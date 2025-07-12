@@ -1,16 +1,21 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 
 const Header = () => {
   const [isProfileDropdownOpen, setIsProfileDropdownOpen] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const router = useRouter();
 
   const toggleProfileDropdown = () => {
     setIsProfileDropdownOpen(!isProfileDropdownOpen);
   };
+
+  useEffect(() => {
+    setIsLoggedIn(localStorage.getItem('token') ? true : false);
+  }, []);
 
   return (
     <header className="bg-white shadow-md sticky top-0 z-50">
@@ -29,7 +34,8 @@ const Header = () => {
           {/* Right side - Icons, Influencer Button, and Profile */}
           <div className="flex items-center space-x-2 sm:space-x-4">
             {/* Cart Icon */}
-            <button className="relative p-2 text-gray-600 hover:text-orange-500 transition-colors">
+            {isLoggedIn && (
+            <button className="relative p-2 text-gray-600 hover:text-orange-500 transition-colors" onClick={() => router.push('/chat/1')}>
               <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 3h2l.4 2M7 13h10l4-8H5.4m0 0L7 13m0 0l-2.5 5M7 13l2.5 5m6-5v6a2 2 0 01-2 2H9a2 2 0 01-2-2v-6m8 0V9a2 2 0 00-2-2H9a2 2 0 00-2 2v4.01" />
               </svg>
@@ -37,13 +43,14 @@ const Header = () => {
                 3
               </span>
             </button>
+            )}
             
-            {/* Chart Icon */}
-            <button className="p-2 text-gray-600 hover:text-orange-500 transition-colors">
-              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
-              </svg>
-            </button>
+
+            {!isLoggedIn && (
+            <button className="w-full bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 rounded-lg font-medium transition-colors" onClick={() => router.push('/login')}>
+          Login
+        </button>
+            )}
 
             {/* List as Influencer Button - Hidden on very small screens */}
             <button className="hidden xs:block bg-orange-500 hover:bg-orange-600 text-white px-2 sm:px-4 py-2 rounded-lg font-medium transition-colors text-sm sm:text-base whitespace-nowrap">
@@ -51,6 +58,7 @@ const Header = () => {
             </button>
 
             {/* Profile Section */}
+            {isLoggedIn && (
             <div className="relative">
               <button
                 onClick={toggleProfileDropdown}
@@ -155,7 +163,10 @@ const Header = () => {
                   </div>
 
                   {/* Logout */}
-                  <div className="border-t border-gray-100 pt-1">
+                  <div className="border-t border-gray-100 pt-1" onClick={() => {
+                    localStorage.removeItem('token');
+                    setIsLoggedIn(false);
+                  }}>
                     <a
                       href="#"
                       className="flex items-center px-4 py-2 text-sm text-red-600 hover:bg-red-50 transition-colors"
@@ -169,18 +180,20 @@ const Header = () => {
                 </div>
               )}
             </div>
+            )}
+            
+              <button className="w-full bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 rounded-lg font-medium transition-colors whitespace-nowrap" onClick={() => router.push(isLoggedIn ? '/post' : '/login')}>
+                List as Influencer
+              </button>
+          
           </div>
         </div>
       </div>
 
       {/* Mobile Influencer Button - Only show on very small screens */}
       <div className="xs:hidden bg-gray-50 border-t border-gray-200 px-4 py-2 flex gap-2">
-        <button className="w-full bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 rounded-lg font-medium transition-colors" onClick={() => router.push('/post')}>
-          List as Influencer
-        </button>
-        <button className="w-full bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 rounded-lg font-medium transition-colors" onClick={() => router.push('/login')}>
-          Login
-        </button>
+
+
       </div>
     </header>
   );

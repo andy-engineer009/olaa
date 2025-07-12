@@ -52,6 +52,7 @@ const Login = () => {
       // Simulate API call to verify code
       await new Promise(resolve => setTimeout(resolve, 1500));
       console.log('Verification successful with code:', values.code);
+      localStorage.setItem('token', '1234567890');
       // Redirect to homepage or handle successful login
       window.location.href = '/';
     } catch (error) {
