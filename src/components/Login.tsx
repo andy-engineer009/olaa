@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 import Image from 'next/image';
+import { useRouter } from 'next/navigation';
 
 interface LoginFormValues {
   email: string;
@@ -17,7 +18,7 @@ const Login = () => {
   const [isVerificationStep, setIsVerificationStep] = useState(false);
   const [userEmail, setUserEmail] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-
+  const router = useRouter();
   const loginValidationSchema = Yup.object({
     email: Yup.string()
       .email('Please enter a valid email address')
@@ -87,11 +88,24 @@ const Login = () => {
     } finally {
       setIsLoading(false);
     }
-  };
+  };  
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-orange-50 via-white to-orange-50 flex items-center justify-center p-4">
       <div className="w-full max-w-md">
+        {/* Back to Home Button */}
+        <div className="absolute top-4 left-4 sm:top-8 sm:left-8">
+          <button
+            onClick={() => router.push('/')}
+            className="flex items-center justify-center p-2 rounded-full hover:bg-gray-100 transition-colors"
+            aria-label="Back to Home"
+          >
+            <svg className="w-6 h-6 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+            </svg>
+          </button>
+        </div>
+
         {/* Logo */}
         <div className="text-center mb-8">
           <div className="flex items-center justify-center mb-4">

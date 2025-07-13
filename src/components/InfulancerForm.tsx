@@ -4,6 +4,7 @@ import { useState, useRef } from 'react';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 import Image from 'next/image';
+import { useRouter } from 'next/navigation';
 
 interface InfluencerFormValues {
   username: string;
@@ -60,6 +61,7 @@ const InfluencerForm = ({ isEditMode = false, initialValues = {}, onSubmit }: In
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
   const [imageError, setImageError] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const router = useRouter();
 
   const defaultValues: InfluencerFormValues = {
     username: '',
@@ -178,6 +180,19 @@ const InfluencerForm = ({ isEditMode = false, initialValues = {}, onSubmit }: In
   return (
     <div className="min-h-screen bg-gray-50 py-8">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+        {/* Back to Home Button */}
+        <div className="absolute top-4 left-4 sm:top-8 sm:left-8">
+          <button
+            onClick={() => router.push('/')}
+            className="flex items-center justify-center p-2 rounded-full hover:bg-gray-100 transition-colors"
+            aria-label="Back to Home"
+          >
+            <svg className="w-6 h-6 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+            </svg>
+          </button>
+        </div>
+
         {/* Header */}
         <div className="text-center mb-8">
           <h1 className="text-3xl font-bold text-gray-900 mb-2">
