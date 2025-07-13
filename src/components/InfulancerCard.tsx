@@ -49,7 +49,7 @@ const InfluencerCard = ({
   const router = useRouter();
 
   return (
-    <div className="bg-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden border border-gray-100"  onClick={() => router.push(`/detail/${id}`)}>
+    <div className="bg-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden border border-gray-100" >
       {/* Profile Image with Effects */}
       <div className="relative h-32 sm:h-48 overflow-hidden group">
         <Image
@@ -59,23 +59,23 @@ const InfluencerCard = ({
           height={200}
           className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
           onError={() => setImageError(true)}
-          onClick={() => router.push(`/detail/${id}`)}
+          // onClick={() => router.push(`/detail/${id}`)}
         />
         
         {/* Gradient Overlay */}
         <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
         
         {/* Verified Badge */}
-        {isVerified && (
+        {/* {isVerified && (
           <div className="absolute top-3 right-3 bg-blue-500 text-white p-1.5 rounded-full shadow-lg">
             <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
               <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
             </svg>
           </div>
-        )}
+        )} */}
         
         {/* Social Media Icons */}
-        <div className="absolute bottom-3 right-3 flex space-x-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+        <div className="absolute bottom-3 right-3 flex space-x-2  group-hover:opacity-100 transition-opacity duration-300">
           {instagramUrl && (
             <a
               href={instagramUrl}
@@ -104,7 +104,7 @@ const InfluencerCard = ({
       </div>
 
       {/* Card Content */}
-      <div className="p-4 space-y-3">
+      <div className="p-4 space-y-3" onClick={() => router.push(`/detail/${id}`)}>
         {/* Name and Social Icons */}
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-2">
@@ -117,7 +117,7 @@ const InfluencerCard = ({
               </div>
             )}
           </div>
-          <div className="flex space-x-2">
+          {/* <div className="flex space-x-2">
             {instagramUrl && (
               <a
                 href={instagramUrl}
@@ -142,7 +142,7 @@ const InfluencerCard = ({
                 </svg>
               </a>
             )}
-          </div>
+          </div> */}
         </div>
 
         {/* Location */}
@@ -162,7 +162,7 @@ const InfluencerCard = ({
         </div>
 
         {/* Followers */}
-        <div className="flex items-center space-x-2 text-gray-600">
+        <div className="flex items-center space-x-2 text-gray-600 mb-0">
           <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
           </svg>

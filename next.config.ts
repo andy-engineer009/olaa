@@ -19,6 +19,12 @@ const baseConfig: NextConfig = {
         port: '',
         pathname: '/**',
       },
+      {
+        protocol: 'https',
+        hostname: 'apollo.olx.in',
+        port: '',
+        pathname: '/**',
+      },
     ],
   },
 };

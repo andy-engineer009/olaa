@@ -5,17 +5,19 @@ const influencers = [
   {
     id: "1",
     name: "John Doe",
-    image: "https://via.placeholder.com/150",
+    image: "https://apollo.olx.in/v1/files/1mfuey8oh35o3-IN/image;s=300x600;q=60",
     isVerified: true,
     location: "New York",
     category: "Fashion",
     followers: 1000,
     startingPrice: 1000,
+    instagramUrl: "https://www.instagram.com/john_doe",
+    youtubeUrl: "https://www.youtube.com/john_doe",
   },
   {
     id: "1",
     name: "Andrii",
-    image: "https://via.placeholder.com/150",
+    image: "https://apollo.olx.in/v1/files/1mfuey8oh35o3-IN/image;s=300x600;q=60",
     isVerified: true,
     location: "New York",
     category: "Fashion",
@@ -25,7 +27,7 @@ const influencers = [
   {
     id: "1",
     name: "mak",
-    image: "https://via.placeholder.com/150",
+    image: "https://apollo.olx.in/v1/files/1mfuey8oh35o3-IN/image;s=300x600;q=60",
     isVerified: true,
     location: "New York",
     category: "Fashion",
@@ -35,7 +37,7 @@ const influencers = [
   {
     id: "1",
     name: "Sasha",
-    image: "https://via.placeholder.com/150",
+    image: "https://apollo.olx.in/v1/files/1mfuey8oh35o3-IN/image;s=300x600;q=60",
     isVerified: true,
     location: "New York",
     category: "Fashion",
@@ -45,7 +47,7 @@ const influencers = [
   {
     id: "1",
     name: "Sasha",
-    image: "https://via.placeholder.com/150",
+    image: "https://apollo.olx.in/v1/files/1mfuey8oh35o3-IN/image;s=300x600;q=60",
     isVerified: true,
     location: "New York",
     category: "Fashion",
@@ -55,7 +57,7 @@ const influencers = [
   {
     id: "1",
     name: "Sasha",
-    image: "https://via.placeholder.com/150",
+    image: "https://apollo.olx.in/v1/files/1mfuey8oh35o3-IN/image;s=300x600;q=60",
     isVerified: true,
     location: "New York",
     category: "Fashion",
@@ -65,7 +67,7 @@ const influencers = [
   {
     id: "1",
     name: "Sasha",
-    image: "https://via.placeholder.com/150",
+    image: "https://apollo.olx.in/v1/files/1mfuey8oh35o3-IN/image;s=300x600;q=60",
     isVerified: true,
     location: "New York",
     category: "Fashion",
@@ -75,7 +77,7 @@ const influencers = [
   {
     id: "1",
     name: "Sasha",
-    image: "https://via.placeholder.com/150",
+    image: "https://apollo.olx.in/v1/files/1mfuey8oh35o3-IN/image;s=300x600;q=60",
     isVerified: true,
     location: "New York",
     category: "Fashion",
@@ -85,7 +87,7 @@ const influencers = [
   {
     id: "1",
     name: "Sasha",
-    image: "https://via.placeholder.com/150",
+    image: "https://apollo.olx.in/v1/files/1mfuey8oh35o3-IN/image;s=300x600;q=60",
     isVerified: true,
     location: "New York",
     category: "Fashion",
@@ -95,7 +97,7 @@ const influencers = [
   {
     id: "1",
     name: "Sasha",
-    image: "https://via.placeholder.com/150",
+    image: "https://apollo.olx.in/v1/files/1mfuey8oh35o3-IN/image;s=300x600;q=60",
     isVerified: true,
     location: "New York",
     category: "Fashion",
@@ -105,7 +107,7 @@ const influencers = [
   {
     id: "1",
     name: "Sasha",
-    image: "https://via.placeholder.com/150",
+    image: "https://apollo.olx.in/v1/files/1mfuey8oh35o3-IN/image;s=300x600;q=60",
     isVerified: true,
     location: "New York",
     category: "Fashion",
@@ -115,7 +117,7 @@ const influencers = [
   {
     id: "1",
     name: "Sasha",
-    image: "https://via.placeholder.com/150",
+    image: "https://apollo.olx.in/v1/files/1mfuey8oh35o3-IN/image;s=300x600;q=60",
     isVerified: true,
     location: "New York",
     category: "Fashion",
