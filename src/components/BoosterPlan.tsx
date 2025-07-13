@@ -1,346 +1,156 @@
 'use client';
 
 import { useState } from 'react';
-import { Formik, Form, Field } from 'formik';
+import { Formik, Form } from 'formik';
 
 interface BoosterPlan {
   id: string;
   name: string;
-  duration: string;
+  badge?: string;
+  price: number;
   originalPrice: number;
-  discountedPrice: number;
   discount: number;
   features: string[];
-  popular?: boolean;
-  bestValue?: boolean;
 }
 
+const plans: BoosterPlan[] = [
+  {
+    id: '1day',
+    name: '1 Day',
+    price: 19,
+    originalPrice: 60,
+    discount: 25,
+    features: [
+      'Featured on top for 24 hours',
+      '3x more profile views',
+      'Priority brand connections'
+    ]
+  },
+  {
+    id: '10days',
+    name: '10 Days',
+    badge: 'Most Popular',
+    price: 99,
+    originalPrice: 199,
+    discount: 50,
+    features: [
+      'Featured on top for 10 days',
+      '5x more profile views',
+      'Priority brand connections',
+      'Analytics dashboard'
+    ]
+  },
+  {
+    id: 'monthly',
+    name: 'Monthly',
+    price: 199,
+    originalPrice: 700,
+    discount: 70,
+    features: [
+      'Featured on top for 30 days',
+      '10x more profile views',
+      'Priority brand connections',
+      'Analytics dashboard',
+      'Dedicated support'
+    ]
+  },
+  {
+    id: 'premium',
+    name: 'Premium',
+    price: 299,
+    originalPrice: 999,
+    discount: 70,
+    features: [
+      'Featured on top for 60 days',
+      '20x more profile views',
+      'Exclusive brand partnerships',
+      'Analytics dashboard',
+      'Dedicated support',
+      'Custom profile customization'
+    ]
+  }
+];
+
 const BoosterPlan = () => {
-  const [isProcessing, setIsProcessing] = useState(false);
-  const [showPaymentForm, setShowPaymentForm] = useState(false);
-  const [selectedPlan, setSelectedPlan] = useState<BoosterPlan | null>(null);
-
-  const plans: BoosterPlan[] = [
-    {
-      id: 'daily',
-      name: 'Daily Boost',
-      duration: '1 Day',
-      originalPrice: 50,
-      discountedPrice: 19,
-      discount: 60,
-      features: [
-        'Featured on top for 24 hours',
-        '3x more profile views',
-        'Priority brand connections'
-      ]
-    },
-    {
-      id: 'weekly',
-      name: 'Weekly Boost',
-      duration: '10 Days',
-      originalPrice: 190,
-      discountedPrice: 99,
-      discount: 50,
-      features: [
-        'Featured on top for 10 days',
-        '5x more profile views',
-        'Priority brand connections',
-        'Analytics dashboard'
-      ],
-      popular: true,
-      bestValue: true
-    },
-    {
-      id: 'monthly',
-      name: 'Monthly Boost',
-      duration: '30 Days',
-      originalPrice: 700,
-      discountedPrice: 299,
-      discount: 60,
-      features: [
-        'Featured on top for 30 days',
-        '10x more profile views',
-        'Priority brand connections',
-        'Analytics dashboard',
-        'Dedicated support'
-      ]
-    }
-  ];
-
-  const handleQuickPurchase = async (plan: BoosterPlan) => {
-    setSelectedPlan(plan);
-    setShowPaymentForm(true);
-  };
-
-  const handlePaymentSubmit = async (values: any) => {
-    setIsProcessing(true);
-    try {
-      // Simulate payment processing
-      await new Promise(resolve => setTimeout(resolve, 2000));
-      console.log('Payment processed:', { plan: selectedPlan, payment: values });
-      alert('🎉 Payment successful! Your profile is now boosted!');
-      setShowPaymentForm(false);
-      setSelectedPlan(null);
-    } catch (error) {
-      console.error('Payment error:', error);
-      alert('Payment failed. Please try again.');
-    } finally {
-      setIsProcessing(false);
-    }
-  };
-
-  const formatCurrency = (amount: number) => `₹${amount}`;
+  const [selectedPlan, setSelectedPlan] = useState<BoosterPlan>(plans[0]);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-orange-50 via-white to-orange-50">
-      {/* Mobile-First Header */}
-      <div className="bg-white shadow-sm border-b border-gray-200">
-        <div className="max-w-7xl mx-auto px-4 py-6">
-          <div className="text-center">
-            <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-3">
-              Boost Your Profile
-            </h1>
-            <p className="text-base sm:text-lg text-gray-600">
-              Get featured & connect with more brands instantly
-            </p>
+    <Formik
+      initialValues={{ plan: selectedPlan.id }}
+      onSubmit={() => {
+        alert(`Proceeding to payment for ${selectedPlan.name} plan!`);
+      }}
+    >
+      {({ setFieldValue }) => (
+        <Form className="min-h-screen flex flex-col bg-white">
+          {/* Header */}
+          <div className="py-4 px-4 border-b border-gray-200 sticky top-0 bg-white z-10">
+            {/* <h1 className="text-2xl font-bold text-gray-900 text-center mb-1">Boost your profile</h1> */}
+            <h2 className="text-lg font-bold text-gray-900 text-center">Choose the plan that's right for you</h2>
           </div>
-        </div>
-      </div>
 
-      {/* Mobile-First Plans */}
-      <div className="max-w-7xl mx-auto px-4 py-8">
-        {/* Quick Stats */}
-        <div className="grid grid-cols-3 gap-4 mb-8">
-          <div className="bg-white rounded-lg p-4 text-center shadow-sm">
-            <div className="text-xl font-bold text-orange-600">10x</div>
-            <div className="text-xs text-gray-600">More Views</div>
-          </div>
-          <div className="bg-white rounded-lg p-4 text-center shadow-sm">
-            <div className="text-xl font-bold text-orange-600">5x</div>
-            <div className="text-xs text-gray-600">More Brands</div>
-          </div>
-          <div className="bg-white rounded-lg p-4 text-center shadow-sm">
-            <div className="text-xl font-bold text-orange-600">3x</div>
-            <div className="text-xs text-gray-600">More Earnings</div>
-          </div>
-        </div>
-
-        {/* Mobile-Optimized Plans */}
-        <div className="space-y-4 mb-8">
-          {plans.map((plan) => (
-            <div
-              key={plan.id}
-              className={`relative bg-white rounded-xl shadow-lg border-2 transition-all duration-200 ${
-                plan.popular ? 'border-orange-500 ring-2 ring-orange-500 ring-opacity-20' : 'border-gray-100'
-              }`}
-            >
-              {/* Popular Badge */}
-              {plan.popular && (
-                <div className="absolute -top-2 left-4">
-                  <div className="bg-orange-500 text-white px-3 py-1 rounded-full text-xs font-semibold">
-                    ⭐ MOST POPULAR
-                  </div>
-                </div>
-              )}
-
-              <div className="p-6">
-                <div className="flex items-center justify-between mb-4">
-                  <div>
-                    <h3 className="text-lg font-bold text-gray-900">{plan.name}</h3>
-                    <p className="text-sm text-gray-600">{plan.duration} Featured</p>
-                  </div>
-                  <div className="text-right">
-                    <div className="text-2xl font-bold text-gray-900">
-                      {formatCurrency(plan.discountedPrice)}
-                    </div>
-                    <div className="text-sm text-gray-500 line-through">
-                      {formatCurrency(plan.originalPrice)}
-                    </div>
-                    <div className="text-xs bg-green-100 text-green-800 px-2 py-1 rounded-full font-semibold">
-                      {plan.discount}% OFF
-                    </div>
-                  </div>
-                </div>
-
-                {/* Features */}
-                <div className="space-y-2 mb-4">
-                  {plan.features.map((feature, index) => (
-                    <div key={index} className="flex items-center space-x-2">
-                      <svg className="w-4 h-4 text-green-500 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
-                        <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                      </svg>
-                      <span className="text-sm text-gray-700">{feature}</span>
-                    </div>
-                  ))}
-                </div>
-
-                {/* One-Click Purchase Button */}
-                <button
-                  onClick={() => handleQuickPurchase(plan)}
-                  className="w-full bg-orange-500 hover:bg-orange-600 text-white font-semibold py-3 px-4 rounded-lg transition-colors duration-200 flex items-center justify-center space-x-2"
-                >
-                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
-                  </svg>
-                  <span>Boost Now - {formatCurrency(plan.discountedPrice)}</span>
-                </button>
-              </div>
-            </div>
-          ))}
-        </div>
-
-        {/* Trust Indicators */}
-        <div className="bg-white rounded-xl p-6 shadow-sm text-center">
-          <h3 className="text-lg font-semibold text-gray-900 mb-4">Trusted by 10,000+ Influencers</h3>
-          <div className="grid grid-cols-2 gap-4">
-            <div>
-              <div className="text-xl font-bold text-orange-600">4.9★</div>
-              <div className="text-xs text-gray-600">User Rating</div>
-            </div>
-            <div>
-              <div className="text-xl font-bold text-orange-600">30d</div>
-              <div className="text-xs text-gray-600">Money Back</div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Mobile Payment Modal */}
-      {showPaymentForm && selectedPlan && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-end sm:items-center justify-center p-4">
-          <div className="bg-white rounded-t-2xl sm:rounded-2xl w-full max-w-md max-h-[90vh] overflow-y-auto">
-            <div className="p-6">
-              {/* Header */}
-              <div className="flex items-center justify-between mb-6">
-                <h2 className="text-xl font-bold text-gray-900">Complete Payment</h2>
-                <button
-                  onClick={() => setShowPaymentForm(false)}
-                  className="p-2 text-gray-500 hover:text-gray-700"
-                >
-                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                  </svg>
-                </button>
-              </div>
-
-              {/* Plan Summary */}
-              <div className="bg-orange-50 rounded-lg p-4 mb-6">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <h3 className="font-semibold text-gray-900">{selectedPlan.name}</h3>
-                    <p className="text-sm text-gray-600">{selectedPlan.duration} Featured</p>
-                  </div>
-                  <div className="text-right">
-                    <div className="text-xl font-bold text-gray-900">
-                      {formatCurrency(selectedPlan.discountedPrice)}
-                    </div>
-                    <div className="text-sm text-gray-500 line-through">
-                      {formatCurrency(selectedPlan.originalPrice)}
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              {/* Payment Form */}
-              <Formik
-                initialValues={{
-                  name: '',
-                  email: '',
-                  phone: '',
-                  upiId: ''
+          {/* Horizontal Scrollable Plans */}
+          <div className="flex overflow-x-auto gap-3 px-4 py-4 snap-x snap-mandatory">
+            {plans.map((plan) => (
+              <button
+                type="button"
+                key={plan.id}
+                onClick={() => {
+                  setSelectedPlan(plan);
+                  setFieldValue('plan', plan.id);
                 }}
-                onSubmit={handlePaymentSubmit}
+                className={`relative flex-shrink-0 w-36 sm:w-44 rounded-lg border-2 px-3 py-4 flex flex-col items-center text-center snap-center transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-orange-500
+                  ${selectedPlan.id === plan.id ? 'border-orange-500 bg-orange-50 shadow-md' : 'border-gray-200 bg-white'}`}
               >
-                <Form className="space-y-4">
-                  <div>
-                    <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-1">
-                      Full Name
-                    </label>
-                    <Field
-                      type="text"
-                      id="name"
-                      name="name"
-                      required
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
-                      placeholder="Enter your full name"
-                    />
-                  </div>
+                {plan.badge && (
+                  <span className="absolute -top-3 left-1/2 -translate-x-1/2 bg-orange-500 text-white text-xs px-2 py-1 rounded-full font-semibold shadow">{plan.badge}</span>
+                )}
+                <span className="text-base font-bold text-gray-900 mb-1">{plan.name}</span>
+                <span className="text-lg font-bold text-orange-600 mb-1">₹{plan.price}</span>
+                <span className="text-xs text-gray-500 line-through">₹{plan.originalPrice}</span>
+                <span className="text-xs bg-green-100 text-green-800 px-2 py-0.5 rounded-full font-semibold mt-1">{plan.discount}% OFF</span>
+              </button>
+            ))}
+          </div>
 
-                  <div>
-                    <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
-                      Email
-                    </label>
-                    <Field
-                      type="email"
-                      id="email"
-                      name="email"
-                      required
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
-                      placeholder="Enter your email"
-                    />
-                  </div>
-
-                  <div>
-                    <label htmlFor="phone" className="block text-sm font-medium text-gray-700 mb-1">
-                      Phone Number
-                    </label>
-                    <Field
-                      type="tel"
-                      id="phone"
-                      name="phone"
-                      required
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
-                      placeholder="Enter your phone number"
-                    />
-                  </div>
-
-                  <div>
-                    <label htmlFor="upiId" className="block text-sm font-medium text-gray-700 mb-1">
-                      UPI ID (Optional)
-                    </label>
-                    <Field
-                      type="text"
-                      id="upiId"
-                      name="upiId"
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
-                      placeholder="username@upi"
-                    />
-                  </div>
-
-                  {/* Payment Button */}
-                  <button
-                    type="submit"
-                    disabled={isProcessing}
-                    className="w-full bg-orange-500 hover:bg-orange-600 disabled:bg-orange-300 text-white font-semibold py-3 px-4 rounded-lg transition-colors duration-200 flex items-center justify-center space-x-2"
-                  >
-                    {isProcessing ? (
-                      <>
-                        <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                          <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                          <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                        </svg>
-                        <span>Processing...</span>
-                      </>
-                    ) : (
-                      <>
-                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
-                        </svg>
-                        <span>Pay {formatCurrency(selectedPlan.discountedPrice)}</span>
-                      </>
-                    )}
-                  </button>
-
-                  <p className="text-xs text-gray-500 text-center">
-                    Secure payment • 30-day money-back guarantee
-                  </p>
-                </Form>
-              </Formik>
+          {/* Plan Details Section */}
+          <div className="px-4 pb-32">
+            <div className="rounded-xl border border-gray-200 bg-white shadow-sm overflow-hidden p-6">
+              <h2 className="text-lg font-bold text-gray-900 mb-2">{selectedPlan.name} Plan</h2>
+              <div className="flex items-center gap-2 mb-4">
+                <span className="text-2xl font-bold text-orange-600">₹{selectedPlan.price}</span>
+                <span className="text-base text-gray-500 line-through">₹{selectedPlan.originalPrice}</span>
+                <span className="text-xs bg-green-100 text-green-800 px-2 py-0.5 rounded-full font-semibold">{selectedPlan.discount}% OFF</span>
+              </div>
+              <h3 className="text-base font-semibold text-gray-900 mb-2">What you get:</h3>
+              <ul className="space-y-2 mb-2">
+                {selectedPlan.features.map((feature, idx) => (
+                  <li key={idx} className="flex items-center text-gray-700 text-sm">
+                    <svg className="w-4 h-4 text-green-500 mr-2 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                      <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                    </svg>
+                    {feature}
+                  </li>
+                ))}
+              </ul>
+              <div className="text-xs text-gray-500 mt-4">
+                <p>All plans include priority listing and enhanced visibility. You can upgrade or cancel anytime. For more details, see our <a href="#" className="underline">Terms of Service</a>.</p>
+              </div>
             </div>
           </div>
-        </div>
+
+          {/* Fixed Next Button */}
+          <div className="fixed bottom-0 left-0 w-full bg-white border-t border-gray-200 p-4 z-20">
+            <button
+              type="submit"
+              className="w-full bg-orange-500 hover:bg-orange-600 text-white font-bold py-3 rounded-lg text-lg shadow transition-colors duration-200"
+            >
+              Next
+            </button>
+          </div>
+        </Form>
       )}
-    </div>
+    </Formik>
   );
 };
 
