@@ -42,6 +42,86 @@ const influencers = [
     followers: 1000,
     startingPrice: 1000,
   },
+  {
+    id: "1",
+    name: "Sasha",
+    image: "https://via.placeholder.com/150",
+    isVerified: true,
+    location: "New York",
+    category: "Fashion",
+    followers: 1000,
+    startingPrice: 1000,
+  },
+  {
+    id: "1",
+    name: "Sasha",
+    image: "https://via.placeholder.com/150",
+    isVerified: true,
+    location: "New York",
+    category: "Fashion",
+    followers: 1000,
+    startingPrice: 1000,
+  },
+  {
+    id: "1",
+    name: "Sasha",
+    image: "https://via.placeholder.com/150",
+    isVerified: true,
+    location: "New York",
+    category: "Fashion",
+    followers: 1000,
+    startingPrice: 1000,
+  },
+  {
+    id: "1",
+    name: "Sasha",
+    image: "https://via.placeholder.com/150",
+    isVerified: true,
+    location: "New York",
+    category: "Fashion",
+    followers: 1000,
+    startingPrice: 1000,
+  },
+  {
+    id: "1",
+    name: "Sasha",
+    image: "https://via.placeholder.com/150",
+    isVerified: true,
+    location: "New York",
+    category: "Fashion",
+    followers: 1000,
+    startingPrice: 1000,
+  },
+  {
+    id: "1",
+    name: "Sasha",
+    image: "https://via.placeholder.com/150",
+    isVerified: true,
+    location: "New York",
+    category: "Fashion",
+    followers: 1000,
+    startingPrice: 1000,
+  },
+  {
+    id: "1",
+    name: "Sasha",
+    image: "https://via.placeholder.com/150",
+    isVerified: true,
+    location: "New York",
+    category: "Fashion",
+    followers: 1000,
+    startingPrice: 1000,
+  },
+  {
+    id: "1",
+    name: "Sasha",
+    image: "https://via.placeholder.com/150",
+    isVerified: true,
+    location: "New York",
+    category: "Fashion",
+    followers: 1000,
+    startingPrice: 1000,
+  },
 ];
 
 export default function Home() {
@@ -65,9 +145,11 @@ export default function Home() {
             </div>
           </div>
         </div>
-      <div className="flex p-4 md:p-8">
-        <Filters />
-        <InfluencerGrid influencers={influencers} />
+      <div className="flex p-4 md:p-8 items-start">
+          <Filters />
+        <div className=" md:pl-9" style={{flex: 1}}>
+          <InfluencerGrid influencers={influencers} />
+        </div>
       </div>
     </div>
   );

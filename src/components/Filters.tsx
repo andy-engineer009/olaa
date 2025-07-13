@@ -125,7 +125,7 @@ const Filters = () => {
   };
 
   const FilterContent = ({ resetForm }: { resetForm: () => void }) => (
-    <div className="p-6">
+    <div className="p-6 w-full">
       <div className="flex items-center justify-between mb-6">
         <h2 className="text-xl font-semibold text-gray-900">Filters</h2>
         <button
@@ -345,7 +345,7 @@ const Filters = () => {
       )}
 
       {/* Desktop Sidebar */}
-      <div className="hidden lg:block w-80 bg-white border-r border-gray-200 h-screen sticky top-16 overflow-y-auto">
+      <div className="hidden lg:block bg-white border-r border-gray-200 h-screen sticky top-16 overflow-y-auto">
         <Formik
           initialValues={initialValues}
           onSubmit={handleApplyFilters}
