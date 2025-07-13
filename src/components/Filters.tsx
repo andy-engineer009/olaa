@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Formik, Form, Field, FormikHelpers } from 'formik';
 
 interface FilterValues {
@@ -31,6 +31,19 @@ const categories = [
 const Filters = () => {
   const [isMobileOpen, setIsMobileOpen] = useState(false);
   const [appliedFilters, setAppliedFilters] = useState<FilterValues | null>(null);
+
+  // Prevent body scroll when mobile filter is open
+  useEffect(() => {
+    if (isMobileOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'unset';
+    }
+
+    return () => {
+      document.body.style.overflow = 'unset';
+    };
+  }, [isMobileOpen]);
 
   const handleApplyFilters = (values: FilterValues) => {
     setAppliedFilters(values);
@@ -124,13 +137,14 @@ const Filters = () => {
     );
   };
 
-  const FilterContent = ({ resetForm }: { resetForm: () => void }) => (
-    <div className="p-6 w-full">
-      <div className="flex items-center justify-between mb-6">
+  const FilterForm = ({ resetForm }: { resetForm: () => void }) => (
+    <div className="flex flex-col h-full">
+      {/* Header */}
+      <div className="flex-shrink-0 flex items-center justify-between p-6 border-b border-gray-200 bg-white">
         <h2 className="text-xl font-semibold text-gray-900">Filters</h2>
         <button
           onClick={() => setIsMobileOpen(false)}
-          className="lg:hidden p-2 text-gray-500 hover:text-gray-700"
+          className="p-2 text-gray-500 hover:text-gray-700 transition-colors"
         >
           <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -138,145 +152,150 @@ const Filters = () => {
         </button>
       </div>
 
-      <Form className="space-y-6">
-        {/* Location */}
-        <div>
-          <label htmlFor="location" className="block text-sm font-medium text-gray-700 mb-2">
-            Location
-          </label>
-          <Field
-            as="select"
-            id="location"
-            name="location"
-            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 text-black bg-white"
-          >
-            <option value="">Select Location</option>
-            <option value="new-york">New York</option>
-            <option value="los-angeles">Los Angeles</option>
-            <option value="chicago">Chicago</option>
-            <option value="mumbai">Mumbai</option>
-            <option value="delhi">Delhi</option>
-            <option value="bangalore">Bangalore</option>
-          </Field>
-        </div>
-
-        {/* Budget Amount Range */}
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">
-            Budget Amount (₹)
-          </label>
-          <div className="space-y-4">
-            <div className="flex justify-between text-sm text-gray-600">
-              <span>{formatCurrency(0)}</span>
-              <span>{formatCurrency(10000)}</span>
-            </div>
-            <Field name="budgetMin">
-              {({ field, form }: any) => (
-                <Field name="budgetMax">
-                  {({ field: fieldMax }: any) => (
-                    <DualRangeSlider
-                      min={0}
-                      max={10000}
-                      step={100}
-                      minValue={field.value}
-                      maxValue={fieldMax.value}
-                      onMinChange={(value) => form.setFieldValue('budgetMin', value)}
-                      onMaxChange={(value) => form.setFieldValue('budgetMax', value)}
-                      formatValue={formatCurrency}
-                    />
-                  )}
-                </Field>
-              )}
+      {/* Scrollable Content */}
+      <div className="h-[calc(100vh-225px)]  overflow-y-auto">
+        <div className="p-6 space-y-6">
+          {/* Location */}
+          <div>
+            <label htmlFor="location" className="block text-sm font-medium text-gray-700 mb-2">
+              Location
+            </label>
+            <Field
+              as="select"
+              id="location"
+              name="location"
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 text-black bg-white transition-colors"
+            >
+              <option value="">Select Location</option>
+              <option value="new-york">New York</option>
+              <option value="los-angeles">Los Angeles</option>
+              <option value="chicago">Chicago</option>
+              <option value="mumbai">Mumbai</option>
+              <option value="delhi">Delhi</option>
+              <option value="bangalore">Bangalore</option>
             </Field>
           </div>
-        </div>
 
-        {/* Gender */}
-        <div>
-          <label htmlFor="gender" className="block text-sm font-medium text-gray-700 mb-2">
-            Gender
-          </label>
-          <Field
-            as="select"
-            id="gender"
-            name="gender"
-            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 text-black bg-white"
-          >
-            <option value="">Select Gender</option>
-            <option value="male">Male</option>
-            <option value="female">Female</option>
-            <option value="other">Other</option>
-          </Field>
-        </div>
-
-        {/* Follower Count Range */}
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">
-            Follower Count
-          </label>
-          <div className="space-y-4">
-            <div className="flex justify-between text-sm text-gray-600">
-              <span>0</span>
-              <span>1M</span>
+          {/* Budget Amount Range */}
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Budget Amount (₹)
+            </label>
+            <div className="space-y-4">
+              <div className="flex justify-between text-sm text-gray-600">
+                <span>{formatCurrency(0)}</span>
+                <span>{formatCurrency(10000)}</span>
+              </div>
+              <Field name="budgetMin">
+                {({ field, form }: any) => (
+                  <Field name="budgetMax">
+                    {({ field: fieldMax }: any) => (
+                      <DualRangeSlider
+                        min={0}
+                        max={10000}
+                        step={100}
+                        minValue={field.value}
+                        maxValue={fieldMax.value}
+                        onMinChange={(value) => form.setFieldValue('budgetMin', value)}
+                        onMaxChange={(value) => form.setFieldValue('budgetMax', value)}
+                        formatValue={formatCurrency}
+                      />
+                    )}
+                  </Field>
+                )}
+              </Field>
             </div>
-            <Field name="followersMin">
-              {({ field, form }: any) => (
-                <Field name="followersMax">
-                  {({ field: fieldMax }: any) => (
-                    <DualRangeSlider
-                      min={0}
-                      max={1000000}
-                      step={1000}
-                      minValue={field.value}
-                      maxValue={fieldMax.value}
-                      onMinChange={(value) => form.setFieldValue('followersMin', value)}
-                      onMaxChange={(value) => form.setFieldValue('followersMax', value)}
-                      formatValue={formatFollowers}
-                    />
-                  )}
-                </Field>
-              )}
+          </div>
+
+          {/* Gender */}
+          <div>
+            <label htmlFor="gender" className="block text-sm font-medium text-gray-700 mb-2">
+              Gender
+            </label>
+            <Field
+              as="select"
+              id="gender"
+              name="gender"
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 text-black bg-white transition-colors"
+            >
+              <option value="">Select Gender</option>
+              <option value="male">Male</option>
+              <option value="female">Female</option>
+              <option value="other">Other</option>
             </Field>
           </div>
-        </div>
 
-        {/* Categories */}
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-3">
-            Categories
-          </label>
-          <div className="space-y-2 max-h-48 overflow-y-auto">
-            {categories.map((category) => (
-              <label key={category} className="flex items-center">
-                <Field
-                  type="checkbox"
-                  name="categories"
-                  value={category}
-                  className="h-4 w-4 text-orange-500 focus:ring-orange-500 border-gray-300 rounded"
-                />
-                <span className="ml-2 text-sm text-gray-700">{category}</span>
-              </label>
-            ))}
+          {/* Follower Count Range */}
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Follower Count
+            </label>
+            <div className="space-y-4">
+              <div className="flex justify-between text-sm text-gray-600">
+                <span>0</span>
+                <span>1M</span>
+              </div>
+              <Field name="followersMin">
+                {({ field, form }: any) => (
+                  <Field name="followersMax">
+                    {({ field: fieldMax }: any) => (
+                      <DualRangeSlider
+                        min={0}
+                        max={1000000}
+                        step={1000}
+                        minValue={field.value}
+                        maxValue={fieldMax.value}
+                        onMinChange={(value) => form.setFieldValue('followersMin', value)}
+                        onMaxChange={(value) => form.setFieldValue('followersMax', value)}
+                        formatValue={formatFollowers}
+                      />
+                    )}
+                  </Field>
+                )}
+              </Field>
+            </div>
+          </div>
+
+          {/* Categories */}
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-3">
+              Categories
+            </label>
+            <div className="space-y-2 max-h-48 overflow-y-auto pr-2">
+              {categories.map((category) => (
+                <label key={category} className="flex items-center p-2 rounded-lg hover:bg-gray-50 transition-colors">
+                  <Field
+                    type="checkbox"
+                    name="categories"
+                    value={category}
+                    className="h-4 w-4 text-orange-500 focus:ring-orange-500 border-gray-300 rounded"
+                  />
+                  <span className="ml-3 text-sm text-gray-700">{category}</span>
+                </label>
+              ))}
+            </div>
           </div>
         </div>
+      </div>
 
-        {/* Action Buttons */}
-        <div className="space-y-3 pt-4">
+      {/* Fixed Bottom Buttons */}
+      <div className="flex-shrink-0 p-6 border-t border-gray-200 bg-white">
+        <div className="space-y-3">
           <button
             type="submit"
-            className="w-full bg-orange-500 hover:bg-orange-600 text-white py-2 px-4 rounded-lg font-medium transition-colors"
+            className="w-full bg-orange-500 hover:bg-orange-600 text-white py-3 px-4 rounded-lg font-medium transition-colors shadow-sm"
           >
             Apply Filters
           </button>
           <button
             type="button"
             onClick={() => handleClearFilters(resetForm)}
-            className="w-full bg-gray-200 hover:bg-gray-300 text-gray-700 py-2 px-4 rounded-lg font-medium transition-colors"
+            className="w-full bg-gray-100 hover:bg-gray-200 text-gray-700 py-3 px-4 rounded-lg font-medium transition-colors"
           >
             Clear Filters
           </button>
         </div>
-      </Form>
+      </div>
 
       {/* Custom CSS for range sliders */}
       <style jsx>{`
@@ -322,7 +341,7 @@ const Filters = () => {
       <div className="lg:hidden fixed bottom-4 right-4 z-40">
         <button
           onClick={() => setIsMobileOpen(true)}
-          className="bg-orange-500 hover:bg-orange-600 text-white p-3 rounded-full shadow-lg transition-colors"
+          className="bg-orange-500 hover:bg-orange-600 text-white p-4 rounded-full shadow-lg transition-all duration-200 transform hover:scale-105"
         >
           <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.207A1 1 0 013 6.5V4z" />
@@ -330,27 +349,42 @@ const Filters = () => {
         </button>
       </div>
 
-      {/* Mobile Overlay */}
+      {/* Mobile Overlay with Slide Animation */}
       {isMobileOpen && (
-        <div className="lg:hidden fixed inset-0 bg-black bg-opacity-50 z-50">
-          <div className="fixed left-0 top-0 h-full w-80 bg-white shadow-xl">
+        <div className="lg:hidden fixed inset-0 z-50">
+          {/* Backdrop */}
+          <div 
+            className="absolute inset-0 bg-black bg-opacity-50 transition-opacity duration-300"
+            onClick={() => setIsMobileOpen(false)}
+          />
+          
+          {/* Slide-in Panel */}
+          <div className={`absolute left-0 top-0 h-full w-80 bg-white shadow-2xl transform transition-transform duration-300 ease-out ${isMobileOpen ? 'translate-x-0' : '-translate-x-full'}`}>
             <Formik
               initialValues={initialValues}
               onSubmit={handleApplyFilters}
             >
-              {({ resetForm }: { resetForm: () => void }) => <FilterContent resetForm={resetForm} />}
+              {({ resetForm }: { resetForm: () => void }) => (
+                <Form>
+                  <FilterForm resetForm={resetForm} />
+                </Form>
+              )}
             </Formik>
           </div>
         </div>
       )}
 
       {/* Desktop Sidebar */}
-      <div className="hidden lg:block bg-white border-r border-gray-200 h-screen sticky top-16 overflow-y-auto">
+      <div className="hidden lg:block bg-white border-r border-gray-200 h-screen sticky top-16">
         <Formik
           initialValues={initialValues}
           onSubmit={handleApplyFilters}
         >
-          {({ resetForm }: { resetForm: () => void }) => <FilterContent resetForm={resetForm} />}
+          {({ resetForm }: { resetForm: () => void }) => (
+            <Form>
+              <FilterForm resetForm={resetForm} />
+            </Form>
+          )}
         </Formik>
       </div>
 
