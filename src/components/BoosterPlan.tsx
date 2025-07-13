@@ -29,7 +29,7 @@ const plans: BoosterPlan[] = [
   {
     id: '10days',
     name: '10 Days',
-    badge: 'Most Popular',
+    badge: 'Most',
     price: 99,
     originalPrice: 199,
     discount: 50,

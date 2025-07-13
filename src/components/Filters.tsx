@@ -140,7 +140,7 @@ const Filters = () => {
   const FilterForm = ({ resetForm }: { resetForm: () => void }) => (
     <div className="flex flex-col h-full">
       {/* Header */}
-      <div className="flex-shrink-0 flex items-center justify-between p-6 border-b border-gray-200 bg-white">
+      <div className="flex-shrink-0 flex items-center justify-between p-3 md:p-6 border-b border-gray-200 bg-white">
         <h2 className="text-xl font-semibold text-gray-900">Filters</h2>
         <button
           onClick={() => setIsMobileOpen(false)}
@@ -153,7 +153,7 @@ const Filters = () => {
       </div>
 
       {/* Scrollable Content */}
-      <div className="h-[calc(100vh-225px)]  overflow-y-auto">
+      <div className="h-[calc(100vh-210px)]  overflow-y-auto">
         <div className="p-6 space-y-6">
           {/* Location */}
           <div>
