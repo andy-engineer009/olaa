@@ -5,6 +5,7 @@ import { useParams, useRouter } from 'next/navigation';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 import Image from 'next/image';
+import Link from 'next/link';
 
 // Types
 interface ChatUser {
@@ -245,16 +246,23 @@ export default function ChatPage() {
   const ChatList = () => (
     <div className="flex flex-col h-full">
       {/* Header */}
-      <div className="flex items-center justify-between p-4 border-b border-gray-200">
-        <h2 className="text-lg font-semibold text-gray-900">Messages</h2>
-        {chatUsers.length > 0 && (
-          <button
-            onClick={handleDeleteAllChats}
-            className="text-red-500 hover:text-red-700 text-sm font-medium transition-colors"
-          >
-            Delete All
-          </button>
-        )}
+      <div className="flex flex-col gap-4 border-b border-gray-200">
+        <div className="p-4">
+          <Link href="/" className="text-black hover:underline block text-sm md:text-base">
+            Back to Home
+          </Link>
+        </div>
+        <div className="flex items-center justify-between px-4 pb-4">
+          <h2 className="text-lg font-semibold text-gray-900">Messages</h2>
+          {chatUsers.length > 0 && (
+            <button
+              onClick={handleDeleteAllChats}
+              className="text-red-500 hover:text-red-700 text-sm font-medium transition-colors"
+            >
+              Delete All
+            </button>
+          )}
+        </div>
       </div>
 
       {/* Chat list */}
