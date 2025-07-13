@@ -47,6 +47,24 @@ const influencers = [
 export default function Home() {
   return (
     <div>
+            <div className="w-full mt-4">
+          <div className="max-w-4xl mx-auto px-4">
+            <div className="bg-gradient-to-r from-orange-500 to-orange-600 rounded-lg shadow-lg p-6 flex items-center justify-between flex-wrap">
+              <div className="flex items-center space-x-4">
+                
+                <div className="text-white text-center md:text-left">
+                  <h2 className="text-xl font-bold">1+ lakh plus Daily Active Visitors</h2>
+                  <p className="text-orange-100 hidden md:block">Join India's fastest growing influencer platform</p>
+                </div>
+              </div>
+              <div className="w-full md:w-auto">
+                <button className="mt-4 md:mt-0 bg-white text-orange-500 px-6 py-2 rounded-full font-semibold hover:bg-orange-50 transition-colors w-full md:w-auto">
+                  Get Started
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
       <div className="flex p-4 md:p-8">
         <Filters />
         <InfluencerGrid influencers={influencers} />

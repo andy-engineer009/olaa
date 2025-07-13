@@ -190,11 +190,7 @@ const Header = () => {
         </div>
       </div>
 
-      {/* Mobile Influencer Button - Only show on very small screens */}
-      <div className="xs:hidden bg-gray-50 border-t border-gray-200 px-4 py-2 flex gap-2">
-
-
-      </div>
+     
     </header>
   );
 };
