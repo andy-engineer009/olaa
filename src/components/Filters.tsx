@@ -261,7 +261,7 @@ const Filters = () => {
             <label className="block text-sm font-medium text-gray-700 mb-3">
               Categories
             </label>
-            <div className="space-y-2 max-h-48 overflow-y-auto pr-2">
+            <div className="space-y-2 pr-2">
               {categories.map((category) => (
                 <label key={category} className="flex items-center p-2 rounded-lg hover:bg-gray-50 transition-colors">
                   <Field
