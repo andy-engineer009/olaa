@@ -3,6 +3,7 @@
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
+import styles from './css/inluancerCard.module.css';
 
 interface InfluencerCardProps {
   id: string;
@@ -15,6 +16,7 @@ interface InfluencerCardProps {
   startingPrice: number;
   instagramUrl?: string;
   youtubeUrl?: string;
+  isFeatured?: boolean;
 //   onViewDetails: (id: string) => void;
 }
 
@@ -29,6 +31,7 @@ const InfluencerCard = ({
   startingPrice,
   instagramUrl,
   youtubeUrl,
+  isFeatured,
 //   onViewDetails
 }: InfluencerCardProps) => {
   const [imageError, setImageError] = useState(false);
@@ -49,9 +52,9 @@ const InfluencerCard = ({
   const router = useRouter();
 
   return (
-    <div className="bg-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden border border-gray-100" >
+    <div className="bg-white shadow-lg hover:shadow-xl transition-all duration-300  border border-gray-100" >
       {/* Profile Image with Effects */}
-      <div className="relative h-32 sm:h-48 overflow-hidden group">
+      <div className={`relative group image-container ${styles.imageContainer}`}>
         <Image
           src={imageError ? '/api/placeholder/400/200' : image}
           alt={name}
@@ -62,17 +65,15 @@ const InfluencerCard = ({
           // onClick={() => router.push(`/detail/${id}`)}
         />
         
+        {/* Featured Badge */}
+        {isFeatured && (
+          <div className="absolute top-[-4px] right-0 bg-yellow-400 text-black px-2 py-0.5 text-[10px] font-medium shadow-md z-10">
+            FEATURED
+          </div>
+        )}
+
         {/* Gradient Overlay */}
         <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-        
-        {/* Verified Badge */}
-        {/* {isVerified && (
-          <div className="absolute top-3 right-3 bg-blue-500 text-white p-1.5 rounded-full shadow-lg">
-            <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-              <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-            </svg>
-          </div>
-        )} */}
         
         {/* Social Media Icons */}
         <div className="absolute bottom-3 right-3 flex space-x-2  group-hover:opacity-100 transition-opacity duration-300">
@@ -104,9 +105,9 @@ const InfluencerCard = ({
       </div>
 
       {/* Card Content */}
-      <div className="p-4 space-y-3" onClick={() => router.push(`/detail/${id}`)}>
+      <div className="p-2 space-y-3" onClick={() => router.push(`/detail/${id}`)}>
         {/* Name and Social Icons */}
-        <div className="flex items-center justify-between">
+        <div className="flex items-center justify-between mb-0">
           <div className="flex items-center space-x-2">
             <h3 className="font-semibold text-gray-900 text-lg">{name}</h3>
             {isVerified && (
@@ -146,7 +147,7 @@ const InfluencerCard = ({
         </div>
 
         {/* Location */}
-        <div className="flex items-center space-x-2 text-gray-600">
+        <div className="flex items-center space-x-2 text-black">
           <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
@@ -162,7 +163,7 @@ const InfluencerCard = ({
         </div>
 
         {/* Followers */}
-        <div className="flex items-center space-x-2 text-gray-600 mb-0">
+        <div className="flex items-center space-x-2 text-black mb-0">
           <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
           </svg>
@@ -172,8 +173,8 @@ const InfluencerCard = ({
         {/* Starting Price and View Details */}
         <div className="flex items-center justify-between pt-2 border-t border-gray-100">
           <div className="text-left flex items-center justify-between w-full">
-            <p className="text-xs text-gray-500">Starting at</p>
-            <p className="text-lg font-bold text-orange-600">{formatCurrency(startingPrice)}</p>
+            <p className="text-xs text-black">Starting at</p>
+            <p className="text-lg font-bold text-orange-600 bg-orange-100 px-2 py-1 rounded-md">{formatCurrency(startingPrice)}</p>
           </div>
           {/* <button
             // onClick={() => onViewDetails(id)}

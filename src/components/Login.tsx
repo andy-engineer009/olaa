@@ -112,7 +112,7 @@ const Login = () => {
             <div className="w-12 h-12 bg-orange-500 rounded-xl flex items-center justify-center mr-3">
               <span className="text-white font-bold text-2xl">O</span>
             </div>
-            <span className="text-3xl font-bold text-gray-900">OLX</span>
+            <span className="text-3xl font-bold text-gray-900">Ol</span>
           </div>
           <h1 className="text-2xl font-bold text-gray-900 mb-2">
             {isVerificationStep ? 'Verify Your Email' : 'Welcome Back'}

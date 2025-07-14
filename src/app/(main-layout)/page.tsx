@@ -23,6 +23,7 @@ const influencers = [
     category: "Fashion",
     followers: 1000,
     startingPrice: 1000,
+    isFeatured: true,
   },
   {
     id: "1",
@@ -34,96 +35,96 @@ const influencers = [
     followers: 1000,
     startingPrice: 1000,
   },
-  {
-    id: "1",
-    name: "Sasha",
-    image: "https://apollo.olx.in/v1/files/1mfuey8oh35o3-IN/image;s=300x600;q=60",
-    isVerified: true,
-    location: "New York",
-    category: "Fashion",
-    followers: 1000,
-    startingPrice: 1000,
-  },
-  {
-    id: "1",
-    name: "Sasha",
-    image: "https://apollo.olx.in/v1/files/1mfuey8oh35o3-IN/image;s=300x600;q=60",
-    isVerified: true,
-    location: "New York",
-    category: "Fashion",
-    followers: 1000,
-    startingPrice: 1000,
-  },
-  {
-    id: "1",
-    name: "Sasha",
-    image: "https://apollo.olx.in/v1/files/1mfuey8oh35o3-IN/image;s=300x600;q=60",
-    isVerified: true,
-    location: "New York",
-    category: "Fashion",
-    followers: 1000,
-    startingPrice: 1000,
-  },
-  {
-    id: "1",
-    name: "Sasha",
-    image: "https://apollo.olx.in/v1/files/1mfuey8oh35o3-IN/image;s=300x600;q=60",
-    isVerified: true,
-    location: "New York",
-    category: "Fashion",
-    followers: 1000,
-    startingPrice: 1000,
-  },
-  {
-    id: "1",
-    name: "Sasha",
-    image: "https://apollo.olx.in/v1/files/1mfuey8oh35o3-IN/image;s=300x600;q=60",
-    isVerified: true,
-    location: "New York",
-    category: "Fashion",
-    followers: 1000,
-    startingPrice: 1000,
-  },
-  {
-    id: "1",
-    name: "Sasha",
-    image: "https://apollo.olx.in/v1/files/1mfuey8oh35o3-IN/image;s=300x600;q=60",
-    isVerified: true,
-    location: "New York",
-    category: "Fashion",
-    followers: 1000,
-    startingPrice: 1000,
-  },
-  {
-    id: "1",
-    name: "Sasha",
-    image: "https://apollo.olx.in/v1/files/1mfuey8oh35o3-IN/image;s=300x600;q=60",
-    isVerified: true,
-    location: "New York",
-    category: "Fashion",
-    followers: 1000,
-    startingPrice: 1000,
-  },
-  {
-    id: "1",
-    name: "Sasha",
-    image: "https://apollo.olx.in/v1/files/1mfuey8oh35o3-IN/image;s=300x600;q=60",
-    isVerified: true,
-    location: "New York",
-    category: "Fashion",
-    followers: 1000,
-    startingPrice: 1000,
-  },
-  {
-    id: "1",
-    name: "Sasha",
-    image: "https://apollo.olx.in/v1/files/1mfuey8oh35o3-IN/image;s=300x600;q=60",
-    isVerified: true,
-    location: "New York",
-    category: "Fashion",
-    followers: 1000,
-    startingPrice: 1000,
-  },
+  // {
+  //   id: "1",
+  //   name: "Sasha",
+  //   image: "https://apollo.olx.in/v1/files/1mfuey8oh35o3-IN/image;s=300x600;q=60",
+  //   isVerified: true,
+  //   location: "New York",
+  //   category: "Fashion",
+  //   followers: 1000,
+  //   startingPrice: 1000,
+  // },
+  // {
+  //   id: "1",
+  //   name: "Sasha",
+  //   image: "https://apollo.olx.in/v1/files/1mfuey8oh35o3-IN/image;s=300x600;q=60",
+  //   isVerified: true,
+  //   location: "New York",
+  //   category: "Fashion",
+  //   followers: 1000,
+  //   startingPrice: 1000,
+  // },
+  // {
+  //   id: "1",
+  //   name: "Sasha",
+  //   image: "https://apollo.olx.in/v1/files/1mfuey8oh35o3-IN/image;s=300x600;q=60",
+  //   isVerified: true,
+  //   location: "New York",
+  //   category: "Fashion",
+  //   followers: 1000,
+  //   startingPrice: 1000,
+  // },
+  // {
+  //   id: "1",
+  //   name: "Sasha",
+  //   image: "https://apollo.olx.in/v1/files/1mfuey8oh35o3-IN/image;s=300x600;q=60",
+  //   isVerified: true,
+  //   location: "New York",
+  //   category: "Fashion",
+  //   followers: 1000,
+  //   startingPrice: 1000,
+  // },
+  // {
+  //   id: "1",
+  //   name: "Sasha",
+  //   image: "https://apollo.olx.in/v1/files/1mfuey8oh35o3-IN/image;s=300x600;q=60",
+  //   isVerified: true,
+  //   location: "New York",
+  //   category: "Fashion",
+  //   followers: 1000,
+  //   startingPrice: 1000,
+  // },
+  // {
+  //   id: "1",
+  //   name: "Sasha",
+  //   image: "https://apollo.olx.in/v1/files/1mfuey8oh35o3-IN/image;s=300x600;q=60",
+  //   isVerified: true,
+  //   location: "New York",
+  //   category: "Fashion",
+  //   followers: 1000,
+  //   startingPrice: 1000,
+  // },
+  // {
+  //   id: "1",
+  //   name: "Sasha",
+  //   image: "https://apollo.olx.in/v1/files/1mfuey8oh35o3-IN/image;s=300x600;q=60",
+  //   isVerified: true,
+  //   location: "New York",
+  //   category: "Fashion",
+  //   followers: 1000,
+  //   startingPrice: 1000,
+  // },
+  // {
+  //   id: "1",
+  //   name: "Sasha",
+  //   image: "https://apollo.olx.in/v1/files/1mfuey8oh35o3-IN/image;s=300x600;q=60",
+  //   isVerified: true,
+  //   location: "New York",
+  //   category: "Fashion",
+  //   followers: 1000,
+  //   startingPrice: 1000,
+  // },
+  // {
+  //   id: "1",
+  //   name: "Sasha",
+  //   image: "https://apollo.olx.in/v1/files/1mfuey8oh35o3-IN/image;s=300x600;q=60",
+  //   isVerified: true,
+  //   location: "New York",
+  //   category: "Fashion",
+  //   followers: 1000,
+  //   startingPrice: 1000,
+  // },
 ];
 
 export default function Home() {
@@ -131,7 +132,7 @@ export default function Home() {
     <div>
             <div className="w-full mt-4">
           <div className="max-w-4xl mx-auto px-4">
-            <div className="bg-gradient-to-r from-orange-500 to-orange-600 rounded-lg shadow-lg p-6 flex items-center justify-between flex-wrap">
+            {/* <div className="bg-gradient-to-r from-orange-500 to-orange-600 rounded-lg shadow-lg p-6 flex items-center justify-between flex-wrap">
               <div className="flex items-center space-x-4">
                 
                 <div className="text-white text-center md:text-left">
@@ -144,7 +145,7 @@ export default function Home() {
                   Get Started
                 </button>
               </div>
-            </div>
+            </div> */}
           </div>
         </div>
       <div className="flex p-4 md:p-8 items-start">
