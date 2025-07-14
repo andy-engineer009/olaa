@@ -336,7 +336,7 @@ const Header = () => {
         </div>
         
         {/* Bottom safe area for devices with home indicator */}
-        <div className="h-0.5 bg-gradient-to-r from-orange-400 to-orange-600"></div>
+        {/* <div className="h-0.5 bg-gradient-to-r from-orange-400 to-orange-600"></div> */}
       </nav>
 
       {/* Bottom padding for mobile to account for bottom navigation */}
