@@ -52,7 +52,7 @@ const InfluencerCard = ({
   return (
     <div 
       className="relative bg-white rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-all duration-200 border border-gray-100 flex flex-col h-full cursor-pointer"
-      onClick={() => router.push(`/influencers/${id}`)}
+      onClick={() => router.push(`/detail/${id}`)}
     >
       {/* Featured Badge */}
       {isFeatured && (
@@ -166,7 +166,7 @@ const InfluencerCard = ({
               className="text-xs font-medium bg-blue-600 hover:bg-blue-700 text-white py-1.5 px-3 rounded-full transition-colors duration-200 shadow-sm"
               onClick={(e) => {
                 e.stopPropagation();
-                router.push(`/influencers/${id}`);
+                router.push(`/detail/${id}`);
               }}
             >
               Collaborate

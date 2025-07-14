@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { Formik, Form, Field, FormikHelpers } from 'formik';
+import { motion, AnimatePresence } from 'framer-motion';
 
 interface FilterValues {
   location: string;
@@ -95,7 +96,7 @@ const Filters = () => {
       <div className="relative">
         <div className="relative h-2 bg-gray-200 rounded-lg">
           <div 
-            className="absolute h-2 bg-orange-500 rounded-lg"
+            className="absolute h-2 bg-gradient-to-r from-blue-500 to-purple-500 rounded-lg"
             style={{ left: `${minPercent}%`, right: `${100 - maxPercent}%` }}
           />
           <input
@@ -140,8 +141,8 @@ const Filters = () => {
   const FilterForm = ({ resetForm }: { resetForm: () => void }) => (
     <div className="flex flex-col h-full">
       {/* Header */}
-      <div className="flex-shrink-0 flex items-center justify-between p-3 md:p-6 border-b border-gray-200 bg-white">
-        <h2 className="text-xl font-semibold text-gray-900">Filters</h2>
+      <div className="flex-shrink-0 flex items-center justify-between p-4 border-b border-gray-200 bg-white">
+        <h2 className="text-xl font-bold text-gray-900">Filters</h2>
         <button
           onClick={() => setIsMobileOpen(false)}
           className="p-2 text-gray-500 hover:text-gray-700 transition-colors"
@@ -153,8 +154,8 @@ const Filters = () => {
       </div>
 
       {/* Scrollable Content */}
-      <div className="h-[calc(100vh-240px)]  overflow-y-auto">
-        <div className="p-6 space-y-6">
+      <div className="h-[calc(100vh-218px)] overflow-y-auto">
+        <div className="p-4 space-y-6">
           {/* Location */}
           <div>
             <label htmlFor="location" className="block text-sm font-medium text-gray-700 mb-2">
@@ -164,7 +165,7 @@ const Filters = () => {
               as="select"
               id="location"
               name="location"
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 text-black bg-white transition-colors"
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-black bg-white transition-colors"
             >
               <option value="">Select Location</option>
               <option value="new-york">New York</option>
@@ -216,7 +217,7 @@ const Filters = () => {
               as="select"
               id="gender"
               name="gender"
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 text-black bg-white transition-colors"
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-black bg-white transition-colors"
             >
               <option value="">Select Gender</option>
               <option value="male">Male</option>
@@ -261,16 +262,16 @@ const Filters = () => {
             <label className="block text-sm font-medium text-gray-700 mb-3">
               Categories
             </label>
-            <div className="space-y-2 pr-2">
+            <div className="grid grid-cols-2 gap-2">
               {categories.map((category) => (
                 <label key={category} className="flex items-center p-2 rounded-lg hover:bg-gray-50 transition-colors">
                   <Field
                     type="checkbox"
                     name="categories"
                     value={category}
-                    className="h-4 w-4 text-orange-500 focus:ring-orange-500 border-gray-300 rounded"
+                    className="h-4 w-4 text-blue-500 focus:ring-blue-500 border-gray-300 rounded"
                   />
-                  <span className="ml-3 text-sm text-gray-700">{category}</span>
+                  <span className="ml-2 text-sm text-gray-700">{category}</span>
                 </label>
               ))}
             </div>
@@ -279,100 +280,92 @@ const Filters = () => {
       </div>
 
       {/* Fixed Bottom Buttons */}
-      <div className="flex-shrink-0 p-6 border-t border-gray-200 bg-white">
-        <div className="space-y-3">
-          <button
-            type="submit"
-            className="w-full bg-orange-500 hover:bg-orange-600 text-white py-3 px-4 rounded-lg font-medium transition-colors shadow-sm"
-          >
-            Apply Filters
-          </button>
+      <div className="flex-shrink-0 p-4 border-t border-gray-200 bg-white">
+        <div className="flex gap-3">
           <button
             type="button"
             onClick={() => handleClearFilters(resetForm)}
-            className="w-full bg-gray-100 hover:bg-gray-200 text-gray-700 py-3 px-4 rounded-lg font-medium transition-colors"
+            className="flex-1 bg-gray-100 hover:bg-gray-200 text-gray-700 py-2 px-4 rounded-lg font-medium transition-colors"
           >
-            Clear Filters
+            Clear
+          </button>
+          <button
+            type="submit"
+            className="flex-1 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white py-2 px-4 rounded-lg font-medium transition-all duration-300 shadow-lg hover:shadow-xl"
+          >
+            Apply
           </button>
         </div>
       </div>
-
-      {/* Custom CSS for range sliders */}
-      <style jsx>{`
-        .slider-thumb::-webkit-slider-thumb {
-          appearance: none;
-          height: 20px;
-          width: 20px;
-          border-radius: 50%;
-          background: #f97316;
-          cursor: pointer;
-          border: 2px solid #fff;
-          box-shadow: 0 2px 4px rgba(0,0,0,0.2);
-        }
-        
-        .slider-thumb::-moz-range-thumb {
-          height: 20px;
-          width: 20px;
-          border-radius: 50%;
-          background: #f97316;
-          cursor: pointer;
-          border: 2px solid #fff;
-          box-shadow: 0 2px 4px rgba(0,0,0,0.2);
-        }
-        
-        .slider-thumb::-webkit-slider-track {
-          background: transparent;
-          border-radius: 8px;
-          height: 8px;
-        }
-        
-        .slider-thumb::-moz-range-track {
-          background: transparent;
-          border-radius: 8px;
-          height: 8px;
-        }
-      `}</style>
     </div>
   );
 
   return (
     <>
       {/* Mobile Filter Button */}
-      <div className="lg:hidden fixed bottom-[85px] right-4 z-40">
-        <button
-          onClick={() => setIsMobileOpen(true)}
-          className="bg-orange-500 hover:bg-orange-600 text-white p-4 rounded-full shadow-lg transition-all duration-200 transform hover:scale-105"
-        >
-          <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.207A1 1 0 013 6.5V4z" />
-          </svg>
-        </button>
+      <div className="lg:hidden fixed bottom-[85px] right-6 z-40">
+        <AnimatePresence>
+          {!isMobileOpen && (
+            <motion.button
+              initial={{ scale: 0, rotate: -180 }}
+              animate={{ scale: 1, rotate: 0 }}
+              exit={{ scale: 0, rotate: 180 }}
+              transition={{ type: "spring", stiffness: 260, damping: 20 }}
+              onClick={() => setIsMobileOpen(true)}
+              className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white p-4 rounded-full shadow-2xl transition-all duration-300 hover:scale-110"
+              style={{
+                boxShadow: '0 8px 32px rgba(37, 99, 235, 0.4)'
+              }}
+            >
+              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.207A1 1 0 013 6.5V4z" />
+              </svg>
+            </motion.button>
+          )}
+        </AnimatePresence>
       </div>
 
-      {/* Mobile Overlay with Slide Animation */}
-      {isMobileOpen && (
-        <div className="lg:hidden fixed inset-0 z-50">
-          {/* Backdrop */}
-          <div 
-            className="absolute inset-0 bg-black bg-opacity-50 transition-opacity duration-300"
-            onClick={() => setIsMobileOpen(false)}
-          />
-          
-          {/* Slide-in Panel */}
-          <div className={`absolute left-0 top-0 h-full w-80 bg-white shadow-2xl transform transition-transform duration-300 ease-out ${isMobileOpen ? 'translate-x-0' : '-translate-x-full'}`}>
-            <Formik
-              initialValues={initialValues}
-              onSubmit={handleApplyFilters}
+      {/* Mobile Overlay */}
+      <AnimatePresence>
+        {isMobileOpen && (
+          <>
+            {/* Backdrop */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.3 }}
+              className="fixed inset-0 z-50 bg-black bg-opacity-50 backdrop-blur-sm"
+              onClick={() => setIsMobileOpen(false)}
+            />
+            
+            {/* Slide-in Panel */}
+            <motion.div 
+              initial={{ y: '100%' }}
+              animate={{ y: 0 }}
+              exit={{ y: '100%' }}
+              transition={{ 
+                type: 'spring', 
+                damping: 25, 
+                stiffness: 300,
+                duration: 0.5
+              }}
+              className="fixed bottom-0 left-0 right-0 z-50 h-[85vh] bg-white rounded-t-3xl shadow-2xl overflow-hidden"
             >
-              {({ resetForm }: { resetForm: () => void }) => (
-                <Form>
-                  <FilterForm resetForm={resetForm} />
-                </Form>
-              )}
-            </Formik>
-          </div>
-        </div>
-      )}
+              <Formik
+                initialValues={initialValues}
+                onSubmit={handleApplyFilters}
+              >
+                {({ resetForm }: { resetForm: () => void }) => (
+                  <Form>
+                    <FilterForm resetForm={resetForm} />
+                  </Form>
+                )}
+              </Formik>
+            </motion.div>
+          </>
+        )}
+      </AnimatePresence>
 
       {/* Desktop Sidebar */}
       <div className="hidden lg:block bg-white border-r border-gray-200 h-screen sticky top-16">
@@ -387,26 +380,6 @@ const Filters = () => {
           )}
         </Formik>
       </div>
-
-      {/* Applied Filters Display */}
-      {/* {appliedFilters && (
-        <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-4">
-          <h3 className="text-sm font-medium text-blue-900 mb-2">Applied Filters:</h3>
-          <div className="text-sm text-blue-800 space-y-1">
-            {appliedFilters.location && <p>Location: {appliedFilters.location}</p>}
-            {(appliedFilters.budgetMin > 0 || appliedFilters.budgetMax < 10000) && (
-              <p>Budget: {formatCurrency(appliedFilters.budgetMin)} - {formatCurrency(appliedFilters.budgetMax)}</p>
-            )}
-            {appliedFilters.gender && <p>Gender: {appliedFilters.gender}</p>}
-            {(appliedFilters.followersMin > 0 || appliedFilters.followersMax < 1000000) && (
-              <p>Followers: {formatFollowers(appliedFilters.followersMin)} - {formatFollowers(appliedFilters.followersMax)}</p>
-            )}
-            {appliedFilters.categories.length > 0 && (
-              <p>Categories: {appliedFilters.categories.join(', ')}</p>
-            )}
-          </div>
-        </div>
-      )} */}
     </>
   );
 };
