@@ -338,7 +338,7 @@ const Filters = () => {
   return (
     <>
       {/* Mobile Filter Button */}
-      <div className="lg:hidden fixed bottom-4 right-4 z-40">
+      <div className="lg:hidden fixed bottom-[85px] right-4 z-40">
         <button
           onClick={() => setIsMobileOpen(true)}
           className="bg-orange-500 hover:bg-orange-600 text-white p-4 rounded-full shadow-lg transition-all duration-200 transform hover:scale-105"
