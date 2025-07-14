@@ -154,7 +154,7 @@ const Filters = () => {
       </div>
 
       {/* Scrollable Content */}
-      <div className="h-[calc(100vh-218px)] overflow-y-auto">
+      <div className="h-[calc(100vh-240px)] overflow-y-auto">
         <div className="p-4 space-y-6">
           {/* Location */}
           <div>
@@ -306,21 +306,26 @@ const Filters = () => {
       <div className="lg:hidden fixed bottom-[85px] right-6 z-40">
         <AnimatePresence>
           {!isMobileOpen && (
-            <motion.button
-              initial={{ scale: 0, rotate: -180 }}
-              animate={{ scale: 1, rotate: 0 }}
-              exit={{ scale: 0, rotate: 180 }}
-              transition={{ type: "spring", stiffness: 260, damping: 20 }}
-              onClick={() => setIsMobileOpen(true)}
-              className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white p-4 rounded-full shadow-2xl transition-all duration-300 hover:scale-110"
-              style={{
-                boxShadow: '0 8px 32px rgba(37, 99, 235, 0.4)'
-              }}
-            >
+            <button className='bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white p-4 rounded-full shadow-2xl transition-all duration-300 hover:scale-110' onClick={() => setIsMobileOpen(true)}>
               <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.207A1 1 0 013 6.5V4z" />
               </svg>
-            </motion.button>
+            </button>
+            // <motion.button
+            //   initial={{ scale: 0, rotate: -180 }}
+            //   animate={{ scale: 1, rotate: 0 }}
+            //   exit={{ scale: 0, rotate: 180 }}
+            //   transition={{ type: "spring", stiffness: 260, damping: 20 }}
+            //   onClick={() => setIsMobileOpen(true)}
+            //   className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white p-4 rounded-full shadow-2xl transition-all duration-300 hover:scale-110"
+            //   style={{
+            //     boxShadow: '0 8px 32px rgba(37, 99, 235, 0.4)'
+            //   }}
+            // >
+            //   <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            //     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.207A1 1 0 013 6.5V4z" />
+            //   </svg>
+            // </motion.button>
           )}
         </AnimatePresence>
       </div>
