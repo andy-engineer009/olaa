@@ -3,7 +3,6 @@
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
-import styles from './css/inluancerCard.module.css';
 
 interface InfluencerCardProps {
   id: string;
@@ -17,7 +16,7 @@ interface InfluencerCardProps {
   instagramUrl?: string;
   youtubeUrl?: string;
   isFeatured?: boolean;
-//   onViewDetails: (id: string) => void;
+  tags?: string[]; // New prop for influencer tags
 }
 
 const InfluencerCard = ({
@@ -32,9 +31,10 @@ const InfluencerCard = ({
   instagramUrl,
   youtubeUrl,
   isFeatured,
-//   onViewDetails
+  tags = []
 }: InfluencerCardProps) => {
   const [imageError, setImageError] = useState(false);
+  const router = useRouter();
 
   const formatFollowers = (count: number): string => {
     if (count >= 1000000) {
@@ -49,99 +49,132 @@ const InfluencerCard = ({
     return `₹${amount.toLocaleString()}`;
   };
 
-  const router = useRouter();
-
   return (
-<div className="bg-white rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-all duration-300 border border-gray-100 relative">
-  {/* Smaller Featured Badge */}
-  {isFeatured && (
-    <div className="absolute top-2 left-2 bg-yellow-400 text-black text-[10px] font-medium px-2 py-0.5 rounded shadow-sm z-10">
-      FEATURED
-    </div>
-  )}
-
-  {/* Profile Image */}
-  <div className="relative overflow-hidden aspect-square">
-    <Image
-      src={imageError ? '/api/placeholder/400/200' : image}
-      alt={name}
-      width={400}
-      height={400}
-      className="w-full h-full object-cover"
-      onError={() => setImageError(true)}
-    />
-    
-    {/* Verified Badge */}
-    {isVerified && (
-      <div className="absolute top-2 right-2 bg-blue-500 text-white p-1 rounded-full shadow-sm">
-        <svg className="w-2.5 h-2.5" fill="currentColor" viewBox="0 0 20 20">
-          <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-        </svg>
-      </div>
-    )}
-
-    {/* Social Media Icons */}
-    <div className="absolute bottom-2 right-2 flex gap-2">
-      {instagramUrl && (
-        <a 
-          href={instagramUrl}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="bg-white p-1 rounded-full shadow-sm hover:scale-110 transition-transform"
-        >
-          <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M12 2C14.717 2 15.056 2.01 16.122 2.06C17.187 2.11 17.912 2.277 18.55 2.525C19.21 2.779 19.766 3.123 20.322 3.678C20.8305 4.1779 21.224 4.78259 21.475 5.45C21.722 6.087 21.89 6.813 21.94 7.878C21.987 8.944 22 9.283 22 12C22 14.717 21.99 15.056 21.94 16.122C21.89 17.187 21.722 17.912 21.475 18.55C21.2247 19.2178 20.8311 19.8226 20.322 20.322C19.822 20.8303 19.2173 21.2238 18.55 21.475C17.913 21.722 17.187 21.89 16.122 21.94C15.056 21.987 14.717 22 12 22C9.283 22 8.944 21.99 7.878 21.94C6.813 21.89 6.088 21.722 5.45 21.475C4.78233 21.2245 4.17753 20.8309 3.678 20.322C3.16941 19.8222 2.77593 19.2175 2.525 18.55C2.277 17.913 2.11 17.187 2.06 16.122C2.013 15.056 2 14.717 2 12C2 9.283 2.01 8.944 2.06 7.878C2.11 6.812 2.277 6.088 2.525 5.45C2.77524 4.78218 3.1688 4.17732 3.678 3.678C4.17767 3.16923 4.78243 2.77573 5.45 2.525C6.088 2.277 6.812 2.11 7.878 2.06C8.944 2.013 9.283 2 12 2Z" stroke="#E4405F" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-            <path d="M12 15C13.6569 15 15 13.6569 15 12C15 10.3431 13.6569 9 12 9C10.3431 9 9 10.3431 9 12C9 13.6569 10.3431 15 12 15Z" stroke="#E4405F" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-          </svg>
-        </a>
-      )}
-      
-      {youtubeUrl && (
-        <a 
-          href={youtubeUrl}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="bg-white p-1 rounded-full shadow-sm hover:scale-110 transition-transform"
-        >
-          <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M22.54 6.42C22.4212 5.94541 22.1793 5.51057 21.8387 5.15941C21.498 4.80824 21.0708 4.55318 20.6 4.42C18.88 4 12 4 12 4C12 4 5.12 4 3.4 4.46C2.92925 4.59318 2.50198 4.84824 2.16135 5.19941C1.82072 5.55057 1.57879 5.98541 1.46 6.46C1.14521 8.20556 0.991235 9.97631 1 11.75C0.988786 13.537 1.14277 15.3213 1.46 17.08C1.59096 17.5398 1.83831 17.9581 2.17814 18.2945C2.51798 18.6308 2.93882 18.8738 3.4 19C5.12 19.46 12 19.46 12 19.46C12 19.46 18.88 19.46 20.6 19C21.0708 18.8668 21.498 18.6118 21.8387 18.2606C22.1793 17.9094 22.4212 17.4746 22.54 17C22.8524 15.2676 23.0063 13.5103 23 11.75C23.0112 9.96295 22.8572 8.1787 22.54 6.42Z" stroke="#FF0000" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-            <path d="M9.75 15.02L15.5 11.75L9.75 8.48001V15.02Z" stroke="#FF0000" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-          </svg>
-        </a>
-      )}
-    </div>
-  </div>
-
-  {/* Compact Card Content */}
-  <div className="p-3">
-    {/* Name and Category */}
-    <div className="mb-2">
-      <h3 className="font-semibold text-gray-900 text-sm truncate">{name}</h3>
-      <span className="text-xs text-gray-500">{category}</span>
-    </div>
-
-    {/* Minimal Stats */}
-    <div className="flex justify-between items-center text-xs mb-3">
-      <div className="flex items-center text-gray-600">
-        <svg className="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
-        </svg>
-        {formatFollowers(followers)}
-      </div>
-      <div className="text-orange-600 font-semibold">
-        {formatCurrency(startingPrice)}
-      </div>
-    </div>
-
-    {/* Highlighted CTA Button */}
-    <button 
-      onClick={() => router.push(`/detail/${id}`)}
-      className="w-full bg-orange-500 hover:bg-orange-600 text-white font-medium py-2 px-4 rounded-lg transition-colors duration-200 text-sm shadow-md"
+    <div 
+      className="relative bg-white rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-all duration-200 border border-gray-100 flex flex-col h-full cursor-pointer"
+      onClick={() => router.push(`/influencers/${id}`)}
     >
-      View Profile
-    </button>
-  </div>
-</div>
+      {/* Featured Badge */}
+      {isFeatured && (
+        <div className="absolute top-3 left-3 z-10">
+          <div className="bg-gradient-to-r from-blue-500 to-purple-600 text-white text-xs font-bold px-2 py-1 rounded-full shadow-md flex items-center">
+            <svg className="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
+              <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clipRule="evenodd" />
+            </svg>
+            Featured
+          </div>
+        </div>
+      )}
+
+      {/* Profile Image with Verification Badge */}
+      <div className="relative aspect-square bg-gray-100">
+        <Image
+          src={imageError ? '/placeholder-user.jpg' : image}
+          alt={name}
+          width={400}
+          height={400}
+          className="w-full h-full object-cover transition-transform duration-300 hover:scale-105"
+          onError={() => setImageError(true)}
+        />
+        
+        {isVerified && (
+          <div className="absolute top-2 right-2 bg-white p-1 rounded-full shadow-md flex items-center justify-center">
+            <svg className="w-4 h-4 text-blue-500" fill="currentColor" viewBox="0 0 20 20">
+              <path fillRule="evenodd" d="M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 2.812c.051.643.304 1.254.723 1.745a3.066 3.066 0 010 3.976 3.066 3.066 0 00-.723 1.745 3.066 3.066 0 01-2.812 2.812 3.066 3.066 0 00-1.745.723 3.066 3.066 0 01-3.976 0 3.066 3.066 0 00-1.745-.723 3.066 3.066 0 01-2.812-2.812 3.066 3.066 0 00-.723-1.745 3.066 3.066 0 010-3.976 3.066 3.066 0 00.723-1.745 3.066 3.066 0 012.812-2.812zm7.44 5.252a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+            </svg>
+          </div>
+        )}
+      </div>
+
+      {/* Card Content */}
+      <div className="p-3 flex-1 flex flex-col">
+        {/* Name and Location */}
+        <div className="mb-2">
+          <h3 className="font-bold text-gray-900 text-sm truncate">{name}</h3>
+          <div className="flex items-center text-xs text-gray-500">
+            <svg className="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+            </svg>
+            {location}
+          </div>
+        </div>
+
+        {/* Category Tags */}
+        {tags.length > 0 && (
+          <div className="flex flex-wrap gap-1 mb-2">
+            {tags.slice(0, 3).map((tag, index) => (
+              <span 
+                key={index} 
+                className="bg-gray-100 text-gray-800 text-xs px-2 py-1 rounded-full"
+              >
+                {tag}
+              </span>
+            ))}
+          </div>
+        )}
+
+        {/* Stats and Social */}
+        <div className="mt-auto">
+          {/* Stats Row */}
+          <div className="flex justify-between items-center text-xs mb-3">
+            <div className="flex items-center text-gray-600">
+              <svg className="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+              </svg>
+              {formatFollowers(followers)}
+            </div>
+            <div className="text-blue-600 font-bold">
+              {formatCurrency(startingPrice)} <span className="text-gray-500 font-normal">/ post</span>
+            </div>
+          </div>
+
+          {/* Social Links */}
+          <div className="flex justify-between items-center">
+            <div className="flex gap-2">
+              {instagramUrl && (
+                <a 
+                  href={instagramUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-gray-500 hover:text-pink-600 transition-colors"
+                  onClick={(e) => e.stopPropagation()}
+                >
+                  <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
+                  </svg>
+                </a>
+              )}
+              
+              {youtubeUrl && (
+                <a 
+                  href={youtubeUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-gray-500 hover:text-red-600 transition-colors"
+                  onClick={(e) => e.stopPropagation()}
+                >
+                  <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
+                  </svg>
+                </a>
+              )}
+            </div>
+
+            {/* CTA Button */}
+            <button 
+              className="text-xs font-medium bg-blue-600 hover:bg-blue-700 text-white py-1.5 px-3 rounded-full transition-colors duration-200 shadow-sm"
+              onClick={(e) => {
+                e.stopPropagation();
+                router.push(`/influencers/${id}`);
+              }}
+            >
+              Collaborate
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
   );
 };
 
