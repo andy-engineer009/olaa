@@ -29,26 +29,37 @@ const categories = [
   'Travel', 'Lifestyle', 'Gaming', 'Education', 'Business', 'Entertainment'
 ];
 
-const Filters = () => {
+interface FiltersProps {
+  onApplyFilters?: (values: FilterValues) => void;
+  onClose?: () => void;
+  isStandalone?: boolean;
+}
+
+const Filters = ({ onApplyFilters, onClose, isStandalone = false }: FiltersProps) => {
   const [isMobileOpen, setIsMobileOpen] = useState(false);
   const [appliedFilters, setAppliedFilters] = useState<FilterValues | null>(null);
 
-  // Prevent body scroll when mobile filter is open
+  // Prevent body scroll when mobile filter is open (only for standalone mode)
   useEffect(() => {
-    if (isMobileOpen) {
+    if (isStandalone && isMobileOpen) {
       document.body.style.overflow = 'hidden';
-    } else {
+    } else if (isStandalone) {
       document.body.style.overflow = 'unset';
     }
 
     return () => {
-      document.body.style.overflow = 'unset';
+      if (isStandalone) {
+        document.body.style.overflow = 'unset';
+      }
     };
-  }, [isMobileOpen]);
+  }, [isMobileOpen, isStandalone]);
 
   const handleApplyFilters = (values: FilterValues) => {
     setAppliedFilters(values);
-    setIsMobileOpen(false);
+    if (isStandalone) {
+      setIsMobileOpen(false);
+    }
+    onApplyFilters?.(values);
     console.log('Applied filters:', values);
   };
 
@@ -140,21 +151,26 @@ const Filters = () => {
 
   const FilterForm = ({ resetForm }: { resetForm: () => void }) => (
     <div className="flex flex-col h-full">
-      {/* Header */}
-      <div className="flex-shrink-0 flex items-center justify-between p-4 border-b border-gray-200 bg-white">
-        <h2 className="text-xl font-bold text-gray-900">Filters</h2>
-        <button
-          onClick={() => setIsMobileOpen(false)}
-          className="p-2 text-gray-500 hover:text-gray-700 transition-colors"
-        >
-          <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-          </svg>
-        </button>
-      </div>
+      {/* Header - Only show if standalone */}
+      {isStandalone && (
+        <div className="flex-shrink-0 flex items-center justify-between p-4 border-b border-gray-200 bg-white">
+          <h2 className="text-xl font-bold text-gray-900">Filters</h2>
+          <button
+            onClick={() => {
+              setIsMobileOpen(false);
+              onClose?.();
+            }}
+            className="p-2 text-gray-500 hover:text-gray-700 transition-colors"
+          >
+            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
+        </div>
+      )}
 
       {/* Scrollable Content */}
-      <div className="h-[calc(100vh-240px)] overflow-y-auto">
+      <div className={`${isStandalone ? 'h-[calc(100vh-240px)]' : 'h-full'} overflow-y-auto`}>
         <div className="p-4 space-y-6">
           {/* Location */}
           <div>
@@ -300,92 +316,94 @@ const Filters = () => {
     </div>
   );
 
-  return (
-    <>
-      {/* Mobile Filter Button */}
-      <div className="lg:hidden fixed bottom-[85px] right-6 z-40">
+  // If standalone mode, render with mobile/desktop logic
+  if (isStandalone) {
+    return (
+      <>
+        {/* Mobile Filter Button */}
+        <div className="lg:hidden fixed bottom-[85px] right-6 z-40">
+          <AnimatePresence>
+            {!isMobileOpen && (
+              <button className='bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white p-4 rounded-full shadow-2xl transition-all duration-300 hover:scale-110' onClick={() => setIsMobileOpen(true)}>
+                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.207A1 1 0 013 6.5V4z" />
+                </svg>
+              </button>
+            )}
+          </AnimatePresence>
+        </div>
+
+        {/* Mobile Overlay */}
         <AnimatePresence>
-          {!isMobileOpen && (
-            <button className='bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white p-4 rounded-full shadow-2xl transition-all duration-300 hover:scale-110' onClick={() => setIsMobileOpen(true)}>
-              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.207A1 1 0 013 6.5V4z" />
-              </svg>
-            </button>
-            // <motion.button
-            //   initial={{ scale: 0, rotate: -180 }}
-            //   animate={{ scale: 1, rotate: 0 }}
-            //   exit={{ scale: 0, rotate: 180 }}
-            //   transition={{ type: "spring", stiffness: 260, damping: 20 }}
-            //   onClick={() => setIsMobileOpen(true)}
-            //   className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white p-4 rounded-full shadow-2xl transition-all duration-300 hover:scale-110"
-            //   style={{
-            //     boxShadow: '0 8px 32px rgba(37, 99, 235, 0.4)'
-            //   }}
-            // >
-            //   <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            //     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.207A1 1 0 013 6.5V4z" />
-            //   </svg>
-            // </motion.button>
+          {isMobileOpen && (
+            <>
+              {/* Backdrop */}
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.3 }}
+                className="fixed inset-0 z-50 bg-black bg-opacity-50 backdrop-blur-sm"
+                onClick={() => setIsMobileOpen(false)}
+              />
+              
+              {/* Slide-in Panel */}
+              <motion.div 
+                initial={{ y: '100%' }}
+                animate={{ y: 0 }}
+                exit={{ y: '100%' }}
+                transition={{ 
+                  type: 'spring', 
+                  damping: 25, 
+                  stiffness: 300,
+                  duration: 0.5
+                }}
+                className="fixed bottom-0 left-0 right-0 z-50 h-[85vh] bg-white rounded-t-3xl shadow-2xl overflow-hidden"
+              >
+                <Formik
+                  initialValues={initialValues}
+                  onSubmit={handleApplyFilters}
+                >
+                  {({ resetForm }: { resetForm: () => void }) => (
+                    <Form>
+                      <FilterForm resetForm={resetForm} />
+                    </Form>
+                  )}
+                </Formik>
+              </motion.div>
+            </>
           )}
         </AnimatePresence>
-      </div>
 
-      {/* Mobile Overlay */}
-      <AnimatePresence>
-        {isMobileOpen && (
-          <>
-            {/* Backdrop */}
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.3 }}
-              className="fixed inset-0 z-50 bg-black bg-opacity-50 backdrop-blur-sm"
-              onClick={() => setIsMobileOpen(false)}
-            />
-            
-            {/* Slide-in Panel */}
-            <motion.div 
-              initial={{ y: '100%' }}
-              animate={{ y: 0 }}
-              exit={{ y: '100%' }}
-              transition={{ 
-                type: 'spring', 
-                damping: 25, 
-                stiffness: 300,
-                duration: 0.5
-              }}
-              className="fixed bottom-0 left-0 right-0 z-50 h-[85vh] bg-white rounded-t-3xl shadow-2xl overflow-hidden"
-            >
-              <Formik
-                initialValues={initialValues}
-                onSubmit={handleApplyFilters}
-              >
-                {({ resetForm }: { resetForm: () => void }) => (
-                  <Form>
-                    <FilterForm resetForm={resetForm} />
-                  </Form>
-                )}
-              </Formik>
-            </motion.div>
-          </>
-        )}
-      </AnimatePresence>
+        {/* Desktop Sidebar */}
+        <div className="hidden lg:block bg-white border-r border-gray-200 h-screen sticky top-16">
+          <Formik
+            initialValues={initialValues}
+            onSubmit={handleApplyFilters}
+          >
+            {({ resetForm }: { resetForm: () => void }) => (
+              <Form>
+                <FilterForm resetForm={resetForm} />
+              </Form>
+            )}
+          </Formik>
+        </div>
+      </>
+    );
+  }
 
-      {/* Desktop Sidebar */}
-      <div className="hidden lg:block bg-white border-r border-gray-200 h-screen sticky top-16">
-        <Formik
-          initialValues={initialValues}
-          onSubmit={handleApplyFilters}
-        >
-          {({ resetForm }: { resetForm: () => void }) => (
-            <Form>
-              <FilterForm resetForm={resetForm} />
-            </Form>
-          )}
-        </Formik>
-      </div>
-    </>
+  // If not standalone, just render the form content
+  return (
+    <Formik
+      initialValues={initialValues}
+      onSubmit={handleApplyFilters}
+    >
+      {({ resetForm }: { resetForm: () => void }) => (
+        <Form>
+          <FilterForm resetForm={resetForm} />
+        </Form>
+      )}
+    </Formik>
   );
 };
 

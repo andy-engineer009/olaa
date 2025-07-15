@@ -1,7 +1,10 @@
+'use client';
+
 import Filters from "@/components/Filters";
 import InfluencerGrid from "@/components/InfluencerGrid";
+import SearchAndFilter from "@/components/searchAndFilter";
 
-const influencers = [
+const influencers = [ 
   {
     id: "1",
     name: "John Doe",
@@ -131,7 +134,19 @@ const influencers = [
 export default function Home() {
   return (
     <div>
-            <div className="w-full mt-4">
+            <div className="w-full bg-white p-4">
+              <div className="max-w-4xl mx-auto px-4">
+                <SearchAndFilter
+                  placeholder="Search for influencers, brands, or campaigns..."
+                  className="w-full"
+                  onSearch={(values) => {         
+                    console.log('Search values:', values);
+                    // Handle search here
+                  }}
+                />
+              </div>
+            </div>
+            <div className="w-full pt-[46px] md:mt-4">
           <div className="max-w-4xl mx-auto px-4">
             <div className="bg-[#6f43fe] rounded-lg shadow-lg p-6 flex items-center justify-between flex-wrap">
               <div className="flex items-center space-x-4">
@@ -150,7 +165,7 @@ export default function Home() {
           </div>
         </div>
       <div className="flex p-4 md:p-8 items-start">
-          <Filters />
+          {/* <Filters /> */}
         <div className=" md:pl-9" style={{flex: 1}}>
           <InfluencerGrid influencers={influencers} />
         </div>

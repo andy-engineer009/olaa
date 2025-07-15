@@ -271,12 +271,30 @@ const Header = () => {
               </svg>
             </div>
             <span className={`text-xs font-medium transition-colors ${pathname === '/booster' ? 'text-orange-500' : 'text-gray-500'}`}>
-              Booster
+              Discover
             </span>
             {/* {pathname === '/booster' && (
               <div className="w-1 h-1 bg-orange-500 rounded-full mt-0.5 animate-pulse"></div>
             )} */}
           </button>
+          {/* <button
+            onClick={() => router.push('/booster')}
+            className={`flex flex-col items-center justify-center py-1.5 px-1 rounded-lg transition-all duration-300 ${
+              pathname === '/booster' 
+                ? 'text-orange-500 bg-orange-50 shadow-sm' 
+                : 'text-gray-500 hover:text-orange-500 hover:bg-gray-50'
+            }`}
+          >
+            <div className="mb-0.5">
+              <svg className={`w-6 h-6 ${pathname === '/booster' ? 'text-orange-500' : 'text-gray-500'}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={pathname === '/booster' ? 2.5 : 2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+              </svg>
+            </div>
+            <span className={`text-xs font-medium transition-colors ${pathname === '/booster' ? 'text-orange-500' : 'text-gray-500'}`}>
+              Booster
+            </span>
+ 
+          </button> */}
 
           {/* Center - List as Influencer Button (Prominent) */}
           <div className="flex justify-center">
