@@ -282,7 +282,7 @@ const Header = () => {
           <div className="flex justify-center">
             <button
               onClick={() => router.push(isLoggedIn ? '/post' : '/login')}
-              className="flex flex-col items-center justify-center w-14 h-14 bg-gradient-to-r from-orange-500 to-orange-600 text-white rounded-full shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 border-4 border-white -mt-3"
+              className="flex flex-col items-center justify-center w-14 h-14 bg-[#d2fc31] text-[#000] rounded-full shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 border-4 border-white -mt-3"
             >
               <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />

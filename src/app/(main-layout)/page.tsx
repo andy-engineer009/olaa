@@ -133,7 +133,7 @@ export default function Home() {
     <div>
             <div className="w-full mt-4">
           <div className="max-w-4xl mx-auto px-4">
-            <div className="bg-gradient-to-r from-orange-500 to-orange-600 rounded-lg shadow-lg p-6 flex items-center justify-between flex-wrap">
+            <div className="bg-[#6f43fe] rounded-lg shadow-lg p-6 flex items-center justify-between flex-wrap">
               <div className="flex items-center space-x-4">
                 
                 <div className="text-white text-center md:text-left">
@@ -142,7 +142,7 @@ export default function Home() {
                 </div>
               </div>
               <div className="w-full md:w-auto">
-                <button className="mt-4 md:mt-0 bg-white text-orange-500 px-6 py-2 rounded-full font-semibold hover:bg-orange-50 transition-colors w-full md:w-auto">
+                <button className="mt-4 md:mt-0 bg-[#d2fc31] text-[#000] px-6 py-2 rounded-full font-semibold hover:bg-orange-50 transition-colors w-full md:w-auto">
                   Get Started
                 </button>
               </div>
