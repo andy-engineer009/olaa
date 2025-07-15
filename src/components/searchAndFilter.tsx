@@ -15,12 +15,14 @@ const initialSearchValues: SearchValues = {
 
 interface SearchAndFilterProps {
   onSearch?: (values: SearchValues) => void;
+  onApplyFilters?: (values: any) => void;
   placeholder?: string;
   className?: string;
 }
 
 const SearchAndFilter = ({ 
   onSearch, 
+  onApplyFilters,
   placeholder = "Search for influencers, brands, or campaigns...",
   className = ""
 }: SearchAndFilterProps) => {
@@ -43,6 +45,15 @@ const SearchAndFilter = ({
   const handleSearchSubmit = (values: SearchValues) => {
     onSearch?.(values);
     console.log('Search submitted:', values);
+  };
+
+  const handleFilterClose = () => {
+    setIsFilterOpen(false);
+  };
+
+  const handleApplyFilters = (values: any) => {
+    onApplyFilters?.(values);
+    console.log('Filters applied:', values);
   };
 
   const SearchForm = () => (
@@ -128,57 +139,12 @@ const SearchAndFilter = ({
         <SearchForm />
       </div>
 
-      {/* Filter Panel */}
-      <AnimatePresence>
-        {isFilterOpen && (
-          <>
-            {/* Backdrop */}
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.3 }}
-              className="fixed inset-0 z-50 bg-black bg-opacity-50 backdrop-blur-sm"
-              onClick={() => setIsFilterOpen(false)}
-            />
-            
-            {/* Filter Panel */}
-            <motion.div 
-              initial={{ opacity: 0, scale: 0.95 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 0.95 }}
-              transition={{ 
-                type: 'spring', 
-                damping: 25, 
-                stiffness: 300,
-                duration: 0.3
-              }}
-              className="fixed inset-4 z-50 bg-white rounded-2xl shadow-2xl overflow-hidden"
-              onClick={(e) => e.stopPropagation()}
-            >
-              <div className="flex flex-col h-full">
-                {/* Header */}
-                <div className="flex-shrink-0 flex items-center justify-between p-6 border-b border-gray-200 bg-white">
-                  <h2 className="text-2xl font-bold text-gray-900">Advanced Filters</h2>
-                  <button
-                    onClick={() => setIsFilterOpen(false)}
-                    className="p-2 text-gray-500 hover:text-gray-700 transition-colors rounded-lg hover:bg-gray-100"
-                  >
-                    <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                    </svg>
-                  </button>
-                </div>
-
-                {/* Filter Content */}
-                <div className="flex-1 overflow-hidden">
-                  <Filters />
-                </div>
-              </div>
-            </motion.div>
-          </>
-        )}
-      </AnimatePresence>
+      {/* Filters Component */}
+      <Filters 
+        onClose={handleFilterClose}
+        isOpen={isFilterOpen}
+        onApplyFilters={handleApplyFilters}
+      />
     </div>
   );
 };
