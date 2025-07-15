@@ -4,7 +4,7 @@
 @tailwind utilities; */
 
 /* Custom slider thumb styles */
-.slider-thumb::-webkit-slider-thumb {
+/* .slider-thumb::-webkit-slider-thumb {
   appearance: none;
   height: 20px;
   width: 20px;
@@ -35,7 +35,7 @@
 .slider-thumb::-moz-range-thumb:hover {
   transform: scale(1.1);
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
-}
+} */
 
 /* Remove default focus styles for range inputs */
 .slider-thumb:focus {
@@ -44,7 +44,8 @@
 
 /* Custom scrollbar styles */
 ::-webkit-scrollbar {
-  width: 6px;
+  width: 0px;
+  height: 0px;
 }
 
 ::-webkit-scrollbar-track {

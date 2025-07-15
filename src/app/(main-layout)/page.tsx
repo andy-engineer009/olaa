@@ -147,6 +147,7 @@ export default function Home() {
                 />
               </div>
             </div>
+
             <div className="w-full pt-[46px] md:mt-4">
           <div className="max-w-4xl mx-auto px-4">
             <div className="bg-[#6f43fe] rounded-lg shadow-lg p-6 flex items-center justify-between flex-wrap">
@@ -169,7 +170,7 @@ export default function Home() {
         {/* category section */}
 
       <div className="max-w-4xl mx-auto px-4 mt-7">
-        <h3 className="text-xl font-semibold text-gray-800 mb-6">Browse by Follower Range</h3>
+        <h3 className="text-lg font-semibold text-gray-800 mb-4">Browse by Follower Range</h3>
         <div className="grid grid-cols-5 gap-4">
           <div className="group relative">
             <div className="flex flex-col items-center justify-center p-4 h-16 w-full rounded-xl bg-gradient-to-r from-pink-500 to-rose-500 cursor-pointer transform transition-all duration-300 hover:scale-105 hover:shadow-xl">
@@ -210,8 +211,8 @@ export default function Home() {
 
       {/* top featured influencers */}
       <div className="w-full mx-auto mt-7 px-4 md:px-8">
-        <div className="flex justify-between items-center mb-6">
-          <h3 className="text-xl font-semibold text-gray-800">Top Featured Influencers</h3>
+        <div className="flex justify-between items-center mb-4">
+          <h3 className="text-lg font-semibold text-gray-800">Top Featured Influencers</h3>
           <button className="text-blue-600 hover:text-blue-700 font-medium">View All</button>
         </div>
 
@@ -233,8 +234,8 @@ export default function Home() {
             
             {/* trending influencers */}
             <div className="w-full mx-auto mt-5 px-4 md:px-8">
-        <div className="flex justify-between items-center mb-6">
-          <h3 className="text-xl font-semibold text-gray-800">Trending Influencers</h3>
+        <div className="flex justify-between items-center mb-4">
+          <h3 className="text-lg font-semibold text-gray-800">Trending Influencers</h3>
           <button className="text-blue-600 hover:text-blue-700 font-medium">View All</button>
         </div>
 
@@ -249,8 +250,8 @@ export default function Home() {
 
                   {/* trending influencers */}
           <div className="w-full mx-auto mt-3 px-4 md:px-8">
-        <div className="flex justify-between items-center mb-6">
-          <h3 className="text-xl font-semibold text-gray-800">Near By Influencers</h3>
+        <div className="flex justify-between items-center mb-4">
+          <h3 className="text-lg font-semibold text-gray-800">Near By Influencers</h3>
           <button className="text-blue-600 hover:text-blue-700 font-medium">View All</button>
         </div>
 

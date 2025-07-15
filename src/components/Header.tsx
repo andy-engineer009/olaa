@@ -244,11 +244,11 @@ const Header = () => {
             }`}
           >
             <div className="mb-0.5">
-              <svg className={`w-6 h-6 ${pathname === '/' ? 'text-orange-500' : 'text-gray-500'}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg className={`w-6 h-6 ${pathname === '/' ? 'text-[#6f43fe]' : 'text-gray-500'}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={pathname === '/' ? 2.5 : 2} d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
               </svg>
             </div>
-            <span className={`text-xs font-medium transition-colors ${pathname === '/' ? 'text-orange-500' : 'text-gray-500'}`}>
+            <span className={`text-xs font-medium transition-colors ${pathname === '/' ? 'text-[#6f43fe]' : 'text-gray-500'}`}>
               Home
             </span>
             {/* {pathname === '/' && (
@@ -258,19 +258,19 @@ const Header = () => {
 
           {/* Booster */}
           <button
-            onClick={() => router.push('/booster')}
+            onClick={() => router.push('/discover')}
             className={`flex flex-col items-center justify-center py-1.5 px-1 rounded-lg transition-all duration-300 ${
-              pathname === '/booster' 
+              pathname === '/discover' 
                 ? 'text-orange-500 bg-orange-50 shadow-sm' 
                 : 'text-gray-500 hover:text-orange-500 hover:bg-gray-50'
             }`}
           >
             <div className="mb-0.5">
-              <svg className={`w-6 h-6 ${pathname === '/booster' ? 'text-orange-500' : 'text-gray-500'}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={pathname === '/booster' ? 2.5 : 2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+              <svg className={`w-6 h-6 ${pathname === '/discover' ? 'text-[#6f43fe]' : 'text-gray-500'}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={pathname === '/discover' ? 2.5 : 2} d="M13 10V3L4 14h7v7l9-11h-7z" />
               </svg>
             </div>
-            <span className={`text-xs font-medium transition-colors ${pathname === '/booster' ? 'text-orange-500' : 'text-gray-500'}`}>
+            <span className={`text-xs font-medium transition-colors ${pathname === '/discover' ? 'text-[#6f43fe]' : 'text-gray-500'}`}>
               Discover
             </span>
             {/* {pathname === '/booster' && (
@@ -298,9 +298,10 @@ const Header = () => {
 
           {/* Center - List as Influencer Button (Prominent) */}
           <div className="flex justify-center">
+          {/* bg-[#d2fc31] */}
             <button
               onClick={() => router.push(isLoggedIn ? '/post' : '/login')}
-              className="flex flex-col items-center justify-center w-14 h-14 bg-[#d2fc31] text-[#000] rounded-full shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 border-4 border-white -mt-3"
+              className="flex flex-col items-center justify-center w-14 h-14 bg-[#6f43fe] text-[#fff] rounded-full shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 border-4 border-white -mt-3"
             >
               <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
