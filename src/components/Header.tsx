@@ -198,7 +198,7 @@ const Header = () => {
         </div>
       </header>
 
-{!pathname.includes('/detail') && !pathname.includes('/chat') && (
+{!pathname.includes('/detail') && !pathname.includes('/chat') &&  !pathname.includes('/profile') && (
   <>
       {/* Mobile Header - Simple top bar */}
       <header className="bg-white shadow-sm sticky top-0 z-40 hidden md:block">
