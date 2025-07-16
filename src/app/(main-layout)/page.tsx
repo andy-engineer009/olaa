@@ -212,8 +212,8 @@ export default function Home() {
       {/* top featured influencers */}
       <div className="w-full mx-auto mt-7 px-4 md:px-8">
         <div className="flex justify-between items-center mb-4">
-          <h3 className="text-lg font-semibold text-gray-800">Top Featured Influencers</h3>
-          <button className="text-blue-600 hover:text-blue-700 font-medium">View All</button>
+          <h3 className="text-md font-semibold text-gray-800">Top Featured Influencers</h3>
+          <button className="text-blue-600 hover:text-blue-700 font-[500] text-[14px]">View All</button>
         </div>
 
         <div className="flex space-x-4 overflow-x-auto pb-4 hide-scrollbar">
@@ -235,8 +235,8 @@ export default function Home() {
             {/* trending influencers */}
             <div className="w-full mx-auto mt-5 px-4 md:px-8">
         <div className="flex justify-between items-center mb-4">
-          <h3 className="text-lg font-semibold text-gray-800">Trending Influencers</h3>
-          <button className="text-blue-600 hover:text-blue-700 font-medium">View All</button>
+          <h3 className="text-md font-semibold text-gray-800">Trending Influencers</h3>
+          <button className="text-blue-600 hover:text-blue-700 font-[500] text-[14px]">View All</button>
         </div>
 
         <div className="flex space-x-4 overflow-x-auto pb-4 hide-scrollbar">
@@ -251,8 +251,8 @@ export default function Home() {
                   {/* trending influencers */}
           <div className="w-full mx-auto mt-3 px-4 md:px-8">
         <div className="flex justify-between items-center mb-4">
-          <h3 className="text-lg font-semibold text-gray-800">Near By Influencers</h3>
-          <button className="text-blue-600 hover:text-blue-700 font-medium">View All</button>
+          <h3 className="text-md font-semibold text-gray-800">Near By Influencers</h3>
+          <button className="text-blue-600 hover:text-blue-700 font-[500] text-[14px]">View All</button>
         </div>
 
         <div className="flex space-x-4 overflow-x-auto pb-4 hide-scrollbar">

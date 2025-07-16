@@ -14,6 +14,8 @@ interface InfluencerDetailProps {
   category: string;
   followers: number;
   overview: string;
+  instagramUrl?: string;
+  youtubeUrl?: string;
   posts: Array<{
     id: string;
     type: 'image' | 'video';
@@ -26,8 +28,7 @@ interface InfluencerDetailProps {
     instagramReel: number;
     combo: number;
   };
-  instagramUrl?: string;
-  youtubeUrl?: string;
+
 }
 
 const InfluencerDetail = ({
@@ -72,7 +73,7 @@ const InfluencerDetail = ({
   return (
     <div className="min-h-screen bg-white text-gray-900 overflow-x-hidden">
       {/* Header */}
-      <header className="sticky top-0 z-20 bg-white/90 backdrop-blur-sm border-b border-gray-200 px-4 py-3">
+      {/* <header className="sticky top-0 z-20 bg-white/90 backdrop-blur-sm border-b border-gray-200 px-4 py-3">
         <div className="max-w-5xl mx-auto flex justify-between items-center">
           <button onClick={() => router.back()} className="p-2 rounded-full hover:bg-gray-100">
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -80,127 +81,185 @@ const InfluencerDetail = ({
             </svg>
           </button>
           <h1 className="text-lg font-semibold">@{username}</h1>
-          <div className="w-8"></div> {/* Spacer for balance */}
+          <div className="w-8"></div>
         </div>
-      </header>
+      </header> */}
 
       {/* Main Content */}
       <main className="max-w-5xl mx-auto pb-20">
-        {/* Profile Section */}
-        <section className="px-4 py-6">
-          <div className="flex items-start gap-6">
-            {/* Profile Image */}
-            <div className="relative flex-shrink-0">
-              <div className="relative w-20 h-20 md:w-28 md:h-28 rounded-full overflow-hidden border-2 border-white shadow-md bg-black">
-                <Image
-                  src={imageError ? '/api/placeholder/160/160' : image}
-                  alt={name}
-                  width={112}
-                  height={112}
-                  className="w-full h-full object-cover"
-                  onError={() => setImageError(true)}
+      <div className="relative bg-gray-100 overflow-hidden shadow-md">
+      {/* Back Button */}
+      <button 
+        onClick={() => router.back()} 
+        className="absolute top-4 left-4 z-10 p-2 rounded-full bg-white/20 hover:bg-white/30 transition-colors"
+      >
+        <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+        </svg>
+      </button>
+      {/* Background Banner (Cover Photo) - Optional */}
+      <div className="h-[150px] bg-[#000000]"></div>
+
+      {/* Profile Picture + Social Icons */}
+      <div className="flex items-start px-6 pb-6 relative">
+        {/* Profile Picture (Circular) */}
+        <div className="absolute -top-16 left-6 border-4 border-white rounded-full overflow-hidden bg-[#ccc]">
+          <img
+            src={image}
+            alt={name}
+            className="w-32 h-32 object-cover"
+          />
+        </div>
+
+        {/* Social Media Icons (Right Side) */}
+        <div className="ml-auto mt-4 flex gap-4">
+          {youtubeUrl && (
+            <a href={youtubeUrl} target="_blank" rel="noopener noreferrer">
+              ii
+              {/* <FiYoutube className="text-2xl text-red-600 hover:text-red-700" /> */}
+            </a>
+          )}
+          {instagramUrl && (
+            <a href={instagramUrl} target="_blank" rel="noopener noreferrer">
+              {/* <FiInstagram className="text-2xl text-pink-600 hover:text-pink-700" /> */}
+            </a>
+          )}
+        </div>
+      </div>
+
+      {/* Name, Headline, Location, Category */}
+      <div className="px-0 pt-0 pb-6">
+  {/* Profile Card Container */}
+  <div className="bg-white overflow-hidden">
+    {/* Gradient Header */}
+
+    {/* Profile Content */}
+    <div className="px-6 pt-6">
+      {/* Name and Verification */}
+      <div className="flex items-start justify-between">
+        <div>
+          <div className="flex items-center gap-2">
+            <h1 className="text-2xl font-bold text-gray-900">{name}</h1>
+            {isVerified && (
+              <svg
+                className="w-5 h-5 text-blue-500 flex-shrink-0"
+                fill="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  fillRule="evenodd"
+                  d="M8.603 3.799A4.49 4.49 0 0112 2.25c1.357 0 2.573.6 3.397 1.549a4.49 4.49 0 013.498 1.307 4.491 4.491 0 011.307 3.497A4.49 4.49 0 0121.75 12a4.49 4.49 0 01-1.549 3.397 4.491 4.491 0 01-1.307 3.497 4.491 4.491 0 01-3.497 1.307A4.49 4.49 0 0112 21.75a4.49 4.49 0 01-3.397-1.549 4.49 4.49 0 01-3.498-1.306 4.491 4.491 0 01-1.307-3.498A4.49 4.49 0 012.25 12c0-1.357.6-2.573 1.549-3.397a4.49 4.49 0 011.307-3.497 4.49 4.49 0 013.497-1.307zm7.007 6.387a.75.75 0 10-1.22-.872l-3.236 4.53L9.53 12.22a.75.75 0 00-1.06 1.06l2.25 2.25a.75.75 0 001.14-.094l3.75-5.25z"
+                  clipRule="evenodd"
                 />
-              </div>
-              {isVerified && (
-                <div className="absolute -bottom-1 -right-1 bg-blue-500 text-white p-1 rounded-full">
-                  <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-                    <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                  </svg>
-                </div>
-              )}
-            </div>
-
-            {/* Profile Info */}
-            <div className="flex-1">
-              <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-                <div>
-                  <h1 className="text-xl font-bold">{name}</h1>
-                  <p className="text-gray-600">@{username}</p>
-                </div>
-                
-                <div className="flex gap-3">
-                  {/* <button
-                    onClick={() => setIsFollowing(!isFollowing)}
-                    className={`px-4 py-2 rounded-lg font-medium text-sm ${
-                      isFollowing 
-                        ? 'bg-gray-100 text-gray-900 border border-gray-300' 
-                        : 'bg-gray-900 text-white hover:bg-gray-800'
-                    }`}
-                  >
-                    {isFollowing ? 'Following' : 'Follow'}
-                  </button> */}
-                  
-                  <button
-                    onClick={handleChat}
-                    className="bg-black text-white px-4 py-2 rounded-lg font-medium text-sm border border-gray-300 hover:bg-gray-50 flex items-center gap-1"
-                  >
-                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
-                    </svg>
-                    <span>Message</span>
-                  </button>
-                </div>
-              </div>
-
-              <div className="mt-4 flex flex-wrap gap-2">
-                <div className="flex items-center gap-1 bg-gray-100 px-3 py-1 rounded-full text-sm">
-                  <svg className="w-4 h-4 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-                  </svg>
-                  <span>{location}</span>
-                </div>
-                <div className="bg-gray-100 px-3 py-1 rounded-full text-sm">
-                  <span className="font-medium">{category}</span>
-                </div>
-              </div>
-
-              {/* Stats */}
-              <div className="mt-4 flex items-center gap-6">
-                <div className="text-center">
-                  <div className="text-lg font-bold">{formatFollowers(followers)}</div>
-                  <div className="text-gray-600 text-sm">Followers</div>
-                </div>
-                
-                {/* Social Links */}
-                <div className="flex gap-3">
-                  {instagramUrl && (
-                    <a
-                      href={instagramUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="w-10 h-10 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full flex items-center justify-center hover:scale-110 transition-all duration-300 shadow-sm"
-                    >
-                      <svg className="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 24 24">
-                        <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
-                      </svg>
-                    </a>
-                  )}
-                  {youtubeUrl && (
-                    <a
-                      href={youtubeUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="w-10 h-10 bg-red-600 rounded-full flex items-center justify-center hover:scale-110 transition-all duration-300 shadow-sm"
-                    >
-                      <svg className="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 24 24">
-                        <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
-                      </svg>
-                    </a>
-                  )}
-                </div>
-              </div>
-            </div>
+              </svg>
+            )}
           </div>
-        </section>
+          <p className="text-gray-500 mt-1">@{username}</p>
+        </div>
 
-        {/* Bio */}
-        <section className="px-4 py-3 border-t border-gray-200">
-          <p className="text-gray-800">{overview}</p>
-        </section>
+        {/* Social Icons */}
+        <div className="flex gap-3">
+          {youtubeUrl && (
+            <a
+              href={youtubeUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="p-2 bg-red-50 rounded-full hover:bg-red-100 transition-colors"
+            >
+              <svg
+                className="w-5 h-5 text-red-600"
+                fill="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z" />
+              </svg>
+            </a>
+          )}
+          {instagramUrl && (
+            <a
+              href={instagramUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="p-2 bg-pink-50 rounded-full hover:bg-pink-100 transition-colors"
+            >
+              <svg
+                className="w-5 h-5 text-pink-600"
+                fill="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 1 0 0 12.324 6.162 6.162 0 0 0 0-12.324zM12 16a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm6.406-11.845a1.44 1.44 0 1 0 0 2.881 1.44 1.44 0 0 0 0-2.881z" />
+              </svg>
+            </a>
+          )}
+        </div>
+      </div>
 
+      {/* Location */}
+      <div className="flex items-center gap-2 mt-4 text-gray-600">
+        <svg
+          className="w-5 h-5 text-gray-400"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth={2}
+            d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"
+          />
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth={2}
+            d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
+          />
+        </svg>
+        <span>{location}</span>
+      </div>
+
+      {/* Stats */}
+      <div className="grid grid-cols-2 gap-4 mt-2">
+        <div className="bg-gray-50 p-4 rounded-lg">
+          <p className="text-2xl font-bold ">
+            {followers.toLocaleString()}
+          </p>
+          <p className="text-gray-500 text-sm">Followers</p>
+        </div>
+        <div className="bg-gray-50 p-4 rounded-lg">
+          <p className="text-2xl font-bold ">
+            {category.split(",").length}
+          </p>
+          <p className="text-gray-500 text-sm">Categories</p>
+        </div>
+      </div>
+
+      {/* Categories */}
+      <div className="mt-4">
+        <h3 className="text-sm font-medium text-gray-500 mb-2">CATEGORIES</h3>
+        <div className="flex flex-wrap gap-2">
+          {category.split(",").map((cat, index) => (
+            <span
+              key={index}
+              className="px-3 py-1.5 bg-purple-50 text-purple-700 rounded-full text-sm font-medium"
+            >
+              {cat.trim()}
+            </span>
+          ))}
+        </div>
+      </div>
+
+      {/* Bio */}
+      {/* <div className="mt-6">
+        <h3 className="text-sm font-medium text-gray-500 mb-2">ABOUT</h3>
+        <p className="text-gray-700">{overview}</p>
+      </div> */}
+    </div>
+  </div>
+</div>
+    </div>
         {/* Tab Navigation */}
-        <section className="sticky top-14 z-10 bg-white border-t border-b border-gray-200 mt-4">
+        <section className="sticky top-14 z-10 bg-white border-t border-b border-gray-200 mt-4 px-3">
           <div className="flex">
             {[
               { id: 'posts', label: 'Posts', icon: 'grid' },
@@ -315,30 +374,18 @@ const InfluencerDetail = ({
       </main>
 
       {/* Bottom Navigation */}
-      <nav className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 py-2 px-4 z-20">
-        <div className="max-w-5xl mx-auto flex justify-around items-center">
-          <button className="p-2 rounded-full hover:bg-gray-100">
-            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
-            </svg>
-          </button>
-          <button className="p-2 rounded-full hover:bg-gray-100">
-            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-            </svg>
-          </button>
+      <nav className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 py-3 px-4 z-20">
+        <div className="max-w-5xl mx-auto flex justify-between items-center">
+          <div className="flex flex-col">
+            <span className="text-sm text-gray-500">Price/Post</span>
+            <span className="text-lg font-bold text-gray-900">{formatCurrency(pricing.instagramPost)}</span>
+          </div>
+          
           <button 
             onClick={handleChat}
-            className="p-2 rounded-full bg-gray-900 text-white hover:bg-gray-800"
+            className="px-8 py-2.5 bg-[#6f43fe] text-white rounded-lg font-medium hover:bg-[#5a35d4] transition-colors"
           >
-            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
-            </svg>
-          </button>
-          <button className="p-2 rounded-full hover:bg-gray-100">
-            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-            </svg>
+            Book Now
           </button>
         </div>
       </nav>

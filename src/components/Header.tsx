@@ -198,6 +198,8 @@ const Header = () => {
         </div>
       </header>
 
+{!pathname.includes('/detail') && (
+  <>
       {/* Mobile Header - Simple top bar */}
       <header className="bg-white shadow-sm sticky top-0 z-40 hidden md:block">
         <div className="px-4 py-3">
@@ -357,9 +359,12 @@ const Header = () => {
         {/* Bottom safe area for devices with home indicator */}
         {/* <div className="h-0.5 bg-gradient-to-r from-orange-400 to-orange-600"></div> */}
       </nav>
+      </>
+)}
+  
 
       {/* Bottom padding for mobile to account for bottom navigation */}
-      <div className="pb-2 md:pb-0"></div>
+      {/* <div className="pb-2 md:pb-0"></div> */}
     </>
   );
 };

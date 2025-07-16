@@ -17,7 +17,9 @@ export default function DetailPage() {
             instagramPost: 200,
             instagramReel: 300,
             combo: 400
-        }
+        },
+        instagramUrl: "https://www.instagram.com/john_doe",
+        youtubeUrl: "https://www.youtube.com/john_doe"
     }       
   return <div>
     <InfluencerDetail {...detail} />
