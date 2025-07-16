@@ -154,7 +154,7 @@ const InfluencerCard = ({
               {formatFollowers(followers)}
             </div>
             <div className="text-blue-600 font-[700] text-[14px]">
-              {formatCurrency(startingPrice)} <span className="text-gray-500 font-[600]  text-[14px]">/ post</span>
+              {formatCurrency(startingPrice)} <span className="text-gray-500 font-normal">/ post</span>
             </div>
           </div>
 

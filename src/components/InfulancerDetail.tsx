@@ -87,7 +87,7 @@ const InfluencerDetail = ({
 
       {/* Main Content */}
       <main className="max-w-5xl mx-auto pb-20">
-      <div className="relative bg-gray-100 overflow-hidden shadow-md">
+      <div className="relative overflow-hidden shadow-md">
       {/* Back Button */}
       <button 
         onClick={() => router.back()} 
@@ -112,23 +112,35 @@ const InfluencerDetail = ({
         </div>
 
         {/* Social Media Icons (Right Side) */}
-        <div className="ml-auto mt-4 flex gap-4">
+        {/* <div className="ml-auto mt-4 flex gap-4">
           {youtubeUrl && (
             <a href={youtubeUrl} target="_blank" rel="noopener noreferrer">
               ii
-              {/* <FiYoutube className="text-2xl text-red-600 hover:text-red-700" /> */}
             </a>
           )}
           {instagramUrl && (
             <a href={instagramUrl} target="_blank" rel="noopener noreferrer">
-              {/* <FiInstagram className="text-2xl text-pink-600 hover:text-pink-700" /> */}
             </a>
           )}
+        </div> */}
+        {/* Featured Tag */}
+        <div className="ml-auto mt-4 absolute top-1 right-4">
+          <div className="flex items-center gap-2 bg-gradient-to-r from-amber-500 to-orange-500 px-4 py-2 rounded-full shadow-md">
+            <svg className="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z" />
+            </svg>
+            <span className="text-white font-medium text-sm">Featured Profile</span>
+          </div>
+          {/* <div className="text-center mt-2">
+            <a href="/plans" className="text-xs text-gray-600 hover:text-orange-600 transition-colors">
+              Boost your profile →
+            </a>
+          </div> */}
         </div>
       </div>
 
       {/* Name, Headline, Location, Category */}
-      <div className="px-0 pt-0 pb-6">
+      <div className="px-0 pt-8 pb-6">
   {/* Profile Card Container */}
   <div className="bg-white overflow-hidden">
     {/* Gradient Header */}

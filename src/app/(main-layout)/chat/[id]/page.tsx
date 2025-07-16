@@ -276,7 +276,7 @@ export default function ChatPage() {
                 key={user.id}
                 onClick={() => handleChatSelect(user)}
                 className={`flex items-center p-4 hover:bg-gray-50 cursor-pointer transition-colors ${
-                  selectedChat?.id === user.id ? 'bg-orange-50 border-r-2 border-orange-500' : ''
+                  selectedChat?.id === user.id ? 'bg-[#6f43fe] border-r-2 border-[#6f43fe]' : ''
                 }`}
               >
                 {/* User avatar */}
@@ -294,7 +294,7 @@ export default function ChatPage() {
                         target.nextElementSibling?.classList.remove('hidden');
                       }}
                     />
-                    <div className="hidden w-full h-full bg-orange-500 flex items-center justify-center text-white font-semibold">
+                    <div className="hidden w-full h-full bg-[#6f43fe] flex items-center justify-center text-white font-semibold">
                       {user.name.split(' ').map(n => n[0]).join('')}
                     </div>
                   </div>
@@ -323,7 +323,7 @@ export default function ChatPage() {
                   <div className="flex items-center justify-between mt-1">
                     <p className="text-sm text-gray-500 truncate">{user.lastMessage}</p>
                     {user.unreadCount > 0 && (
-                      <span className="bg-orange-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
+                      <span className="bg-[#6f43fe] text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
                         {user.unreadCount}
                       </span>
                     )}
@@ -373,7 +373,7 @@ export default function ChatPage() {
                     target.nextElementSibling?.classList.remove('hidden');
                   }}
                 />
-                <div className="hidden w-full h-full bg-orange-500 flex items-center justify-center text-white font-semibold">
+                <div className="hidden w-full h-full bg-[#6f43fe] flex items-center justify-center text-white font-semibold">
                   {selectedChat.name.split(' ').map(n => n[0]).join('')}
                 </div>
               </div>
@@ -405,7 +405,7 @@ export default function ChatPage() {
                 <div
                   className={`max-w-xs lg:max-w-md px-4 py-2 rounded-lg ${
                     message.isOwn
-                      ? 'bg-orange-500 text-white'
+                      ? 'bg-[#6f43fe] text-white'
                       : 'bg-gray-100 text-gray-900'
                   }`}
                 >
@@ -435,7 +435,7 @@ export default function ChatPage() {
                     name="message"
                     as="textarea"
                     placeholder="Type your message..."
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent resize-none"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg  focus:border-transparent resize-none"
                     rows={1}
                     onKeyDown={(e: React.KeyboardEvent) => {
                       if (e.key === 'Enter' && !e.shiftKey) {
@@ -448,12 +448,12 @@ export default function ChatPage() {
                       }
                     }}
                   />
-                  <ErrorMessage name="message" component="div" className="text-red-500 text-xs mt-1" />
+                  {/* <ErrorMessage name="message" component="div" className="text-red-500 text-xs mt-1" /> */}
                 </div>
                 <button
                   type="submit"
                   disabled={isSubmitting}
-                  className="bg-orange-500 hover:bg-orange-600 disabled:bg-gray-400 text-white px-4 py-2 rounded-lg transition-colors"
+                  className="bg-[green] hover:bg-orange-600 disabled:bg-gray-400 text-white px-4 py-2 rounded-lg transition-colors"
                 >
                   <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
