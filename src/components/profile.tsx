@@ -1,6 +1,6 @@
 'use client'
 import { useEffect, useState } from 'react';
-import InfulancerForm from './InfulancerForm';
+import InfulancerForm from './InfulancerFormaddedv1';
 import { useRouter } from 'next/navigation';
 
 // Mock API functions (replace with real API calls)

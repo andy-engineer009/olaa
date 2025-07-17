@@ -302,7 +302,7 @@ const Header = () => {
           <div className="flex justify-center">
           {/* bg-[#d2fc31] */}
             <button
-              onClick={() => router.push(isLoggedIn ? '/post' : '/login')}
+              onClick={() => router.push(isLoggedIn ? '/infulanceradded' : '/infulanceradded')}
               className="flex flex-col items-center justify-center w-14 h-14 bg-[#6f43fe] text-[#fff] rounded-full shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 border-4 border-white -mt-3"
             >
               <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">

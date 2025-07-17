@@ -1,9 +1,7 @@
 "use client";
-import InfluencerForm from "@/components/InfulancerForm";
-import { useState } from "react";
+import InfluencerForm from "@/components/InfulancerFormaddedv1";
 
 export default function PostPage() {
-  const [isEditMode, setIsEditMode] = useState(false);
 
   return (
     <div>

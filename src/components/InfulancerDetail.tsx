@@ -89,7 +89,7 @@ const InfluencerDetail = ({
       <main className="max-w-5xl mx-auto pb-20">
       <div className="relative overflow-hidden shadow-md">
       {/* Back Button */}
-      <button 
+      <button   
         onClick={() => router.back()} 
         className="absolute top-4 left-4 z-10 p-2 rounded-full bg-white/20 hover:bg-white/30 transition-colors"
       >

@@ -148,7 +148,7 @@ export default function Home() {
               </div>
             </div>
 
-            <div className="w-full pt-[46px] md:mt-4">
+            <div className="w-full pt-[60px] md:mt-4">
           <div className="max-w-4xl mx-auto px-4">
             <div className="bg-[#6f43fe] rounded-lg shadow-lg p-6 flex items-center justify-between flex-wrap">
               <div className="flex items-center space-x-4">
