@@ -7,6 +7,17 @@ import { motion, AnimatePresence } from 'framer-motion';
 import Link from 'next/link';
 
 // Types
+interface Offer {
+  id: string;
+  type: 'single' | 'combo';
+  name?: string;
+  price: number;
+  items: Array<{
+    contentType: string;
+    quantity: number;
+  }>;
+}
+
 interface FormValues {
   // Step 1: Basic Info
   name: string;
@@ -27,13 +38,8 @@ interface FormValues {
   audienceAgeGroup: string;
   
   // Step 2: Pricing
-  startingPrice: number;
-  igStoryPrice: number;
-  igReelPrice: number;
-  igPostPrice: number;
-  ytShortsPrice: number;
-  ytVideoPrice: number;
-  stringPrice: number;
+  startingPrice: any;
+  offers: Offer[];
   
   // Step 3: Media
   profileImage: File | null;
@@ -92,27 +98,32 @@ const step1Schema = Yup.object().shape({
 
 const step2Schema = Yup.object().shape({
   startingPrice: Yup.number().required('Starting price is required').min(0, 'Price must be positive'),
-  igStoryPrice: Yup.number().when('platforms', {
-    is: (platforms: string[]) => platforms.includes('Instagram'),
-    then: (schema) => schema.required('IG Story price is required').min(0, 'Price must be positive')
-  }),
-  igReelPrice: Yup.number().when('platforms', {
-    is: (platforms: string[]) => platforms.includes('Instagram'),
-    then: (schema) => schema.required('IG Reel price is required').min(0, 'Price must be positive')
-  }),
-  igPostPrice: Yup.number().when('platforms', {
-    is: (platforms: string[]) => platforms.includes('Instagram'),
-    then: (schema) => schema.required('IG Post price is required').min(0, 'Price must be positive')
-  }),
-  ytShortsPrice: Yup.number().when('platforms', {
-    is: (platforms: string[]) => platforms.includes('YouTube'),
-    then: (schema) => schema.required('YT Shorts price is required').min(0, 'Price must be positive')
-  }),
-  ytVideoPrice: Yup.number().when('platforms', {
-    is: (platforms: string[]) => platforms.includes('YouTube'),
-    then: (schema) => schema.required('YT Video price is required').min(0, 'Price must be positive')
-  }),
-  stringPrice: Yup.number().required('String price is required').min(0, 'Price must be positive')
+  offers: Yup.array().of(
+    Yup.object().shape({
+      id: Yup.string().required('Offer ID is required'),
+      type: Yup.string().oneOf(['single', 'combo'], 'Offer type must be single or combo').required('Offer type is required'),
+      name: Yup.string().optional(),
+      price: Yup.number().required('Offer price is required').min(0, 'Price must be positive'),
+      items: Yup.array().of(
+        Yup.object().shape({
+          contentType: Yup.string().required('Content type is required'),
+          quantity: Yup.number().required('Quantity is required').min(1, 'Quantity must be at least 1').max(10, 'Maximum 10 items per offer')
+        })
+      ).min(1, 'At least one item is required for each offer').test(
+        'valid-items',
+        'Please check the items configuration',
+        function(value) {
+          if (!Array.isArray(value)) return false;
+          return value.every(item => 
+            item && 
+            typeof item === 'object' && 
+            typeof item.contentType === 'string' && 
+            typeof item.quantity === 'number'
+          );
+        }
+      )
+    })
+  ).min(1, 'At least one offer is required').max(6, 'Maximum 6 offers allowed')
 });
 
 const step3Schema = Yup.object().shape({
@@ -137,13 +148,8 @@ const initialValues: FormValues = {
   followerCount: 0,
   instagramUrl: '',
   youtubeUrl: '',
-  startingPrice: 0,
-  igStoryPrice: 0,
-  igReelPrice: 0,
-  igPostPrice: 0,
-  ytShortsPrice: 0,
-  ytVideoPrice: 0,
-  stringPrice: 0,
+  startingPrice: '',
+  offers: [],
   profileImage: null,
   postImages: [],
   videos: [],
@@ -587,128 +593,363 @@ const Step1BasicInfo = ({ values, setFieldValue }: { values: FormValues; setFiel
   </motion.div>
 );
 
-const Step2Pricing = ({ values }: { values: FormValues }) => (
-  <motion.div
-    initial={{ opacity: 0, x: 20 }}
-    animate={{ opacity: 1, x: 0 }}
-    exit={{ opacity: 0, x: -20 }}
-    className="space-y-6"
-  >
-    <h2 className="text-2xl font-bold text-gray-900 mb-6">Pricing Information</h2>
-    
-    <div className="space-y-6">
-      {/* Starting Price */}
-      <div>
-        <label htmlFor="startingPrice" className="block text-sm font-medium text-gray-700 mb-2">
-          Starting Price (₹) *
-        </label>
-        <Field
-          type="number"
-          id="startingPrice"
-          name="startingPrice"
-          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-          placeholder="Enter starting price"
-        />
-        <ErrorMessage name="startingPrice" component="div" className="text-red-500 text-sm mt-1" />
+const Step2Pricing = ({ values, setFieldValue }: { values: FormValues; setFieldValue: (field: string, value: any) => void }) => {
+  const contentTypes = ['Post', 'Reel', 'Story', 'YouTube Shorts', 'YouTube Video'];
+  
+  // Ensure offers is always an array
+  const safeOffers = Array.isArray(values.offers) ? values.offers : [];
+  
+  const addNewOffer = () => {
+    const newOffer: Offer = {
+      id: `offer-${Date.now()}`,
+      type: 'single',
+      price: 0,
+      items: [{ contentType: 'Post', quantity: 1 }]
+    };
+    setFieldValue('offers', [...safeOffers, newOffer]);
+  };
+
+  const removeOffer = (index: number) => {
+    const newOffers = safeOffers.filter((_, i) => i !== index);
+    setFieldValue('offers', newOffers);
+  };
+
+  const addItemToCombo = (offerIndex: number) => {
+    const newOffers = [...safeOffers];
+    if (newOffers[offerIndex]) {
+      if (!Array.isArray(newOffers[offerIndex].items)) {
+        newOffers[offerIndex].items = [];
+      }
+      newOffers[offerIndex].items.push({ contentType: 'Post', quantity: 1 });
+      setFieldValue('offers', newOffers);
+    }
+  };
+
+  const removeItemFromCombo = (offerIndex: number, itemIndex: number) => {
+    const newOffers = [...safeOffers];
+    if (newOffers[offerIndex] && Array.isArray(newOffers[offerIndex].items)) {
+      newOffers[offerIndex].items = newOffers[offerIndex].items.filter((_, i) => i !== itemIndex);
+      setFieldValue('offers', newOffers);
+    }
+  };
+
+  // Helper function to safely render offer items
+  const renderOfferItems = (offer: Offer, index: number) => {
+    if (!offer || !Array.isArray(offer.items)) {
+      return null;
+    }
+
+    // Additional safety check for offer structure
+    if (typeof offer !== 'object' || offer === null) {
+      return null;
+    }
+
+    if (offer.type === 'single') {
+      if (offer.items.length === 0) {
+        return null;
+      }
+      
+      return (
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <Field
+              as="select"
+              name={`offers.${index}.items.0.contentType`}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+            >
+              {contentTypes.map(type => (
+                <option key={type} value={type}>{type}</option>
+              ))}
+            </Field>
+          </div>
+          <div>
+            <Field
+              type="number"
+              name={`offers.${index}.items.0.quantity`}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              placeholder="Quantity"
+              min="1"
+              max="10"
+            />
+          </div>
+        </div>
+      );
+    }
+
+    if (offer.type === 'combo') {
+      return (
+        <div className="space-y-3">
+          {offer.items.map((item, itemIndex) => {
+            // Ensure item is a valid object
+            if (!item || typeof item !== 'object') {
+              return null;
+            }
+            
+            return (
+              <div key={itemIndex} className="flex items-center space-x-3 p-3 bg-gray-50 rounded-lg">
+                <div className="flex-1">
+                  <Field
+                    as="select"
+                    name={`offers.${index}.items.${itemIndex}.contentType`}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  >
+                    {contentTypes.map(type => (
+                      <option key={type} value={type}>{type}</option>
+                    ))}
+                  </Field>
+                </div>
+                <div className="w-24">
+                  <Field
+                    type="number"
+                    name={`offers.${index}.items.${itemIndex}.quantity`}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                    placeholder="Qty"
+                    min="1"
+                    max="10"
+                  />
+                </div>
+                {offer.items.length > 1 && (
+                  <button
+                    type="button"
+                    onClick={() => removeItemFromCombo(index, itemIndex)}
+                    className="text-red-500 hover:text-red-700 p-1"
+                  >
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                  </button>
+                )}
+              </div>
+            );
+          })}
+          <button
+            type="button"
+            onClick={() => addItemToCombo(index)}
+            className="text-blue-600 hover:text-blue-800 text-sm font-medium flex items-center"
+          >
+            <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+            </svg>
+            Add Item
+          </button>
+        </div>
+      );
+    }
+
+    return null;
+  };
+
+  // Wrap the entire component in error boundary
+  try {
+    return (
+      <motion.div
+        initial={{ opacity: 0, x: 20 }}
+        animate={{ opacity: 1, x: 0 }}
+        exit={{ opacity: 0, x: -20 }}
+        className="space-y-6"
+      >
+      <h2 className="text-2xl font-bold text-gray-900 mb-6">Pricing Information</h2>
+      
+      <div className="space-y-6">
+        {/* Starting Price */}
+        <div>
+          <label htmlFor="startingPrice" className="block text-sm font-medium text-gray-700 mb-2">
+            Starting Price (₹) *
+          </label>
+          <p className="text-sm text-gray-500 mb-3">This is used for public listing preview and is not linked to actual offers.</p>
+          <Field
+            type="number"
+            id="startingPrice"
+            name="startingPrice"
+            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+            placeholder="Enter starting price"
+          />
+          <ErrorMessage name="startingPrice" component="div" className="text-red-500 text-sm mt-1" />
+        </div>
+
+                  {/* Offers Section */}
+          <div>
+            <div className="flex justify-between items-center mb-4">
+              <label className="block text-sm font-medium text-gray-700">
+                Offers *
+              </label>
+              <span className="text-sm text-gray-500">
+                {safeOffers.length}/6 offers
+              </span>
+            </div>
+            
+            {/* Custom error handling for offers */}
+            <Field name="offers">
+              {({ field, form }: any) => {
+                const error = form.errors.offers;
+                const touched = form.touched.offers;
+                
+                if (error && touched) {
+                  let errorMessage = '';
+                  if (typeof error === 'string') {
+                    errorMessage = error;
+                  } else if (Array.isArray(error)) {
+                    errorMessage = error.filter(e => typeof e === 'string').join(', ');
+                  } else if (error && typeof error === 'object') {
+                    errorMessage = 'Please check your offers configuration';
+                  }
+                  
+                  return errorMessage ? (
+                    <div className="text-red-500 text-sm mb-4">{errorMessage}</div>
+                  ) : null;
+                }
+                return null;
+              }}
+            </Field>
+          
+          {safeOffers.length === 0 && (
+            <div className="text-center py-8 bg-gray-50 rounded-lg border-2 border-dashed border-gray-300">
+              <p className="text-gray-500 mb-4">No offers added yet</p>
+              <p className="text-sm text-gray-400">Add at least 1 offer to continue</p>
+            </div>
+          )}
+
+          {/* Offers List */}
+          <div className="space-y-4">
+            {safeOffers.map((offer, index) => {
+              // Ensure offer is a valid object
+              if (!offer || typeof offer !== 'object') {
+                return null;
+              }
+              
+              return (
+                <div key={offer.id || `offer-${index}`} className="bg-white border border-gray-200 rounded-lg p-6 shadow-sm">
+                  {/* Offer Header */}
+                  <div className="flex justify-between items-center mb-4">
+                    <div className="flex items-center space-x-3">
+                      <h3 className="text-lg font-semibold text-gray-800">Offer {index + 1}</h3>
+                      {offer.name && (
+                        <span className="px-2 py-1 bg-blue-100 text-blue-800 text-xs rounded-full">
+                          {offer.name}
+                        </span>
+                      )}
+                    </div>
+                    <button
+                      type="button"
+                      onClick={() => removeOffer(index)}
+                      className="text-red-500 hover:text-red-700 p-1"
+                    >
+                      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                      </svg>
+                    </button>
+                  </div>
+
+                  {/* Offer Type */}
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Offer Type *
+                      </label>
+                      <Field
+                        as="select"
+                        name={`offers.${index}.type`}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                      >
+                        <option value="single">Single Item Offer</option>
+                        <option value="combo">Combo Offer</option>
+                      </Field>
+                    </div>
+                    
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Offer Name (Optional)
+                      </label>
+                      <Field
+                        type="text"
+                        name={`offers.${index}.name`}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                        placeholder="e.g., 🔥 Best Seller"
+                      />
+                    </div>
+                  </div>
+
+                  {/* Price */}
+                  <div className="mb-4">
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Price (₹) *
+                    </label>
+                    <Field
+                      type="number"
+                      name={`offers.${index}.price`}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                      placeholder="Enter price"
+                    />
+                    <ErrorMessage name={`offers.${index}.price`} component="div" className="text-red-500 text-sm mt-1" />
+                  </div>
+
+                  {/* Items */}
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      {offer.type === 'single' ? 'Content Type & Quantity' : 'Items Included'} *
+                    </label>
+                    
+                    {renderOfferItems(offer, index)}
+                    
+                    <Field name={`offers.${index}.items`}>
+                    {({ field, form }: any) => {
+                      const error = form.errors[`offers.${index}.items`];
+                      const touched = form.touched[`offers.${index}.items`];
+                      
+                      if (error && touched) {
+                        // Handle different types of errors
+                        let errorMessage = '';
+                        if (typeof error === 'string') {
+                          errorMessage = error;
+                        } else if (Array.isArray(error)) {
+                          errorMessage = error.filter(e => typeof e === 'string').join(', ');
+                        } else if (error && typeof error === 'object') {
+                          // If it's an object, try to extract meaningful error
+                          errorMessage = 'Please check the items configuration';
+                        }
+                        
+                        return errorMessage ? (
+                          <div className="text-red-500 text-sm mt-1">{errorMessage}</div>
+                        ) : null;
+                      }
+                      return null;
+                    }}
+                  </Field>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+
+          {/* Add Offer Button */}
+          {safeOffers.length < 6 && (
+            <button
+              type="button"
+              onClick={addNewOffer}
+              className="mt-4 w-full py-3 px-4 border-2 border-dashed border-gray-300 rounded-lg text-gray-600 hover:border-blue-400 hover:text-blue-600 transition-colors flex items-center justify-center"
+            >
+              <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+              </svg>
+              Add New Offer
+            </button>
+          )}
+        </div>
       </div>
-
-      {/* Instagram Pricing */}
-      {values.platforms.includes('Instagram') && (
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <div>
-            <label htmlFor="igStoryPrice" className="block text-sm font-medium text-gray-700 mb-2">
-              IG Story Price (₹) *
-            </label>
-            <Field
-              type="number"
-              id="igStoryPrice"
-              name="igStoryPrice"
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-              placeholder="Enter story price"
-            />
-            <ErrorMessage name="igStoryPrice" component="div" className="text-red-500 text-sm mt-1" />
-          </div>
-
-          <div>
-            <label htmlFor="igReelPrice" className="block text-sm font-medium text-gray-700 mb-2">
-              IG Reel Price (₹) *
-            </label>
-            <Field
-              type="number"
-              id="igReelPrice"
-              name="igReelPrice"
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-              placeholder="Enter reel price"
-            />
-            <ErrorMessage name="igReelPrice" component="div" className="text-red-500 text-sm mt-1" />
-          </div>
-
-          <div>
-            <label htmlFor="igPostPrice" className="block text-sm font-medium text-gray-700 mb-2">
-              IG Post Price (₹) *
-            </label>
-            <Field
-              type="number"
-              id="igPostPrice"
-              name="igPostPrice"
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-              placeholder="Enter post price"
-            />
-            <ErrorMessage name="igPostPrice" component="div" className="text-red-500 text-sm mt-1" />
-          </div>
+    </motion.div>
+    );
+  } catch (error) {
+    console.error('Error in Step2Pricing:', error);
+    return (
+      <div className="space-y-6">
+        <h2 className="text-2xl font-bold text-gray-900 mb-6">Pricing Information</h2>
+        <div className="bg-red-50 border border-red-200 rounded-lg p-4">
+          <p className="text-red-800">Something went wrong. Please refresh the page and try again.</p>
         </div>
-      )}
-
-      {/* YouTube Pricing */}
-      {values.platforms.includes('YouTube') && (
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div>
-            <label htmlFor="ytShortsPrice" className="block text-sm font-medium text-gray-700 mb-2">
-              YT Shorts Price (₹) *
-            </label>
-            <Field
-              type="number"
-              id="ytShortsPrice"
-              name="ytShortsPrice"
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-              placeholder="Enter shorts price"
-            />
-            <ErrorMessage name="ytShortsPrice" component="div" className="text-red-500 text-sm mt-1" />
-          </div>
-
-          <div>
-            <label htmlFor="ytVideoPrice" className="block text-sm font-medium text-gray-700 mb-2">
-              YT Video Price (₹) *
-            </label>
-            <Field
-              type="number"
-              id="ytVideoPrice"
-              name="ytVideoPrice"
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-              placeholder="Enter video price"
-            />
-            <ErrorMessage name="ytVideoPrice" component="div" className="text-red-500 text-sm mt-1" />
-          </div>
-        </div>
-      )}
-
-      {/* String Price */}
-      {/* <div>
-        <label htmlFor="stringPrice" className="block text-sm font-medium text-gray-700 mb-2">
-          String Price (₹) *
-        </label>
-        <Field
-          type="number"
-          id="stringPrice"
-          name="stringPrice"
-          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-          placeholder="Enter string price"
-        />
-        <ErrorMessage name="stringPrice" component="div" className="text-red-500 text-sm mt-1" />
-      </div> */}
-    </div>
-  </motion.div>
-);
+      </div>
+    );
+  }
+};
 
 const Step3MediaUpload = ({ form }: { form: any }) => (
   <motion.div
@@ -767,7 +1008,7 @@ const Step3MediaUpload = ({ form }: { form: any }) => (
 );
 
 export default function InfluencerOnboardingForm() {
-  const [currentStep, setCurrentStep] = useState(1);
+  const [currentStep, setCurrentStep] = useState(2);
   const [formData, setFormData] = useState<FormValues>(initialValues);
 
   const steps = [
@@ -875,7 +1116,7 @@ export default function InfluencerOnboardingForm() {
                     <Step1BasicInfo key="step1" values={values} setFieldValue={setFieldValue} />
                   )}
                   {currentStep === 2 && (
-                    <Step2Pricing key="step2" values={values} />
+                    <Step2Pricing key="step2" values={values} setFieldValue={setFieldValue} />
                   )}
                   {currentStep === 3 && (
                     <Step3MediaUpload key="step3" form={{ values, setFieldValue }} />

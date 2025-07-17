@@ -12,14 +12,30 @@ export default function DetailPage() {
         followers: 1000,
         overview: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
         posts: [],
-        pricing: {
-            instagramStory: 100,
-            instagramPost: 200,
-            instagramReel: 300,
-            combo: 400
-        },
+        gender: "Male",
+        age: 25,
+        languages: ["English", "Spanish"],
+        audienceType: "Male",
+        audienceAgeGroup: "18-25",
+        offers: [
+          {
+            id: "1",
+            type: "single",
+            name: "Single Post",
+            price: 100,
+            items: [{ contentType: "Post", quantity: 1 }]
+          },
+          {
+            id: "2",
+            type: "combo",
+            name: "Combo Package",
+            price: 200,
+            items: [{ contentType: "Post", quantity: 1 }, { contentType: "Reel", quantity: 1 }]
+          }
+        ],
         instagramUrl: "https://www.instagram.com/john_doe",
-        youtubeUrl: "https://www.youtube.com/john_doe"
+        youtubeUrl: "https://www.youtube.com/john_doe",
+        startingPrice: 100
     }       
   return <div>
     <InfluencerDetail {...detail} />
