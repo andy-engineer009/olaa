@@ -3,95 +3,239 @@
 import { useState } from 'react';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
-import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 
-interface LoginFormValues {
-  email: string;
+// Types for form values
+interface PhoneLoginFormValues {
+  phoneNumber: string;
 }
 
-interface VerificationFormValues {
-  code: string;
+interface OTPVerificationFormValues {
+  otp: string;
 }
+
+interface GoogleLoginResponse {
+  success: boolean;
+  message: string;
+  redirectUrl?: string;
+}
+
+// Validation schemas
+const phoneValidationSchema = Yup.object({
+  phoneNumber: Yup.string()
+    .matches(/^[6-9]\d{9}$/, 'Please enter a valid 10-digit Indian mobile number')
+    .required('Phone number is required'),
+});
+
+const otpValidationSchema = Yup.object({
+  otp: Yup.string()
+    .length(4, 'OTP must be exactly 4 digits')
+    .matches(/^[0-9]+$/, 'OTP must contain only numbers')
+    .required('OTP is required'),
+});
+
+// Toast notification component
+const Toast = ({ message, type, onClose }: { message: string; type: 'success' | 'error' | 'info'; onClose: () => void }) => {
+  const bgColor = type === 'success' ? 'bg-green-500' : type === 'error' ? 'bg-red-500' : 'bg-blue-500';
+  const icon = type === 'success' ? '✓' : type === 'error' ? '✕' : 'ℹ';
+
+  return (
+    <div className={`fixed top-4 right-4 z-50 ${bgColor} text-white px-6 py-3 rounded-lg shadow-lg flex items-center max-w-sm animate-slide-in`}>
+      <span className="mr-2 font-bold">{icon}</span>
+      <span className="flex-1">{message}</span>
+      <button onClick={onClose} className="ml-2 text-white hover:text-gray-200">
+        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+        </svg>
+      </button>
+    </div>
+  );
+};
+
+// Loading spinner component
+const LoadingSpinner = ({ size = 'md' }: { size?: 'sm' | 'md' | 'lg' }) => {
+  const sizeClasses = {
+    sm: 'w-4 h-4',
+    md: 'w-5 h-5',
+    lg: 'w-6 h-6'
+  };
+
+  return (
+    <svg className={`animate-spin ${sizeClasses[size]} text-white`} xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+    </svg>
+  );
+};
 
 const Login = () => {
-  const [isVerificationStep, setIsVerificationStep] = useState(false);
-  const [userEmail, setUserEmail] = useState('');
+  // State management
+  const [isOTPStep, setIsOTPStep] = useState(false);
+  const [userPhone, setUserPhone] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [toast, setToast] = useState<{ message: string; type: 'success' | 'error' | 'info' } | null>(null);
+  const [resendTimer, setResendTimer] = useState(0);
   const router = useRouter();
-  const loginValidationSchema = Yup.object({
-    email: Yup.string()
-      .email('Please enter a valid email address')
-      .required('Email is required'),
-  });
 
-  const verificationValidationSchema = Yup.object({
-    code: Yup.string()
-      .length(4, 'Verification code must be 4 digits')
-      .matches(/^[0-9]+$/, 'Code must contain only numbers')
-      .required('Verification code is required'),
-  });
+  // Show toast notification
+  const showToast = (message: string, type: 'success' | 'error' | 'info') => {
+    setToast({ message, type });
+    setTimeout(() => setToast(null), 5000);
+  };
 
-  const handleEmailSubmit = async (values: LoginFormValues) => {
+  // Handle phone number submission
+  const handlePhoneSubmit = async (values: PhoneLoginFormValues) => {
     setIsLoading(true);
     try {
-      // Simulate API call to send verification code
+      // Simulate API call to send OTP
       await new Promise(resolve => setTimeout(resolve, 2000));
-      setUserEmail(values.email);
-      setIsVerificationStep(true);
-      console.log('Verification code sent to:', values.email);
+      
+      // Store phone number and show OTP screen
+      setUserPhone(values.phoneNumber);
+      setIsOTPStep(true);
+      
+      // Start resend timer (30 seconds)
+      setResendTimer(30);
+      const timer = setInterval(() => {
+        setResendTimer(prev => {
+          if (prev <= 1) {
+            clearInterval(timer);
+            return 0;
+          }
+          return prev - 1;
+        });
+      }, 1000);
+      
+      // Show success toast
+      showToast(`OTP sent to +91 ${values.phoneNumber}`, 'success');
+      console.log('OTP sent to:', values.phoneNumber);
+      
     } catch (error) {
-      console.error('Error sending verification code:', error);
+      console.error('Error sending OTP:', error);
+      showToast('Failed to send OTP. Please try again.', 'error');
     } finally {
       setIsLoading(false);
     }
   };
 
-  const handleVerificationSubmit = async (values: VerificationFormValues) => {
+  // Handle OTP verification
+  const handleOTPSubmit = async (values: OTPVerificationFormValues) => {
     setIsLoading(true);
     try {
-      // Simulate API call to verify code
+      // Simulate API call to verify OTP
       await new Promise(resolve => setTimeout(resolve, 1500));
-      console.log('Verification successful with code:', values.code);
-      localStorage.setItem('token', '1234567890');
-      // Redirect to homepage or handle successful login
-      window.location.href = '/';
+      
+      // Mock verification (in real app, this would be verified by backend)
+      if (values.otp === '1234') { // Mock OTP for testing
+        showToast('Login successful! Redirecting...', 'success');
+        
+        // Store authentication token
+        localStorage.setItem('token', 'mock-jwt-token');
+        localStorage.setItem('userPhone', userPhone);
+        
+        // Redirect to home page
+        setTimeout(() => {
+          router.push('/');
+        }, 1000);
+      } else {
+        showToast('Invalid OTP. Please try again.', 'error');
+      }
+      
     } catch (error) {
-      console.error('Error verifying code:', error);
+      console.error('Error verifying OTP:', error);
+      showToast('Failed to verify OTP. Please try again.', 'error');
     } finally {
       setIsLoading(false);
     }
   };
 
+  // Handle Google sign-in
   const handleGoogleLogin = async () => {
     setIsLoading(true);
     try {
-      // Simulate Google OAuth
+      // Simulate Google OAuth process
       await new Promise(resolve => setTimeout(resolve, 2000));
-      console.log('Google login successful');
-      // Redirect to homepage
-      window.location.href = '/';
+      
+      // Mock Google sign-in response
+      const mockResponse: GoogleLoginResponse = {
+        success: true,
+        message: 'Google sign-in successful',
+        redirectUrl: '/'
+      };
+      
+      if (mockResponse.success) {
+        showToast('Google sign-in successful! Redirecting...', 'success');
+        
+        // Store authentication token
+        localStorage.setItem('token', 'google-jwt-token');
+        localStorage.setItem('loginMethod', 'google');
+        
+        // Redirect to home page
+        setTimeout(() => {
+          router.push('/');
+        }, 1000);
+      } else {
+        showToast(mockResponse.message || 'Google sign-in failed', 'error');
+      }
+      
     } catch (error) {
       console.error('Google login error:', error);
+      showToast('Google sign-in failed. Please try again.', 'error');
     } finally {
       setIsLoading(false);
     }
   };
 
-  const resendCode = async () => {
+  // Handle resend OTP
+  const handleResendOTP = async () => {
+    if (resendTimer > 0) return;
+    
     setIsLoading(true);
     try {
       await new Promise(resolve => setTimeout(resolve, 1000));
-      console.log('Verification code resent to:', userEmail);
+      
+      // Start resend timer again
+      setResendTimer(30);
+      const timer = setInterval(() => {
+        setResendTimer(prev => {
+          if (prev <= 1) {
+            clearInterval(timer);
+            return 0;
+          }
+          return prev - 1;
+        });
+      }, 1000);
+      
+      showToast(`OTP resent to +91 ${userPhone}`, 'success');
+      console.log('OTP resent to:', userPhone);
+      
     } catch (error) {
-      console.error('Error resending code:', error);
+      console.error('Error resending OTP:', error);
+      showToast('Failed to resend OTP. Please try again.', 'error');
     } finally {
       setIsLoading(false);
     }
-  };  
+  };
+
+  // Format phone number for display
+  const formatPhoneNumber = (phone: string) => {
+    if (phone.length === 10) {
+      return `${phone.slice(0, 5)} ${phone.slice(5, 10)}`;
+    }
+    return phone;
+  };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-orange-50 via-white to-orange-50 flex items-center justify-center p-4">
+      {/* Toast Notifications */}
+      {toast && (
+        <Toast 
+          message={toast.message} 
+          type={toast.type} 
+          onClose={() => setToast(null)} 
+        />
+      )}
+
       <div className="w-full max-w-md">
         {/* Back to Home Button */}
         <div className="absolute top-4 left-4 sm:top-8 sm:left-8">
@@ -106,20 +250,20 @@ const Login = () => {
           </button>
         </div>
 
-        {/* Logo */}
+        {/* Logo and Header */}
         <div className="text-center mb-8">
           <div className="flex items-center justify-center mb-4">
-            <div className="w-12 h-12 bg-orange-500 rounded-xl flex items-center justify-center mr-3">
+            <div className="w-12 h-12 bg-[#6f43fe] rounded-xl flex items-center justify-center mr-3">
               <span className="text-white font-bold text-2xl">O</span>
             </div>
             <span className="text-3xl font-bold text-gray-900">Ol</span>
           </div>
           <h1 className="text-2xl font-bold text-gray-900 mb-2">
-            {isVerificationStep ? 'Verify Your Email' : 'Welcome Back'}
+            {isOTPStep ? 'Verify Your Phone' : 'Welcome Back'}
           </h1>
           <p className="text-gray-600">
-            {isVerificationStep 
-              ? `We've sent a 4-digit code to ${userEmail}`
+            {isOTPStep 
+              ? `We've sent a 4-digit code to +91 ${formatPhoneNumber(userPhone)}`
               : 'Sign in to continue to your account'
             }
           </p>
@@ -127,71 +271,80 @@ const Login = () => {
 
         {/* Main Form Card */}
         <div className="bg-white rounded-2xl shadow-xl border border-gray-100 p-6 sm:p-8">
-          {!isVerificationStep ? (
-            // Email Login Form
+          {!isOTPStep ? (
+            // Phone Number Login Form
             <Formik
-              initialValues={{ email: '' }}
-              validationSchema={loginValidationSchema}
-              onSubmit={handleEmailSubmit}
+              initialValues={{ phoneNumber: '' }}
+              validationSchema={phoneValidationSchema}
+              onSubmit={handlePhoneSubmit}
             >
               {({ isSubmitting }) => (
                 <Form className="space-y-6">
                   <div>
-                    <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
-                      Email Address
+                    <label htmlFor="phoneNumber" className="block text-sm font-medium text-gray-700 mb-2">
+                      Phone Number
                     </label>
-                    <Field
-                      type="email"
-                      id="email"
-                      name="email"
-                      placeholder="Enter your email"
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-colors"
-                    />
-                    <ErrorMessage name="email" component="div" className="text-red-500 text-sm mt-1" />
+                    <div className="relative">
+                      <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                        <span className="text-gray-500 text-sm">+91</span>
+                      </div>
+                      <Field
+                        type="tel"
+                        id="phoneNumber"
+                        name="phoneNumber"
+                        placeholder="Enter your 10-digit mobile number"
+                        maxLength={10}
+                        className="w-full pl-12 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-colors"
+                      />
+                    </div>
+                    <ErrorMessage name="phoneNumber" component="div" className="text-red-500 text-sm mt-1" />
+                    <p className="text-xs text-gray-500 mt-1">
+                      We'll send you a 4-digit verification code
+                    </p>
                   </div>
 
                   <button
                     type="submit"
                     disabled={isSubmitting || isLoading}
-                    className="w-full bg-orange-500 hover:bg-orange-600 disabled:bg-orange-300 text-white font-medium py-3 px-4 rounded-lg transition-colors duration-200 flex items-center justify-center space-x-2"
+                    className="w-full bg-[#6f43fe] hover:bg-[#6f43fe] disabled:bg-[#ccc] text-white font-medium py-3 px-4 rounded-lg transition-colors duration-200 flex items-center justify-center space-x-2"
                   >
                     {isLoading ? (
                       <>
-                        <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                          <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                          <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                        </svg>
-                        <span>Sending Code...</span>
+                        <LoadingSpinner size="sm" />
+                        <span>Sending OTP...</span>
                       </>
                     ) : (
-                      <span>Continue with Email</span>
+                      <span>Continue with Phone</span>
                     )}
                   </button>
                 </Form>
               )}
             </Formik>
           ) : (
-            // Verification Code Form
+            // OTP Verification Form
             <Formik
-              initialValues={{ code: '' }}
-              validationSchema={verificationValidationSchema}
-              onSubmit={handleVerificationSubmit}
+              initialValues={{ otp: '' }}
+              validationSchema={otpValidationSchema}
+              onSubmit={handleOTPSubmit}
             >
               {({ isSubmitting }) => (
                 <Form className="space-y-6">
                   <div>
-                    <label htmlFor="code" className="block text-sm font-medium text-gray-700 mb-2">
+                    <label htmlFor="otp" className="block text-sm font-medium text-gray-700 mb-2">
                       Verification Code
                     </label>
                     <Field
                       type="text"
-                      id="code"
-                      name="code"
+                      id="otp"
+                      name="otp"
                       placeholder="Enter 4-digit code"
                       maxLength={4}
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-colors text-center text-2xl font-mono tracking-widest"
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-colors text-center text-2xl font-mono tracking-widest placeholder:text-sm"
                     />
-                    <ErrorMessage name="code" component="div" className="text-red-500 text-sm mt-1" />
+                    <ErrorMessage name="otp" component="div" className="text-red-500 text-sm mt-1" />
+                    <p className="text-xs text-gray-500 mt-1 text-center">
+                      Enter the 4-digit code sent to your phone
+                    </p>
                   </div>
 
                   <button
@@ -201,10 +354,7 @@ const Login = () => {
                   >
                     {isLoading ? (
                       <>
-                        <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                          <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                          <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                        </svg>
+                        <LoadingSpinner size="sm" />
                         <span>Verifying...</span>
                       </>
                     ) : (
@@ -212,15 +362,22 @@ const Login = () => {
                     )}
                   </button>
 
+                  {/* Resend OTP Section */}
                   <div className="text-center">
-                    <button
-                      type="button"
-                      onClick={resendCode}
-                      disabled={isLoading}
-                      className="text-orange-600 hover:text-orange-700 text-sm font-medium disabled:text-gray-400"
-                    >
-                      Didn't receive code? Resend
-                    </button>
+                    {resendTimer > 0 ? (
+                      <p className="text-gray-500 text-sm">
+                        Resend code in {resendTimer} seconds
+                      </p>
+                    ) : (
+                      <button
+                        type="button"
+                        onClick={handleResendOTP}
+                        disabled={isLoading}
+                        className="text-orange-600 hover:text-orange-700 text-sm font-medium disabled:text-gray-400"
+                      >
+                        Didn't receive code? Resend
+                      </button>
+                    )}
                   </div>
                 </Form>
               )}
@@ -238,17 +395,15 @@ const Login = () => {
           </div>
 
           {/* Google Login Button */}
-          <button
+
+          {!isOTPStep && <button
             onClick={handleGoogleLogin}
             disabled={isLoading}
             className="w-full bg-white hover:bg-gray-50 disabled:bg-gray-100 text-gray-700 font-medium py-3 px-4 rounded-lg border border-gray-300 transition-colors duration-200 flex items-center justify-center space-x-3"
           >
             {isLoading ? (
               <>
-                <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-gray-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                </svg>
+                <LoadingSpinner size="sm" />
                 <span>Signing in...</span>
               </>
             ) : (
@@ -263,16 +418,21 @@ const Login = () => {
               </>
             )}
           </button>
+          }
 
-          {/* Back to Email Option */}
-          {isVerificationStep && (
+          {/* Back to Phone Entry Option */}
+          {isOTPStep && (
             <div className="text-center mt-6">
               <button
                 type="button"
-                onClick={() => setIsVerificationStep(false)}
+                onClick={() => {
+                  setIsOTPStep(false);
+                  setUserPhone('');
+                  setResendTimer(0);
+                }}
                 className="text-gray-600 hover:text-gray-800 text-sm font-medium"
               >
-                ← Back to email entry
+                ← Back to phone entry
               </button>
             </div>
           )}
@@ -292,6 +452,23 @@ const Login = () => {
           </p>
         </div>
       </div>
+
+      {/* Custom CSS for animations */}
+      <style jsx>{`
+        @keyframes slide-in {
+          from {
+            transform: translateX(100%);
+            opacity: 0;
+          }
+          to {
+            transform: translateX(0);
+            opacity: 1;
+          }
+        }
+        .animate-slide-in {
+          animation: slide-in 0.3s ease-out;
+        }
+      `}</style>
     </div>
   );
 };
