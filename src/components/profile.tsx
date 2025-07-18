@@ -90,6 +90,8 @@ const Profile = () => {
       </header>
 
       {/* Main Content */}
+      {localStorage.getItem('token') ? (
+
       <main className="pb-20">
         {/* Profile Overview Section */}
         <section className="px-4 py-6 border-b border-gray-100">
@@ -300,25 +302,48 @@ const Profile = () => {
                 </svg>
               </button>
 
-              <button className="w-full flex items-center justify-between p-3 rounded-lg hover:bg-red-50 transition-colors" onClick={() => {
-                localStorage.clear();
-                console.log('logged out');
-                // router.push('/login');
-              }}>
-                <div className="flex items-center gap-3">
-                  <svg className="w-5 h-5 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+              {/* {localStorage.getItem('token') ? ( */}
+                <button className="w-full flex items-center justify-between p-3 rounded-lg hover:bg-red-50 transition-colors" onClick={() => {
+                  localStorage.clear();
+                  console.log('logged out');
+                  router.push('/');
+                }}>
+                  <div className="flex items-center gap-3">
+                    <svg className="w-5 h-5 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                    </svg>
+                    <span className="text-red-600 font-medium">Logout</span>
+                  </div>
+                  <svg className="w-5 h-5 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                   </svg>
-                  <span className="text-red-600 font-medium">Logout</span>
-                </div>
-                <svg className="w-5 h-5 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                </svg>
-              </button>
+                </button>
+              {/* )  */}
+              {/* // : (
+              //   <button className="w-full flex items-center justify-between p-3 rounded-lg hover:bg-blue-50 transition-colors" onClick={() => router.push('/login')}>
+              //     <div className="flex items-center gap-3">
+              //       <svg className="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              //         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1" />
+              //       </svg>
+              //       <span className="text-blue-600 font-medium">Login</span>
+              //     </div>
+              //     <svg className="w-5 h-5 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              //       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+              //     </svg>
+              //   </button>
+              // )} */}
             </div>
           </div>
         </div>
       </main>
+      ) : (
+        <div className="p-8 text-center">
+          <h1 className="text-2xl font-semibold text-gray-900 mb-4">Please login to continue</h1>
+          <button className="bg-[#6f43fe] text-white px-4 py-2 rounded-lg hover:bg-[#6f43fe]/80 transition-colors" onClick={() => router.push('/login')}>
+            Login
+          </button>
+        </div>
+      )}
     </div>
   );
 };

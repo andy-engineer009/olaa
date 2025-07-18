@@ -1008,7 +1008,7 @@ const Step3MediaUpload = ({ form }: { form: any }) => (
 );
 
 export default function InfluencerOnboardingForm() {
-  const [currentStep, setCurrentStep] = useState(2);
+  const [currentStep, setCurrentStep] = useState(1);
   const [formData, setFormData] = useState<FormValues>(initialValues);
 
   const steps = [

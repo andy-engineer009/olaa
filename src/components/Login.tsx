@@ -350,7 +350,7 @@ const Login = () => {
                   <button
                     type="submit"
                     disabled={isSubmitting || isLoading}
-                    className="w-full bg-orange-500 hover:bg-orange-600 disabled:bg-orange-300 text-white font-medium py-3 px-4 rounded-lg transition-colors duration-200 flex items-center justify-center space-x-2"
+                    className="w-full bg-[#6f43fe] hover:bg-[#6f43fe] disabled:bg-[#ccc] text-white font-medium py-3 px-4 rounded-lg transition-colors duration-200 flex items-center justify-center space-x-2"
                   >
                     {isLoading ? (
                       <>
