@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Formik, Form, Field, ErrorMessage, FormikHelpers } from 'formik';
 import * as Yup from 'yup';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -43,8 +43,8 @@ interface FormValues {
   
   // Step 3: Media
   profileImage: File | null;
-  postImages: File[];
-  videos: File[];
+  // postImages: File[];
+  // videos: File[];
 }
 
 // Mock data for dropdowns
@@ -92,8 +92,8 @@ const step1Schema = Yup.object().shape({
     is: (platforms: string[]) => platforms.includes('YouTube'),
     then: (schema) => schema.required('YouTube URL is required').url('Must be a valid URL')
   }),
-  audienceType: Yup.string().required('Audience type is required'),
-  audienceAgeGroup: Yup.string().required('Audience age group is required')
+  // audienceType: Yup.string().required('Audience type is required'),
+  // audienceAgeGroup: Yup.string().required('Audience age group is required')
 });
 
 const step2Schema = Yup.object().shape({
@@ -102,7 +102,7 @@ const step2Schema = Yup.object().shape({
     Yup.object().shape({
       id: Yup.string().required('Offer ID is required'),
       type: Yup.string().oneOf(['single', 'combo'], 'Offer type must be single or combo').required('Offer type is required'),
-      name: Yup.string().optional(),
+      name: Yup.string().required('Offer name is required'),
       price: Yup.number().required('Offer price is required').min(0, 'Price must be positive'),
       items: Yup.array().of(
         Yup.object().shape({
@@ -128,8 +128,8 @@ const step2Schema = Yup.object().shape({
 
 const step3Schema = Yup.object().shape({
   profileImage: Yup.mixed().required('Profile image is required'),
-  postImages: Yup.array().min(1, 'Please upload at least 1 post images').max(3, 'Maximum 3 post images allowed'),
-  videos: Yup.array().min(0, 'Please upload at least 2 videos').max(2, 'Maximum 2 videos allowed')
+  // postImages: Yup.array().min(1, 'Please upload at least 1 post images').max(3, 'Maximum 3 post images allowed'),
+  // videos: Yup.array().min(0, 'Please upload at least 2 videos').max(2, 'Maximum 2 videos allowed')
 });
 
 // Initial values
@@ -151,8 +151,8 @@ const initialValues: FormValues = {
   startingPrice: '',
   offers: [],
   profileImage: null,
-  postImages: [],
-  videos: [],
+  // postImages: [],
+  // videos: [],
   audienceType: '',
   audienceAgeGroup: ''
 };
@@ -311,6 +311,109 @@ const MediaUpload = ({
         </div>
       )}
     </div>
+  );
+};
+
+// Warning Popup Component
+const WarningPopup = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) => {
+  if (!isOpen) return null;
+
+  return (
+    <AnimatePresence>
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+        className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4"
+        onClick={onClose}
+      >
+        <motion.div
+          initial={{ scale: 0.9, opacity: 0 }}
+          animate={{ scale: 1, opacity: 1 }}
+          exit={{ scale: 0.9, opacity: 0 }}
+          className="bg-white rounded-2xl shadow-2xl max-w-md w-full mx-4 overflow-hidden"
+          onClick={(e) => e.stopPropagation()}
+        >
+          {/* Header */}
+          <div className="bg-gradient-to-r from-orange-500 to-red-500 p-6 text-white text-center">
+            <div className="w-16 h-16 mx-auto mb-4 bg-white bg-opacity-20 rounded-full flex items-center justify-center">
+              <svg className="w-8 h-8" fill="red" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z" />
+              </svg>
+            </div>
+            <h2 className="text-xl font-bold mb-2">Important Notice</h2>
+            <p className="text-sm opacity-90">Before you proceed, please read this carefully</p>
+          </div>
+
+          {/* Content */}
+          <div className="p-6 space-y-4">
+            <div className="flex items-start space-x-3">
+              <div className="flex-shrink-0 w-6 h-6 bg-blue-100 rounded-full flex items-center justify-center mt-0.5">
+                <svg className="w-4 h-4 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+              </div>
+              <div>
+                <h3 className="font-semibold text-gray-900 mb-1">Public Profile Requirement</h3>
+                <p className="text-sm text-gray-600 leading-relaxed">
+                  Your social media profiles (Instagram/YouTube) must be <strong>public</strong> to be listed on our platform. Private profiles cannot be verified or displayed to potential clients.
+                </p>
+              </div>
+            </div>
+
+            <div className="flex items-start space-x-3">
+              <div className="flex-shrink-0 w-6 h-6 bg-green-100 rounded-full flex items-center justify-center mt-0.5">
+                <svg className="w-4 h-4 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+              </div>
+              <div>
+                <h3 className="font-semibold text-gray-900 mb-1">What We Check</h3>
+                <ul className="text-sm text-gray-600 space-y-1">
+                  <li>• Profile visibility settings</li>
+                  {/* <li>• Content accessibility</li> */}
+                  <li>• Follower count verification</li>
+                  {/* <li>• Account authenticity</li> */}
+                </ul>
+              </div>
+            </div>
+
+            <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
+              <div className="flex items-start space-x-2">
+                <svg className="w-5 h-5 text-yellow-600 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z" />
+                </svg>
+                <div>
+                  <p className="text-sm font-medium text-yellow-800 mb-1">Need to make your profile public?</p>
+                  <p className="text-xs text-yellow-700">
+                    Go to your social media settings → Privacy → Account Privacy → Turn off "Private Account"
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Footer */}
+          <div className="bg-gray-50 px-6 py-4 flex flex-col sm:flex-row gap-3">
+            <button
+              onClick={onClose}
+              className="flex-1 bg-[#6f43fe] text-white py-3 px-6 rounded-lg font-medium hover:from-blue-700 hover:to-purple-700 transition-all duration-200 shadow-lg hover:shadow-xl"
+            >
+              I Understand, Continue
+            </button>
+            <button
+              onClick={() => {
+                // You can add navigation to help page or settings guide
+                window.open('https://help.instagram.com/116024195217477', '_blank');
+              }}
+              className="flex-1 bg-gray-200 text-gray-700 py-3 px-6 rounded-lg font-medium hover:bg-gray-300 transition-colors"
+            >
+              Learn How
+            </button>
+          </div>
+        </motion.div>
+      </motion.div>
+    </AnimatePresence>
   );
 };
 
@@ -476,16 +579,35 @@ const Step1BasicInfo = ({ values, setFieldValue }: { values: FormValues; setFiel
       </Field>
 
       {/* Verified Profile */}
-      <div className="flex items-center space-x-3">
-        <Field
-          type="checkbox"
-          id="verifiedProfile"
-          name="verifiedProfile"
-          className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
-        />
-        <label htmlFor="verifiedProfile" className="text-sm font-medium text-gray-700">
-          Verified Profile
-        </label>
+      <div>
+        <h2 className="block text-sm font-medium text-gray-700 mb-2">is Your profile has tick</h2>
+        <div className="flex items-center space-x-6">
+          <div className="flex items-center space-x-2">
+            <Field
+              type="radio"
+              id="verifiedProfileYes"
+              name="verifiedProfile" 
+              value="true"
+              className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300"
+            />
+            <label htmlFor="verifiedProfileYes" className="text-sm font-medium text-gray-700">
+              Yes
+            </label>
+          </div>
+          <div className="flex items-center space-x-2">
+            <Field
+              type="radio"
+              id="verifiedProfileNo"
+              name="verifiedProfile"
+              value="false"
+              className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300"
+            />
+            <label htmlFor="verifiedProfileNo" className="text-sm font-medium text-gray-700">
+              No
+            </label>
+          </div>
+        </div>
+        <ErrorMessage name="verifiedProfile" component="div" className="text-red-500 text-sm mt-1" />
       </div>
 
       {/* Location Fields */}
@@ -555,7 +677,7 @@ const Step1BasicInfo = ({ values, setFieldValue }: { values: FormValues; setFiel
         </div>
         <div>
           <label htmlFor="audienceType" className="block text-sm font-medium text-gray-700 mb-2">
-            Audience Type *
+            Audience Type (optional)
           </label>
           <Field
             as="select"
@@ -573,7 +695,7 @@ const Step1BasicInfo = ({ values, setFieldValue }: { values: FormValues; setFiel
 
         <div>
           <label htmlFor="audienceAgeGroup" className="block text-sm font-medium text-gray-700 mb-2">
-            Audience Age Group *
+            Audience Age Group (optional)
           </label>
           <Field
             as="select"
@@ -586,7 +708,7 @@ const Step1BasicInfo = ({ values, setFieldValue }: { values: FormValues; setFiel
               <option key={ageGroup} value={ageGroup}>{ageGroup}</option>
             ))}
           </Field>
-          <ErrorMessage name="audienceAgeGroup" component="div" className="text-red-500 text-sm mt-1" />
+          {/* <ErrorMessage name="audienceAgeGroup" component="div" className="text-red-500 text-sm mt-1" /> */}
         </div>
       </div>
     </div>
@@ -686,7 +808,7 @@ const Step2Pricing = ({ values, setFieldValue }: { values: FormValues; setFieldV
             }
             
             return (
-              <div key={itemIndex} className="flex items-center space-x-3 p-3 bg-gray-50 rounded-lg">
+              <div key={itemIndex} className="flex items-center space-x-3 p-0 bg-gray-50 rounded-lg">
                 <div className="flex-1">
                   <Field
                     as="select"
@@ -823,11 +945,11 @@ const Step2Pricing = ({ values, setFieldValue }: { values: FormValues; setFieldV
                   <div className="flex justify-between items-center mb-4">
                     <div className="flex items-center space-x-3">
                       <h3 className="text-lg font-semibold text-gray-800">Offer {index + 1}</h3>
-                      {offer.name && (
+                      {/* {offer.name && (
                         <span className="px-2 py-1 bg-blue-100 text-blue-800 text-xs rounded-full">
                           {offer.name}
                         </span>
-                      )}
+                      )} */}
                     </div>
                     <button
                       type="button"
@@ -858,7 +980,7 @@ const Step2Pricing = ({ values, setFieldValue }: { values: FormValues; setFieldV
                     
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Offer Name (Optional)
+                        Offer Name * 
                       </label>
                       <Field
                         type="text"
@@ -866,6 +988,7 @@ const Step2Pricing = ({ values, setFieldValue }: { values: FormValues; setFieldV
                         className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                         placeholder="e.g., 🔥 Best Seller"
                       />
+                      <ErrorMessage name={`offers.${index}.name`} component="div" className="text-red-500 text-sm mt-1" />
                     </div>
                   </div>
 
@@ -975,7 +1098,7 @@ const Step3MediaUpload = ({ form }: { form: any }) => (
       <ErrorMessage name="profileImage" component="div" className="text-red-500 text-sm mt-1" />
 
       {/* Post Images */}
-      <Field name="postImages">
+      {/* <Field name="postImages">
         {({ field }: any) => (
           <MediaUpload
             label="Post Images (3 required) *"
@@ -987,10 +1110,10 @@ const Step3MediaUpload = ({ form }: { form: any }) => (
           />
         )}
       </Field>
-      <ErrorMessage name="postImages" component="div" className="text-red-500 text-sm mt-1" />
+      <ErrorMessage name="postImages" component="div" className="text-red-500 text-sm mt-1" /> */}
 
       {/* Videos */}
-      <Field name="videos">
+      {/* <Field name="videos">
         {({ field }: any) => (
           <MediaUpload
             label="Videos (2 required) *"
@@ -1002,7 +1125,7 @@ const Step3MediaUpload = ({ form }: { form: any }) => (
           />
         )}
       </Field>
-      <ErrorMessage name="videos" component="div" className="text-red-500 text-sm mt-1" />
+      <ErrorMessage name="videos" component="div" className="text-red-500 text-sm mt-1" /> */}
     </div>
   </motion.div>
 );
@@ -1010,6 +1133,22 @@ const Step3MediaUpload = ({ form }: { form: any }) => (
 export default function InfluencerOnboardingForm() {
   const [currentStep, setCurrentStep] = useState(1);
   const [formData, setFormData] = useState<FormValues>(initialValues);
+  const [showWarning, setShowWarning] = useState(false);
+
+  // Show warning popup on first visit
+  useEffect(() => {
+    setShowWarning(true);
+
+    const hasSeenWarning = localStorage.getItem('influencer-warning-seen');
+    if (!hasSeenWarning) {
+      setShowWarning(true);
+    }
+  }, []);
+
+  const handleWarningClose = () => {
+    setShowWarning(false);
+    localStorage.setItem('influencer-warning-seen', 'true');
+  };
 
   const steps = [
     { number: 1, title: 'Basic Info', schema: step1Schema },
@@ -1052,7 +1191,10 @@ export default function InfluencerOnboardingForm() {
 
   return (
     <>
-          <div className="max-w-4xl mx-auto px-4 mb-0 pt-3">
+      {/* Warning Popup */}
+      <WarningPopup isOpen={showWarning} onClose={handleWarningClose} />
+
+      <div className="max-w-4xl mx-auto px-4 mb-0 pt-3">
         <Link
           href={'/'}
           className="inline-flex items-center text-gray-600 hover:text-gray-900 transition-colors"

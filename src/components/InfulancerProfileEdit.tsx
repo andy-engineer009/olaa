@@ -39,8 +39,8 @@ interface InfluencerProfile {
   startingPrice: number;
   offers: Offer[];
   profileImage: string;
-  postImages: string[];
-  videos: string[];
+  // postImages: string[];
+  // videos: string[];
   isListed: boolean;
 }
 
@@ -64,8 +64,8 @@ interface FormValues {
   startingPrice: number;
   offers: Offer[];
   profileImage: File | null;
-  postImages: File[];
-  videos: File[];
+  // postImages: File[];
+  // videos: File[];
 }
 
 // Mock data
@@ -114,8 +114,8 @@ const initialValues: FormValues = {
   startingPrice: 0,
   offers: [],
   profileImage: null,
-  postImages: [],
-  videos: []
+  // postImages: [],
+  // videos: []
 };
 
 const step1Schema = Yup.object().shape({
@@ -173,8 +173,8 @@ const step2Schema = Yup.object().shape({
 
 const step3Schema = Yup.object().shape({
   profileImage: Yup.mixed().required('Profile image is required'),
-  postImages: Yup.array().min(1, 'Please upload at least 1 post images').max(3, 'Maximum 3 post images allowed'),
-  videos: Yup.array().min(0, 'Please upload at least 2 videos').max(2, 'Maximum 2 videos allowed')
+  // postImages: Yup.array().min(1, 'Please upload at least 1 post images').max(3, 'Maximum 3 post images allowed'),
+  // videos: Yup.array().min(0, 'Please upload at least 2 videos').max(2, 'Maximum 2 videos allowed')
 });
 
 // Full validation schema
@@ -455,6 +455,7 @@ const Step1BasicInfo = ({ values, setFieldValue }: { values: FormValues; setFiel
             name="instagramUrl"
             className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
             placeholder="https://instagram.com/yourusername"
+            disabled={true}
           />
           <ErrorMessage name="instagramUrl" component="div" className="text-red-500 text-sm mt-1" />
         </div>
@@ -471,6 +472,7 @@ const Step1BasicInfo = ({ values, setFieldValue }: { values: FormValues; setFiel
             name="youtubeUrl"
             className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
             placeholder="https://youtube.com/@yourchannel"
+            disabled={true}
           />
           <ErrorMessage name="youtubeUrl" component="div" className="text-red-500 text-sm mt-1" />
         </div>
@@ -713,7 +715,7 @@ const Step3MediaUpload = ({ form }: { form: any }) => (
       <ErrorMessage name="profileImage" component="div" className="text-red-500 text-sm mt-1" />
 
       {/* Post Images */}
-      <Field name="postImages">
+      {/* <Field name="postImages">
         {({ field }: any) => (
           <MediaUpload
             label="Post Images (3 required) *"
@@ -725,10 +727,10 @@ const Step3MediaUpload = ({ form }: { form: any }) => (
           />
         )}
       </Field>
-      <ErrorMessage name="postImages" component="div" className="text-red-500 text-sm mt-1" />
+      <ErrorMessage name="postImages" component="div" className="text-red-500 text-sm mt-1" /> */}
 
       {/* Videos */}
-      <Field name="videos">
+      {/* <Field name="videos">
         {({ field }: any) => (
           <MediaUpload
             label="Videos (2 required) *"
@@ -740,7 +742,7 @@ const Step3MediaUpload = ({ form }: { form: any }) => (
           />
         )}
       </Field>
-      <ErrorMessage name="videos" component="div" className="text-red-500 text-sm mt-1" />
+      <ErrorMessage name="videos" component="div" className="text-red-500 text-sm mt-1" /> */}
     </div>
   </motion.div>
 );
@@ -1215,8 +1217,8 @@ export default function InfluencerProfileEdit() {
         },
       ],
       profileImage: '/api/profile-image.jpg',
-      postImages: ['/api/post1.jpg', '/api/post2.jpg', '/api/post3.jpg'],
-      videos: ['/api/video1.mp4', '/api/video2.mp4'],
+      // postImages: ['/api/post1.jpg', '/api/post2.jpg', '/api/post3.jpg'],
+      // videos: ['/api/video1.mp4', '/api/video2.mp4'],
       isListed: true // Change this to false to test not listed state
     };
 
@@ -1294,8 +1296,8 @@ export default function InfluencerProfileEdit() {
           },
         ],
         profileImage: '/api/profile-image.jpg',
-        postImages: ['/api/post1.jpg', '/api/post2.jpg', '/api/post3.jpg'],
-        videos: ['/api/video1.mp4', '/api/video2.mp4'],
+        // postImages: ['/api/post1.jpg', '/api/post2.jpg', '/api/post3.jpg'],
+        // videos: ['/api/video1.mp4', '/api/video2.mp4'],
         isListed: true // Change this to false to test not listed state
       };
 
@@ -1342,13 +1344,13 @@ export default function InfluencerProfileEdit() {
         formData.append('profileImage', values.profileImage);
       }
       
-      values.postImages.forEach((file, index) => {
-        formData.append(`postImages[${index}]`, file);
-      });
+      // values.postImages.forEach((file, index) => {
+      //   formData.append(`postImages[${index}]`, file);
+      // });
       
-      values.videos.forEach((file, index) => {
-        formData.append(`videos[${index}]`, file);
-      });
+      // values.videos.forEach((file, index) => {
+      //   formData.append(`videos[${index}]`, file);
+      // });
       
       // Make API call
       const response = await fetch('/api/influencer/profile/update', {
@@ -1370,8 +1372,8 @@ export default function InfluencerProfileEdit() {
           ...profile,
           ...values,
           profileImage: profile.profileImage,
-          postImages: profile.postImages,
-          videos: profile.videos
+          // postImages: profile.postImages,
+          // videos: profile.videos
         });
       }
       
@@ -1395,7 +1397,8 @@ export default function InfluencerProfileEdit() {
       name: '', username: '', platforms: [], gender: '', categories: [], languages: [],
       verifiedProfile: false, state: '', city: '', locality: '', influencerAge: 0,
       followerCount: 0, instagramUrl: '', youtubeUrl: '', audienceType: '', audienceAgeGroup: '',
-      startingPrice: 0, offers: [], profileImage: null, postImages: [], videos: []
+      startingPrice: 0, offers: [], profileImage: null, 
+      // postImages: [], videos: []
     };
 
     return {
@@ -1418,8 +1421,8 @@ export default function InfluencerProfileEdit() {
       startingPrice: profile.startingPrice,
       offers: profile.offers,
       profileImage: null,
-      postImages: [],
-      videos: []
+      // postImages: [],
+      // videos: []
     };
   };
 

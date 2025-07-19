@@ -4,6 +4,7 @@ import Filters from "@/components/Filters";
 import InfluencerGrid from "@/components/InfluencerGrid";
 import InfluencerCard from "@/components/InfulancerCard";
 import SearchAndFilter from "@/components/searchAndFilter";
+import UserRolePopup from "@/components/userRolePopup";
 
 const influencers = [ 
   {
@@ -135,7 +136,7 @@ const influencers = [
 export default function Home() {
   return (
     <div>
-            <div className="w-full bg-white p-4">
+            {/* <div className="w-full bg-white p-4">
               <div className="max-w-4xl mx-auto px-4">
                 <SearchAndFilter
                   placeholder="Search for influencers, brands, or campaigns..."
@@ -146,9 +147,10 @@ export default function Home() {
                   }}
                 />
               </div>
-            </div>
+            </div> */}
+              <UserRolePopup />
 
-            <div className="w-full pt-[60px] md:mt-4">
+            <div className="w-full pt-[20px] md:mt-4">
           <div className="max-w-4xl mx-auto px-4">
             <div className="bg-[#6f43fe] rounded-lg shadow-lg p-6 flex items-center justify-between flex-wrap">
               <div className="flex items-center space-x-4">
@@ -248,6 +250,10 @@ export default function Home() {
         </div>
       </div>
 
+
+    
+
+  
                   {/* trending influencers */}
           <div className="w-full mx-auto mt-3 px-4 md:px-8">
         <div className="flex justify-between items-center mb-4">
@@ -263,6 +269,7 @@ export default function Home() {
           ))}
         </div>
       </div>
+
 
       {/* <div className="flex mt-4 p-4 md:p-8 items-start">
         <div className=" md:pl-9" style={{flex: 1}}>

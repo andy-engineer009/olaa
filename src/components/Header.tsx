@@ -3,10 +3,15 @@
 import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import { useRouter, usePathname } from 'next/navigation';
+import { useSelector, useDispatch } from 'react-redux';
+import { selectUserRole } from '@/store/userRoleSlice';
 
 const Header = () => {
+  const role = useSelector(selectUserRole);
   const [isProfileDropdownOpen, setIsProfileDropdownOpen] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [currentUserRole, setCurrentUserRole] = useState(localStorage.getItem('userRole') || '2');
+
   const router = useRouter();
   const pathname = usePathname();
 
@@ -16,6 +21,7 @@ const Header = () => {
 
   useEffect(() => {
     setIsLoggedIn(localStorage.getItem('token') ? true : false);
+    setCurrentUserRole(localStorage.getItem('userRole') || '2');
   }, []);
 
   // Mobile navigation items with proper SVG icons
@@ -235,7 +241,7 @@ const Header = () => {
 
       {/* Mobile Bottom Navigation Bar - App-like Design */}
       <nav className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 z-50 md:hidden shadow-lg">
-        <div className="grid grid-cols-5 items-center py-2 px-2 relative">
+        <div className={`grid ${role === '3' ? 'grid-cols-4' : 'grid-cols-5'} items-center content-center justify-center py-2 px-2 relative`}>
           {/* Home */}
           <button
             onClick={() => router.push('/')}
@@ -258,7 +264,7 @@ const Header = () => {
             )} */}
           </button>
 
-          {/* Booster */}
+          {/* discover */}
           <button
             onClick={() => router.push('/discover')}
             className={`flex flex-col items-center justify-center py-1.5 px-1 rounded-lg transition-all duration-300 ${
@@ -299,6 +305,7 @@ const Header = () => {
           </button> */}
 
           {/* Center - List as Influencer Button (Prominent) */}
+          { role == '2' && (
           <div className="flex justify-center">
           {/* bg-[#d2fc31] */}
             <button
@@ -310,6 +317,7 @@ const Header = () => {
               </svg>
             </button>
           </div>
+          )}
 
           {/* Chat */}
           <button

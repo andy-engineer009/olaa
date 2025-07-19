@@ -1,8 +1,10 @@
 'use client'
 import { useEffect, useState } from 'react';
-import InfulancerForm from './InfulancerFormaddedv1';
 import { useRouter } from 'next/navigation';
-
+import { useAppSelector } from '@/store/hooks';
+import { selectUserRole, setUserRole } from '@/store/userRoleSlice';
+import { useSelector, useDispatch } from 'react-redux';
+ 
 // Mock API functions (replace with real API calls)
 const fetchUserProfile = async () => {
   // Simulate API call
@@ -32,10 +34,16 @@ const uploadProfileImage = async (file: File) => {
 };
 
 const Profile = () => {
+  console.log(useSelector(selectUserRole))
+  const dispatch = useDispatch();
+const role = useSelector(selectUserRole);
+
   const [initialValues, setInitialValues] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [image, setImage] = useState<string | null>(null);
-  const [updating, setUpdating] = useState(false);
+  // const [updating, setUpdating] = useState(false);
+  const currentUserRole = useAppSelector(selectUserRole);
+
   const router = useRouter();
 
   useEffect(() => {
@@ -46,28 +54,32 @@ const Profile = () => {
     });
   }, []);
 
-  const handleImageDelete = async () => {
-    setUpdating(true);
-    await deleteProfileImage();
-    setImage(null);
-    setUpdating(false);
-  };
+  useEffect(() => {
+console.log('mak') 
+ }, [useSelector(selectUserRole)]);
 
-  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files && e.target.files[0]) {
-      setUpdating(true);
-      const res = await uploadProfileImage(e.target.files[0]);
-      setImage(res.url);
-      setUpdating(false);
-    }
-  };
+  // const handleImageDelete = async () => {
+  //   setUpdating(true);
+  //   await deleteProfileImage();
+  //   setImage(null);
+  //   setUpdating(false);
+  // };
 
-  const handleSubmit = async (values: any) => {
-    setUpdating(true);
-    await updateUserProfile({ ...values, image });
-    setUpdating(false);
-    alert('Profile updated!');
-  };
+  // const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+  //   if (e.target.files && e.target.files[0]) {
+  //     setUpdating(true);
+  //     const res = await uploadProfileImage(e.target.files[0]);
+  //     setImage(res.url);
+  //     setUpdating(false);
+  //   }
+  // };
+
+  // const handleSubmit = async (values: any) => {
+  //   setUpdating(true);
+  //   await updateUserProfile({ ...values, image });
+  //   setUpdating(false);
+  //   alert('Profile updated!');
+  // };
 
   if (loading) return <div className="p-8 text-center">Loading...</div>;
 
@@ -84,8 +96,59 @@ const Profile = () => {
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
             </svg>
           </button>
-          <h1 className="text-lg font-semibold text-gray-900">Profile Settings</h1>
-          <div className="w-8"></div> {/* Spacer for balance */}
+          <h1 className="text-lg font-semibold text-gray-900 mr-auto">Profile Settings</h1>
+          {localStorage.getItem('token') && ( <>
+          <div className="flex items-center gap-4">
+            <div className="flex items-center gap-3">
+              <div className="relative">
+                <span className={`px-3 py-1.5 rounded-full text-sm ${
+                  currentUserRole === '2' 
+                    ? 'bg-[#6f43fe]/10 text-[#6f43fe] font-medium'
+                    : 'bg-gray-100 text-gray-500'
+                }`}>
+                  Influencer
+                  {currentUserRole === '2' && (
+                    <span className="absolute -bottom-4 left-1/2 transform -translate-x-1/2 px-2 py-0.5 text-[10px] bg-green-100 text-green-600 font-medium rounded-full">
+                      Active
+                    </span>
+                  )}
+                </span>
+              </div>
+
+              <button
+                onClick={() => {
+                  const newRole = currentUserRole === '2' ? '3' : '2';
+                  dispatch(setUserRole(newRole));
+                }}
+                className={`relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none ${
+                  currentUserRole === '2' ? 'bg-[#6f43fe]' : 'bg-[#6f43fe]'
+                }`}
+              >
+                <span
+                  className={`${
+                    currentUserRole === '2' ? 'translate-x-0' : 'translate-x-5'
+                  } pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out`}
+                />
+              </button>
+
+              <div className="relative">
+                <span className={`px-3 py-1.5 rounded-full text-sm ${
+                  currentUserRole === '3'
+                    ? 'bg-[#6f43fe]/10 text-[#6f43fe] font-medium' 
+                    : 'bg-gray-100 text-gray-500'
+                }`}>
+                  Promoter
+                  {currentUserRole === '3' && (
+                    <span className="absolute -bottom-4 left-1/2 transform -translate-x-1/2 px-2 py-0.5 text-[10px] bg-green-100 text-green-600 font-medium rounded-full">
+                      Active
+                    </span>
+                  )}
+                </span>
+              </div>
+            </div>
+          </div>
+          </>
+          )}
         </div>
       </header>
 
@@ -257,6 +320,8 @@ const Profile = () => {
           <div className="mb-6">
             <h3 className="text-sm font-medium text-gray-500 mb-3">Influencer Profile</h3>
             <div className="space-y-1">
+              { currentUserRole == '2' && ( <>
+              
               <button 
                 onClick={() => router.push('/profile/edit')}
                 className="w-full flex items-center justify-between p-3 rounded-lg hover:bg-gray-50 transition-colors"
@@ -271,7 +336,6 @@ const Profile = () => {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                 </svg>
               </button>
-
               <button className="w-full flex items-center justify-between p-3 rounded-lg hover:bg-gray-50 transition-colors" onClick={() => router.push('/booster')}>
                 <div className="flex items-center gap-3">
                   <svg className="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -283,6 +347,9 @@ const Profile = () => {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                 </svg>
               </button>
+              </>
+              )}
+
             </div>
           </div>
 
