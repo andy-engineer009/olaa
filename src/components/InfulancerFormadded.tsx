@@ -455,16 +455,16 @@ const WarningPopup = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => voi
           initial={{ scale: 0.9, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
           exit={{ scale: 0.9, opacity: 0 }}
-          className="bg-white rounded-2xl shadow-2xl max-w-md w-full mx-4 overflow-hidden"
+          className="bg-white rounded-2xl shadow-2xl w-full overflow-hidden"
           onClick={(e) => e.stopPropagation()}
         >
           {/* Header */}
           <div className="bg-gradient-to-r from-orange-500 to-red-500 p-6 text-white text-center">
-            <div className="w-16 h-16 mx-auto mb-4 bg-white bg-opacity-20 rounded-full flex items-center justify-center">
+            {/* <div className="w-16 h-16 mx-auto mb-4 bg-white bg-opacity-20 rounded-full flex items-center justify-center">
               <svg className="w-8 h-8" fill="red" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z" />
               </svg>
-            </div>
+            </div> */}
             <h2 className="text-xl font-bold mb-2">Important Notice</h2>
             <p className="text-sm opacity-90">Before you proceed, please read this carefully</p>
           </div>
@@ -502,7 +502,7 @@ const WarningPopup = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => voi
               </div>
             </div>
 
-            <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
+            {/* <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
               <div className="flex items-start space-x-2">
                 <svg className="w-5 h-5 text-yellow-600 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z" />
@@ -514,7 +514,7 @@ const WarningPopup = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => voi
                   </p>
                 </div>
               </div>
-            </div>
+            </div> */}
           </div>
 
           {/* Footer */}
