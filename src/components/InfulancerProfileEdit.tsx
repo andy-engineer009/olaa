@@ -1540,10 +1540,10 @@ export default function InfluencerProfileEdit() {
 
   // Convert profile data to form values
   const getInitialValues = (): FormValues => {
-    if (!profile) return {
+    if (!profile)  return {
       name: '', username: '', platforms: [], gender: '', categories: [], languages: [],
       verifiedProfile: false, state: '', city: '', locality: '', influencerAge: 0,
-      followerCount: 0, instagramUrl: '', youtubeUrl: '', audienceType: '', audienceAgeGroup: '',
+      followerCount: 0, instagramUrl: '', youtubeUrl: '', facebookUrl: '', audienceType: '', audienceAgeGroup: '',
       startingPrice: 0, offers: [], profileImage: null, 
       // postImages: [], videos: []
     };
@@ -1563,11 +1563,13 @@ export default function InfluencerProfileEdit() {
       followerCount: profile.followerCount,
       instagramUrl: profile.instagramUrl,
       youtubeUrl: profile.youtubeUrl,
+      facebookUrl: profile.facebookUrl,
       audienceType: profile.audienceType,
       audienceAgeGroup: profile.audienceAgeGroup,
       startingPrice: profile.startingPrice,
       offers: profile.offers,
       profileImage: null,
+
       // postImages: [],
       // videos: []
     };
