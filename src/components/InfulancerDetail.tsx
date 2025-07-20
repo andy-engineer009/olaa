@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
+import AwarePopup from './aware-popup';
 
 interface InfluencerDetailProps {
   id: string;
@@ -62,6 +63,9 @@ const InfluencerDetail = ({
   const [showMore, setShowMore] = useState(false);
   const router = useRouter();
 
+  //aware opuop
+  const [isAwareOpen, setIsAwareOpen] = useState(false);
+
   const formatFollowers = (count: number): string => {
     if (count >= 1000000) {
       return `${(count / 1000000).toFixed(1)}M`;
@@ -76,11 +80,18 @@ const InfluencerDetail = ({
   };
 
   const handleChat = () => {
+    setIsAwareOpen(true);
+  };
+
+  const handleChatRedirection = () => {
+    setIsAwareOpen(false);
     router.push('/chat/1');
     console.log('Opening chat with:', name);
   };
 
   return (
+    <>
+
     <div className="min-h-screen bg-white text-gray-900 overflow-x-hidden">
       {/* Header */}
       {/* <header className="sticky top-0 z-20 bg-white/90 backdrop-blur-sm border-b border-gray-200 px-4 py-3">
@@ -409,6 +420,13 @@ const InfluencerDetail = ({
         </div>
       </nav>
     </div>
+    <AwarePopup
+      isOpen={isAwareOpen}
+      onClose={() => setIsAwareOpen(false)}
+      onProceed={() => handleChatRedirection()}
+      influencerName={name}
+    />
+    </>
   );
 };
 
