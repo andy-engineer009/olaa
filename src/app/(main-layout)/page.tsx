@@ -137,6 +137,27 @@ const influencers = [
 export default function Home() {
   return (
     <div>
+      {/* logobar */}
+    <div className=" top-0 left-0 right-0 bg-white border-b border-gray-200 z-50 px-4 py-3 flex justify-between items-center h-14">
+  <div className="flex items-center">
+    <svg className="w-8 h-8 text-purple-600" viewBox="0 0 24 24" fill="currentColor">
+      <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"/>
+      <path d="M12 17c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm1-9h-2V6h2v2zm0 4h-2v-2h2v2z"/>
+    </svg>
+    <span className="ml-2 font-bold text-lg">AppName</span>
+  </div>
+
+  <div className="flex items-center space-x-2">
+    <span className="text-xs bg-gray-100 px-2 py-1 rounded-full">v1.0</span>
+    <button className="p-1 rounded-full hover:bg-gray-100">
+      <svg className="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z"/>
+      </svg>
+    </button>
+  </div>
+</div>
+
+
             {/* <div className="w-full bg-white p-4">
               <div className="max-w-4xl mx-auto px-4">
                 <SearchAndFilter
@@ -151,9 +172,9 @@ export default function Home() {
             </div> */}
               <UserRolePopup />
 
-            <div className="w-full pt-[20px] md:mt-4">
-          <div className="max-w-4xl mx-auto px-4">
-            <div className="bg-[#6f43fe] rounded-lg shadow-lg p-6 flex items-center justify-between flex-wrap">
+            <div className="w-full pt-[0px] md:mt-0">
+          <div className="max-w-4xl mx-auto px-0">
+            <div className="bg-[#6f43fe] shadow-lg px-6 py-10 flex items-center justify-between flex-wrap">
               <div className="flex items-center space-x-4">
                 
                 <div className="text-white text-center md:text-left">
