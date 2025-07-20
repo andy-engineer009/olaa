@@ -3,7 +3,7 @@
 import InfluencerCard from './InfulancerCard';
 
 interface Influencer {
-  id: string;
+  id: number;
   name: string;
   image: string;
   isVerified: boolean;
@@ -13,6 +13,7 @@ interface Influencer {
   startingPrice: number;
   instagramUrl?: string;
   youtubeUrl?: string;
+  facebookUrl?: string;
 }
 
 interface InfluencerGridProps {

@@ -78,8 +78,16 @@ export default function UserRolePopup() {
   };
 
   useEffect(() => {
+    const visited = localStorage.getItem('hasVisitedBefore') === 'true';
+    const role = localStorage.getItem('userRole');
+
+    dispatch(setHasVisitedBefore(visited));
+    dispatch(setUserRole(role === '2' || role === '3' ? role : null));
+  }, []);
+
+  useEffect(() => {
     // Check if user is new (first time visiting) using Redux state
-    if (!hasVisitedBefore) {
+    if (!hasVisitedBefore && hasVisitedBefore !== null) {
       setIsOpen(true);
       // Mark user as having visited using Redux action
       dispatch(setHasVisitedBefore(true));
@@ -89,9 +97,9 @@ export default function UserRolePopup() {
   const handleSelection = (role: string) => {
     // Dispatch Redux action to set user role
     if (role === 'influencer') {
-      dispatch(setUserRole('influencer'));
+      dispatch(setUserRole('2'));
     } else if (role === 'business') {
-      dispatch(setUserRole('business'));
+      dispatch(setUserRole('3'));
     }
     
     // Close the popup

@@ -4,7 +4,7 @@ import SearchAndFilter from "@/components/searchAndFilter";
 
 const influencers = [ 
     {
-      id: "1",
+      id: 1,
       name: "John Doe",
       image: "https://apollo.olx.in/v1/files/1mfuey8oh35o3-IN/image;s=300x600;q=60",
       isVerified: true,
@@ -15,9 +15,10 @@ const influencers = [
       instagramUrl: "https://www.instagram.com/john_doe",
       youtubeUrl: "https://www.youtube.com/john_doe",
       isFeatured: true,
+      facebookUrl: "https://www.facebook.com/john_doe",
     },
     {
-      id: "1",
+      id: 2,
       name: "Andrii",
       image: "https://apollo.olx.in/v1/files/1mfuey8oh35o3-IN/image;s=300x600;q=60",
       isVerified: true,
@@ -28,7 +29,7 @@ const influencers = [
       isFeatured: true,
     },
     {
-      id: "1",
+      id: 3,  
       name: "mak",
       image: "https://apollo.olx.in/v1/files/1mfuey8oh35o3-IN/image;s=300x600;q=60",
       isVerified: true,
@@ -38,7 +39,7 @@ const influencers = [
       startingPrice: 1000,
     },
     {
-      id: "1",
+      id: 4,
       name: "Sasha",
       image: "https://apollo.olx.in/v1/files/1mfuey8oh35o3-IN/image;s=300x600;q=60",
       isVerified: true,
@@ -48,7 +49,7 @@ const influencers = [
       startingPrice: 1000,
     },
     {
-      id: "1",
+      id: 5,
       name: "Sasha",
       image: "https://apollo.olx.in/v1/files/1mfuey8oh35o3-IN/image;s=300x600;q=60",
       isVerified: true,
@@ -58,7 +59,7 @@ const influencers = [
       startingPrice: 1000,
     },
     {
-      id: "1",
+      id: 6,
       name: "Sasha",
       image: "https://apollo.olx.in/v1/files/1mfuey8oh35o3-IN/image;s=300x600;q=60",
       isVerified: true,
@@ -68,7 +69,7 @@ const influencers = [
       startingPrice: 1000,
     },
     {
-      id: "1",
+      id: 7,
       name: "Sasha",
       image: "https://apollo.olx.in/v1/files/1mfuey8oh35o3-IN/image;s=300x600;q=60",
       isVerified: true,
@@ -78,7 +79,7 @@ const influencers = [
       startingPrice: 1000,
     },
     {
-      id: "1",
+      id: 8,
       name: "Sasha",
       image: "https://apollo.olx.in/v1/files/1mfuey8oh35o3-IN/image;s=300x600;q=60",
       isVerified: true,
@@ -88,7 +89,7 @@ const influencers = [
       startingPrice: 1000,
     },
     {
-      id: "1",
+      id: 9,
       name: "Sasha",
       image: "https://apollo.olx.in/v1/files/1mfuey8oh35o3-IN/image;s=300x600;q=60",
       isVerified: true,

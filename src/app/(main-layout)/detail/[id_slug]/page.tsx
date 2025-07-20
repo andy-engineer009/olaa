@@ -35,6 +35,7 @@ export default function DetailPage() {
         ],
         instagramUrl: "https://www.instagram.com/john_doe",
         youtubeUrl: "https://www.youtube.com/john_doe",
+        facebookUrl: "https://www.facebook.com/john_doe",
         startingPrice: 100
     }       
   return <div>

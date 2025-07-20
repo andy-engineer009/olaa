@@ -274,6 +274,7 @@ const Login = () => {
           {!isOTPStep ? (
             // Phone Number Login Form
             <Formik
+            key="phone-form" 
               initialValues={{ phoneNumber: '' }}
               validationSchema={phoneValidationSchema}
               onSubmit={handlePhoneSubmit}
@@ -323,6 +324,7 @@ const Login = () => {
           ) : (
             // OTP Verification Form
             <Formik
+            key="otp-form" // 👈 And this one
               initialValues={{ otp: '' }}
               validationSchema={otpValidationSchema}
               onSubmit={handleOTPSubmit}

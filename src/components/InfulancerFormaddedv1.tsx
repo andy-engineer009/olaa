@@ -15,6 +15,7 @@ interface InfluencerFormValues {
   categories: string[];
   instagramUrl: string;
   youtubeUrl: string;
+  facebookUrl: string;
   instagramPostPrice: number;
   instagramStoryPrice: number;
   instagramReelPrice: number;
@@ -72,6 +73,7 @@ const InfluencerForm = ({ isEditMode = false, initialValues = {}, onSubmit }: In
     categories: [],
     instagramUrl: '',
     youtubeUrl: '',
+    facebookUrl:'',
     instagramPostPrice: 0,
     instagramStoryPrice: 0,
     instagramReelPrice: 0,

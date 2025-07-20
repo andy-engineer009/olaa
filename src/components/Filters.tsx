@@ -12,6 +12,10 @@ interface FilterValues {
   followersMin: number;
   followersMax: number;
   categories: string[];
+  language: string[];
+  platforms: string[];
+  audienceTypes: string,
+  audienceAgeGroups: string,
 }
 
 const initialValues: FilterValues = {
@@ -22,12 +26,21 @@ const initialValues: FilterValues = {
   followersMin: 0,
   followersMax: 1000000,
   categories: [],
+  language: [],
+  platforms: [],
+  audienceTypes: 'all',
+  audienceAgeGroups: 'all',
 };
 
 const categories = [
   'Fashion & Beauty', 'Technology', 'Fitness & Health', 'Food & Cooking',
   'Travel', 'Lifestyle', 'Gaming', 'Education', 'Business', 'Entertainment'
 ];
+
+const languages = ['English', 'Hindi', 'Punjabi', 'Bhojpuri', 'Marathi', 'Gujarati', 'Telugu'];
+const platforms = ['Instagram', 'YouTube', 'Facebook'];
+const audienceTypes = ['all','General', 'Niche', 'Specific'];
+const audienceAgeGroups = ['all','13-18', '19-25', '26-35', '36-45', '46-55', '56+'];
 
 interface FiltersProps {
   onApplyFilters?: (values: FilterValues) => void;
@@ -187,6 +200,44 @@ const Filters = ({onClose, isOpen: isOpenProp, onApplyFilters}: FiltersProps) =>
           </Field>
         </div>
 
+                       {/* platfrom */}
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-3">
+            Platforms
+          </label>
+          <div className="grid grid-cols-2 gap-2">
+            {platforms.map((platform) => (
+              <label key={platform} className="flex items-center p-2 rounded-lg hover:bg-gray-50 transition-colors">
+                <Field
+                  type="checkbox"
+                  name="platforms"
+                  value={platform}
+                  className="h-4 w-4 text-blue-500 focus:ring-blue-500 border-gray-300 rounded"
+                />
+                <span className="ml-2 text-sm text-gray-700">{platform}</span>
+              </label>
+            ))}
+          </div>
+        </div>
+
+        {/*  Gender */}
+        <div>
+          <label htmlFor="gender" className="block text-sm font-medium text-gray-700 mb-2">
+            Gender
+          </label>
+          <Field
+            as="select"
+            id="gender"
+            name="gender"
+            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-black bg-white transition-colors"
+          >
+            <option value="">Select Gender</option>
+            <option value="male">Male</option>
+            <option value="female">Female</option>
+            <option value="other">Other</option>
+          </Field>
+        </div>
+
         {/* Budget Amount Range */}
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -218,23 +269,7 @@ const Filters = ({onClose, isOpen: isOpenProp, onApplyFilters}: FiltersProps) =>
           </div>
         </div>
 
-        {/* Gender */}
-        <div>
-          <label htmlFor="gender" className="block text-sm font-medium text-gray-700 mb-2">
-            Gender
-          </label>
-          <Field
-            as="select"
-            id="gender"
-            name="gender"
-            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-black bg-white transition-colors"
-          >
-            <option value="">Select Gender</option>
-            <option value="male">Male</option>
-            <option value="female">Female</option>
-            <option value="other">Other</option>
-          </Field>
-        </div>
+
 
         {/* Follower Count Range */}
         <div>
@@ -285,6 +320,60 @@ const Filters = ({onClose, isOpen: isOpenProp, onApplyFilters}: FiltersProps) =>
               </label>
             ))}
           </div>
+        </div>
+
+        {/* language */}
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-3">
+            Categories
+          </label>
+          <div className="grid grid-cols-2 gap-2">
+            {languages.map((language) => (
+              <label key={language} className="flex items-center p-2 rounded-lg hover:bg-gray-50 transition-colors">
+                <Field
+                  type="checkbox"
+                  name="language"
+                  value={language}
+                  className="h-4 w-4 text-blue-500 focus:ring-blue-500 border-gray-300 rounded"
+                />
+                <span className="ml-2 text-sm text-gray-700">{language}</span>
+              </label>
+            ))}
+          </div>
+        </div>
+
+         {/*  audience types */}
+         <div>
+          <label htmlFor="audienceTypes" className="block text-sm font-medium text-gray-700 mb-2">
+            Audience Types
+          </label>
+          <Field
+            as="select"
+            id="audienceTypes"
+            name="audienceTypes"
+            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-black bg-white transition-colors"
+          >
+            {audienceTypes.map((audienceType) => (
+              <option key={audienceType} value={audienceType}>{audienceType}</option>
+            ))}
+          </Field>
+        </div>
+
+     {/*  audience age groups */}
+     <div>
+          <label htmlFor="audienceAgeGroups" className="block text-sm font-medium text-gray-700 mb-2">
+            Audience Age Groups
+          </label>
+          <Field
+            as="select"
+            id="audienceAgeGroups"
+            name="audienceAgeGroups"
+            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-black bg-white transition-colors"
+          >
+            {audienceAgeGroups.map((audienceAgeGroup) => (
+              <option key={audienceAgeGroup} value={audienceAgeGroup}>{audienceAgeGroup}</option>
+            ))}
+          </Field>
         </div>
       </div>
 

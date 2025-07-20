@@ -10,7 +10,6 @@ const Header = () => {
   const role = useSelector(selectUserRole);
   const [isProfileDropdownOpen, setIsProfileDropdownOpen] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [currentUserRole, setCurrentUserRole] = useState(localStorage.getItem('userRole') || '2');
 
   const router = useRouter();
   const pathname = usePathname();
@@ -21,7 +20,6 @@ const Header = () => {
 
   useEffect(() => {
     setIsLoggedIn(localStorage.getItem('token') ? true : false);
-    setCurrentUserRole(localStorage.getItem('userRole') || '2');
   }, []);
 
   // Mobile navigation items with proper SVG icons

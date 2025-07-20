@@ -4,36 +4,41 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 export type UserRole = '2' | '3' | null;
 
 // Define the state interface
-interface UserRoleState {
+export interface UserRoleState {
   role: UserRole;
-  hasVisitedBefore: boolean;
+  hasVisitedBefore: boolean | null;
+}
+
+const initialState : UserRoleState = {
+  role: null,
+  hasVisitedBefore: null
 }
 
 // Get initial state from localStorage
-const getInitialState = (): UserRoleState => {
-  // Check if user has visited before
-  const hasVisitedBefore = localStorage.getItem('hasVisitedBefore') === 'true';
+// const getInitialState = (): UserRoleState => {
+//   // Check if user has visited before
+//   const hasVisitedBefore = localStorage.getItem('hasVisitedBefore') === 'true';
   
-  // Get user role from localStorage (convert '2' to 'influencer', '3' to 'business')
-  const storedRole = localStorage.getItem('userRole');
-  let role: UserRole = null;
+//   // Get user role from localStorage (convert '2' to 'influencer', '3' to 'business')
+//   const storedRole = localStorage.getItem('userRole');
+//   let role: UserRole = null;
   
-  if (storedRole === '2') {
-    role = '2';
-  } else if (storedRole === '3') {
-    role = '3';
-  }
+//   if (storedRole === '2') {
+//     role = '2';
+//   } else if (storedRole === '3') {
+//     role = '3';
+//   }
   
-  return {
-    role,
-    hasVisitedBefore
-  };
-};
+//   return {
+//     role,
+//     hasVisitedBefore
+//   };
+// };
 
 // Create the slice
 const userRoleSlice = createSlice({
   name: 'userRole',
-  initialState: getInitialState(),
+  initialState,
   reducers: {
     // Set user role and save to localStorage
     setUserRole: (state, action: PayloadAction<UserRole>) => {

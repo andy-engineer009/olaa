@@ -17,7 +17,8 @@ const influencers = [
     followers: 1000,
     startingPrice: 1000,
     instagramUrl: "https://www.instagram.com/john_doe",
-    youtubeUrl: "https://www.youtube.com/john_doe",
+    youtubeUrl: "https://www.youtube.com/john_doe", 
+    facebookUrl: "https://www.facebook.com/john_doe",
     isFeatured: true,
   },
   {

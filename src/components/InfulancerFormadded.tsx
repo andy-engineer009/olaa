@@ -22,10 +22,10 @@ interface FormValues {
   // Step 1: Basic Info
   name: string;
   username: string;
-  platforms: string[];
+  platforms: any[];
   gender: string;
-  categories: string[];
-  languages: string[];
+  categories: any[];
+  languages: any[];
   verifiedProfile: boolean;
   state: string;
   city: string;
@@ -34,6 +34,7 @@ interface FormValues {
   followerCount: number;
   instagramUrl: string;
   youtubeUrl: string;
+  facebookUrl: string;
   audienceType: string;
   audienceAgeGroup: string;
   
@@ -48,29 +49,144 @@ interface FormValues {
 }
 
 // Mock data for dropdowns
-const platforms = ['Instagram', 'YouTube'];
-const genders = ['Male', 'Female', 'Other'];
-const categories = ['Fashion & Beauty', 'Technology', 'Fitness & Health', 'Food & Cooking', 'Travel', 'Lifestyle', 'Gaming', 'Education', 'Business', 'Entertainment'];
-const languages = ['English', 'Hindi', 'Spanish', 'French', 'German', 'Chinese', 'Japanese', 'Korean'];
-const states = ['Maharashtra', 'Delhi', 'Karnataka', 'Tamil Nadu', 'Telangana', 'Gujarat'];
-const cities = {
-  'Maharashtra': ['Mumbai', 'Pune', 'Nagpur', 'Thane'],
-  'Delhi': ['New Delhi', 'Gurgaon', 'Noida', 'Faridabad'],
-  'Karnataka': ['Bangalore', 'Mysore', 'Hubli', 'Mangalore'],
-  'Tamil Nadu': ['Chennai', 'Coimbatore', 'Madurai', 'Salem'],
-  'Telangana': ['Hyderabad', 'Warangal', 'Karimnagar', 'Nizamabad'],
-  'Gujarat': ['Ahmedabad', 'Surat', 'Vadodara', 'Rajkot']
-};
-const localities = {
-  'Mumbai': ['Bandra', 'Andheri', 'Dadar', 'Worli'],
-  'Pune': ['Koregaon Park', 'Baner', 'Hinjewadi', 'Kharadi'],
-  'New Delhi': ['Connaught Place', 'Khan Market', 'Lajpat Nagar', 'Defence Colony'],
-  'Bangalore': ['Indiranagar', 'Koramangala', 'Whitefield', 'Electronic City'],
-  'Chennai': ['T Nagar', 'Anna Nagar', 'Adyar', 'Mylapore'],
-  'Hyderabad': ['Banjara Hills', 'Jubilee Hills', 'Gachibowli', 'Hitech City']
-};
-const audienceTypes = ['General', 'Niche', 'Specific'];
-const audienceAgeGroups = ['13-18', '19-25', '26-35', '36-45', '46-55', '56+'];
+const platforms = [
+  { id: 1, name: 'Instagram' },
+  { id: 2, name: 'YouTube' },
+  { id: 3, name: 'Facebook' }
+];
+const categories = [
+  { id: 1, name: 'Fashion & Beauty' },
+  { id: 2, name: 'Technology' },
+  { id: 3, name: 'Fitness & Health' },
+  { id: 4, name: 'Food & Cooking' },
+  { id: 5, name: 'Travel' },
+  { id: 6, name: 'Lifestyle' },
+  { id: 7, name: 'Gaming' },
+  { id: 8, name: 'Education' },
+  { id: 9, name: 'Business' },
+  { id: 10, name: 'Entertainment' }
+];
+
+const languages = [
+  { id: 1, name: 'English' },
+  { id: 2, name: 'Hindi' },
+  { id: 3, name: 'Punjabi' },
+  { id: 4, name: 'Bhojpuri' },
+  { id: 5, name: 'Marathi' },
+  { id: 6, name: 'Gujarati' },
+  { id: 7, name: 'Telugu' }
+];
+const genders = [
+  { id: 1, name: 'Male' },
+  { id: 2, name: 'Female' }, 
+  { id: 3, name: 'Other' }
+];
+
+const states = [
+  // Indian States
+  { id: 1, name: 'Andhra Pradesh', shortName: 'AP' },
+  { id: 2, name: 'Arunachal Pradesh', shortName: 'AR' },
+  { id: 3, name: 'Assam', shortName: 'AS' },
+  { id: 4, name: 'Bihar', shortName: 'BR' },
+  { id: 5, name: 'Chhattisgarh', shortName: 'CG' },
+  { id: 6, name: 'Goa', shortName: 'GA' },
+  { id: 7, name: 'Gujarat', shortName: 'GJ' },
+  { id: 8, name: 'Haryana', shortName: 'HR' },
+  { id: 9, name: 'Himachal Pradesh', shortName: 'HP' },
+  { id: 10, name: 'Jharkhand', shortName: 'JH' },
+  { id: 11, name: 'Karnataka', shortName: 'KA' },
+  { id: 12, name: 'Kerala', shortName: 'KL' },
+  { id: 13, name: 'Madhya Pradesh', shortName: 'MP' },
+  { id: 14, name: 'Maharashtra', shortName: 'MH' },
+  { id: 15, name: 'Manipur', shortName: 'MN' },
+  { id: 16, name: 'Meghalaya', shortName: 'ML' },
+  { id: 17, name: 'Mizoram', shortName: 'MZ' },
+  { id: 18, name: 'Nagaland', shortName: 'NL' },
+  { id: 19, name: 'Odisha', shortName: 'OR' },
+  { id: 20, name: 'Punjab', shortName: 'PB' },
+  { id: 21, name: 'Rajasthan', shortName: 'RJ' },
+  { id: 22, name: 'Sikkim', shortName: 'SK' },
+  { id: 23, name: 'Tamil Nadu', shortName: 'TN' },
+  { id: 24, name: 'Telangana', shortName: 'TG' },
+  { id: 25, name: 'Tripura', shortName: 'TR' },
+  { id: 26, name: 'Uttar Pradesh', shortName: 'UP' },
+  { id: 27, name: 'Uttarakhand', shortName: 'UK' },
+  { id: 28, name: 'West Bengal', shortName: 'WB' },
+
+  // Union Territories (केंद्र शासित प्रदेश)
+  { id: 29, name: 'Andaman and Nicobar Islands', shortName: 'AN' },
+  { id: 30, name: 'Chandigarh', shortName: 'CH' },
+  { id: 31, name: 'Dadra and Nagar Haveli and Daman and Diu', shortName: 'DN' },
+  { id: 32, name: 'Delhi', shortName: 'DL' },
+  { id: 33, name: 'Jammu and Kashmir', shortName: 'JK' },
+  { id: 34, name: 'Ladakh', shortName: 'LA' },
+  { id: 35, name: 'Lakshadweep', shortName: 'LD' },
+  { id: 36, name: 'Puducherry', shortName: 'PY' }
+];
+
+const cities = [
+  { id: 1, name: 'Visakhapatnam', stateId: 1 },
+  { id: 2, name: 'Itanagar', stateId: 2 },
+  { id: 3, name: 'Guwahati', stateId: 3 },
+  { id: 4, name: 'Patna', stateId: 4 },
+  { id: 5, name: 'Raipur', stateId: 5 },
+  { id: 6, name: 'Panaji', stateId: 6 },
+  { id: 7, name: 'Ahmedabad', stateId: 7 },
+  { id: 8, name: 'Gurugram', stateId: 8 },
+  { id: 9, name: 'Shimla', stateId: 9 },
+  { id: 10, name: 'Ranchi', stateId: 10 },
+  { id: 11, name: 'Bengaluru', stateId: 11 },
+  { id: 12, name: 'Kochi', stateId: 12 },
+  { id: 13, name: 'Bhopal', stateId: 13 },
+  { id: 14, name: 'Mumbai', stateId: 14 },
+  { id: 15, name: 'Imphal', stateId: 15 },
+  { id: 16, name: 'Shillong', stateId: 16 },
+  { id: 17, name: 'Aizawl', stateId: 17 },
+  { id: 18, name: 'Kohima', stateId: 18 },
+  { id: 19, name: 'Bhubaneswar', stateId: 19 },
+  { id: 20, name: 'Ludhiana', stateId: 20 },
+  { id: 21, name: 'Jaipur', stateId: 21 },
+  { id: 22, name: 'Gangtok', stateId: 22 },
+  { id: 23, name: 'Chennai', stateId: 23 },
+  { id: 24, name: 'Hyderabad', stateId: 24 },
+  { id: 25, name: 'Agartala', stateId: 25 },
+  { id: 26, name: 'Lucknow', stateId: 26 },
+  { id: 27, name: 'Dehradun', stateId: 27 },
+  { id: 28, name: 'Kolkata', stateId: 28 },
+  { id: 29, name: 'Port Blair', stateId: 29 },
+  { id: 30, name: 'Chandigarh', stateId: 30 },
+  { id: 31, name: 'Daman', stateId: 31 },
+  { id: 32, name: 'New Delhi', stateId: 32 },
+  { id: 33, name: 'Srinagar', stateId: 33 },
+  { id: 34, name: 'Leh', stateId: 34 },
+  { id: 35, name: 'Kavaratti', stateId: 35 },
+  { id: 36, name: 'Puducherry', stateId: 36 }
+];
+
+const localities = [
+  { id: 1, name: 'Andheri West', cityId: 1 },   // Mumbai
+  { id: 2, name: 'Kothrud', cityId: 2 },        // Pune
+  { id: 3, name: 'Connaught Place', cityId: 3 },// New Delhi
+  { id: 4, name: 'Sector 10', cityId: 4 },  
+  { id: 5, name: 'una', cityId: 9 }     // Dwarka
+];
+
+const audienceTypes = [
+  { id: 0, name: 'all' },
+  { id: 1, name: 'General' },
+  { id: 2, name: 'Niche' },
+  { id: 3, name: 'Specific' }
+];
+
+const audienceAgeGroups = [
+  { id: 0, name: 'all' },
+  { id: 1, name: '13-18' },
+  { id: 2, name: '19-25' },
+  { id: 3, name: '26-35' },
+  { id: 4, name: '36-45' },
+  { id: 5, name: '46-55' },
+  { id: 6, name: '56+' }
+];
 
 // Validation schemas
 const step1Schema = Yup.object().shape({
@@ -85,12 +201,16 @@ const step1Schema = Yup.object().shape({
   influencerAge: Yup.number().required('Age is required').min(13, 'Must be at least 13 years old').max(100, 'Invalid age'),
   followerCount: Yup.number().required('Follower count is required').min(100, 'Must have at least 100 followers'),
   instagramUrl: Yup.string().when('platforms', {
-    is: (platforms: string[]) => platforms.includes('Instagram'),
+    is: (platforms: number[]) => platforms.includes(1),
     then: (schema) => schema.required('Instagram URL is required').url('Must be a valid URL')
   }),
   youtubeUrl: Yup.string().when('platforms', {
-    is: (platforms: string[]) => platforms.includes('YouTube'),
+    is: (platforms: number[]) => platforms.includes(2),
     then: (schema) => schema.required('YouTube URL is required').url('Must be a valid URL')
+  }),
+  facebookUrl: Yup.string().when('platforms', {
+    is: (platforms: number[]) => platforms.includes(3),
+    then: (schema) => schema.required('Facebook URL is required').url('Must be a valid URL')
   }),
   // audienceType: Yup.string().required('Audience type is required'),
   // audienceAgeGroup: Yup.string().required('Audience age group is required')
@@ -140,7 +260,7 @@ const initialValues: FormValues = {
   gender: '',
   categories: [],
   languages: [],
-  verifiedProfile: false,
+  verifiedProfile: true,
   state: '',
   city: '',
   locality: '',
@@ -148,6 +268,7 @@ const initialValues: FormValues = {
   followerCount: 0,
   instagramUrl: '',
   youtubeUrl: '',
+  facebookUrl: '',
   startingPrice: '',
   offers: [],
   profileImage: null,
@@ -165,17 +286,18 @@ const MultiSelectCheckbox = ({
   form 
 }: {
   label: string;
-  options: string[];
+  options: Array<{id: number, name: string}>;
   field: any;
   form: any;
 }) => {
-  const handleChange = (option: string) => {
+  const handleChange = (optionId: number) => {
     const currentValues = form.values[field.name] || [];
-    const newValues = currentValues.includes(option)
-      ? currentValues.filter((value: string) => value !== option)
-      : [...currentValues, option];
+    const newValues = currentValues.includes(optionId)
+      ? currentValues.filter((value: number) => value !== optionId)
+      : [...currentValues, optionId];
     
     form.setFieldValue(field.name, newValues);
+    console.log(form.values[field.name])
   };
 
   return (
@@ -183,14 +305,16 @@ const MultiSelectCheckbox = ({
       <label className="block text-sm font-medium text-gray-700">{label}</label>
       <div className="grid grid-cols-2 gap-3">
         {options.map((option) => (
-          <label key={option} className="flex items-center space-x-2 cursor-pointer">
+          <label key={option.id} className="flex items-center space-x-2 cursor-pointer">
             <input
               type="checkbox"
-              checked={(form.values[field.name] || []).includes(option)}
-              onChange={() => handleChange(option)}
+              name={field.name}
+              value={option.id}
+              checked={(form.values[field.name] || []).includes(option.id)}
+              onChange={() => handleChange(option.id)}
               className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
             />
-            <span className="text-sm text-gray-700">{option}</span>
+            <span className="text-sm text-gray-700">{option.name}</span>
           </label>
         ))}
       </div>
@@ -472,7 +596,7 @@ const Step1BasicInfo = ({ values, setFieldValue }: { values: FormValues; setFiel
       </Field>
 
       {/* Platform URLs */}
-      {values.platforms.includes('Instagram') && (
+      {values.platforms.includes(1) && (
         <div>
           <label htmlFor="instagramUrl" className="block text-sm font-medium text-gray-700 mb-2">
             Instagram Profile URL *
@@ -488,7 +612,7 @@ const Step1BasicInfo = ({ values, setFieldValue }: { values: FormValues; setFiel
         </div>
       )}
 
-      {values.platforms.includes('YouTube') && (
+      {values.platforms.includes(2) && (
         <div>
           <label htmlFor="youtubeUrl" className="block text-sm font-medium text-gray-700 mb-2">
             YouTube Channel URL *
@@ -501,6 +625,22 @@ const Step1BasicInfo = ({ values, setFieldValue }: { values: FormValues; setFiel
             placeholder="https://youtube.com/@yourchannel"
           />
           <ErrorMessage name="youtubeUrl" component="div" className="text-red-500 text-sm mt-1" />
+        </div>
+      )}
+
+{values.platforms.includes(3) && (
+        <div>
+          <label htmlFor="facebookUrl" className="block text-sm font-medium text-gray-700 mb-2">
+            Facebook Profile URL *
+          </label>
+          <Field
+            type="url"
+            id="facebookUrl"
+            name="facebookUrl"
+            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+            placeholder="https://facebook.com/yourusername"
+          />
+          <ErrorMessage name="facebookUrl" component="div" className="text-red-500 text-sm mt-1" />
         </div>
       )}
 
@@ -547,8 +687,8 @@ const Step1BasicInfo = ({ values, setFieldValue }: { values: FormValues; setFiel
           className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
         >
           <option value="">Select Gender</option>
-          {genders.map(gender => (
-            <option key={gender} value={gender}>{gender}</option>
+          {genders.map((gender) => (
+            <option key={gender.id} value={gender.id}>{gender.name}</option>
           ))}
         </Field>
         <ErrorMessage name="gender" component="div" className="text-red-500 text-sm mt-1" />
@@ -580,14 +720,14 @@ const Step1BasicInfo = ({ values, setFieldValue }: { values: FormValues; setFiel
 
       {/* Verified Profile */}
       <div>
-        <h2 className="block text-sm font-medium text-gray-700 mb-2">is Your profile has tick</h2>
+        <h2 className="block text-sm font-medium text-gray-700 mb-2">Is your profile verified?</h2>
         <div className="flex items-center space-x-6">
           <div className="flex items-center space-x-2">
             <Field
               type="radio"
               id="verifiedProfileYes"
               name="verifiedProfile" 
-              value="true"
+              value={true}
               className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300"
             />
             <label htmlFor="verifiedProfileYes" className="text-sm font-medium text-gray-700">
@@ -599,7 +739,7 @@ const Step1BasicInfo = ({ values, setFieldValue }: { values: FormValues; setFiel
               type="radio"
               id="verifiedProfileNo"
               name="verifiedProfile"
-              value="false"
+              value={false}
               className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300"
             />
             <label htmlFor="verifiedProfileNo" className="text-sm font-medium text-gray-700">
@@ -629,7 +769,7 @@ const Step1BasicInfo = ({ values, setFieldValue }: { values: FormValues; setFiel
           >
             <option value="">Select State</option>
             {states.map(state => (
-              <option key={state} value={state}>{state}</option>
+              <option key={state.id} value={state.id}>{state.name}</option>
             ))}
           </Field>
           <ErrorMessage name="state" component="div" className="text-red-500 text-sm mt-1" />
@@ -651,9 +791,14 @@ const Step1BasicInfo = ({ values, setFieldValue }: { values: FormValues; setFiel
             }}
           >
             <option value="">Select City</option>
-            {values.state && cities[values.state as keyof typeof cities]?.map(city => (
-              <option key={city} value={city}>{city}</option>
+            {/* {values.state && states[values.state as keyof typeof states]?.map((city: any) => (
+              <option key={city.id} value={city.id}>{city.name}</option>
+            ))} */}
+                        {values.state && cities.filter(city => city.stateId === parseInt(values.state)).map((city) => (
+              <option key={city.id} value={city.id}>{city.name}</option>
             ))}
+
+            
           </Field>
           <ErrorMessage name="city" component="div" className="text-red-500 text-sm mt-1" />
         </div>
@@ -670,9 +815,10 @@ const Step1BasicInfo = ({ values, setFieldValue }: { values: FormValues; setFiel
             disabled={!values.city}
           >
             <option value="">Select Locality</option>
-            {values.city && localities[values.city as keyof typeof localities]?.map(locality => (
-              <option key={locality} value={locality}>{locality}</option>
+            {values.city && localities.filter(locality => locality.cityId === parseInt(values.city)).map((locality) => (
+              <option key={locality.id} value={locality.id}>{locality.name}</option>
             ))}
+
           </Field>
         </div>
         <div>
@@ -687,7 +833,7 @@ const Step1BasicInfo = ({ values, setFieldValue }: { values: FormValues; setFiel
           >
             <option value="">Select Audience Type</option>
             {audienceTypes.map(type => (
-              <option key={type} value={type}>{type}</option>
+              <option key={type.id} value={type.id}>{type.name}</option>
             ))}
           </Field>
           <ErrorMessage name="audienceType" component="div" className="text-red-500 text-sm mt-1" />
@@ -705,7 +851,7 @@ const Step1BasicInfo = ({ values, setFieldValue }: { values: FormValues; setFiel
           >
             <option value="">Select Age Group</option>
             {audienceAgeGroups.map(ageGroup => (
-              <option key={ageGroup} value={ageGroup}>{ageGroup}</option>
+              <option key={ageGroup.id} value={ageGroup.id}>{ageGroup.name}</option>
             ))}
           </Field>
           {/* <ErrorMessage name="audienceAgeGroup" component="div" className="text-red-500 text-sm mt-1" /> */}
@@ -716,7 +862,7 @@ const Step1BasicInfo = ({ values, setFieldValue }: { values: FormValues; setFiel
 );
 
 const Step2Pricing = ({ values, setFieldValue }: { values: FormValues; setFieldValue: (field: string, value: any) => void }) => {
-  const contentTypes = ['Post', 'Reel', 'Story', 'YouTube Shorts', 'YouTube Video'];
+  const contentTypes = ['Post', 'Reel', 'Story', 'YouTube Shorts', 'YouTube Video', 'Facebook Post', 'Facebook Reel', 'Facebook Story'];
   
   // Ensure offers is always an array
   const safeOffers = Array.isArray(values.offers) ? values.offers : [];
