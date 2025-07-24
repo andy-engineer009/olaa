@@ -1,9 +1,8 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Formik, Form, Field } from 'formik';
 import { motion, AnimatePresence } from 'framer-motion';
-
 interface FilterValues {
   location: string;
   budgetMin: number;
@@ -110,48 +109,111 @@ const Filters = ({onClose, isOpen: isOpenProp, onApplyFilters}: FiltersProps) =>
     onMaxChange: (value: number) => void;
     formatValue: (value: number) => string;
   }) => {
+    const [isDragging, setIsDragging] = useState<'min' | 'max' | null>(null);
+    const trackRef = useRef<HTMLDivElement>(null);
+
     const minPercent = ((minValue - min) / (max - min)) * 100;
     const maxPercent = ((maxValue - min) / (max - min)) * 100;
 
+    const getValueFromPosition = (clientX: number) => {
+      if (!trackRef.current) return minValue;
+      
+      const rect = trackRef.current.getBoundingClientRect();
+      const percent = Math.max(0, Math.min(100, ((clientX - rect.left) / rect.width) * 100));
+      const value = min + (percent / 100) * (max - min);
+      return Math.round(value / step) * step;
+    };
+
+    const handleMouseDown = (e: React.MouseEvent, type: 'min' | 'max') => {
+      e.preventDefault();
+      setIsDragging(type);
+    };
+
+    const handleMouseMove = (e: MouseEvent) => {
+      if (!isDragging) return;
+
+      const newValue = getValueFromPosition(e.clientX);
+      
+      if (isDragging === 'min') {
+        if (newValue < maxValue) {
+          onMinChange(newValue);
+        }
+      } else {
+        if (newValue > minValue) {
+          onMaxChange(newValue);
+        }
+      }
+    };
+
+    const handleMouseUp = () => {
+      setIsDragging(null);
+    };
+
+    useEffect(() => {
+      if (isDragging) {
+        document.addEventListener('mousemove', handleMouseMove);
+        document.addEventListener('mouseup', handleMouseUp);
+        return () => {
+          document.removeEventListener('mousemove', handleMouseMove);
+          document.removeEventListener('mouseup', handleMouseUp);
+        };
+      }
+    }, [isDragging, minValue, maxValue]);
+
     return (
       <div className="relative">
-        <div className="relative h-2 bg-gray-200 rounded-lg">
+        {/* Track */}
+        <div 
+          ref={trackRef}
+          className="relative h-2 bg-gray-200 rounded-lg cursor-pointer"
+          onMouseDown={(e) => {
+            const newValue = getValueFromPosition(e.clientX);
+            const minDistance = Math.abs(newValue - minValue);
+            const maxDistance = Math.abs(newValue - maxValue);
+            
+            if (minDistance < maxDistance) {
+              if (newValue < maxValue) {
+                onMinChange(newValue);
+              }
+            } else {
+              if (newValue > minValue) {
+                onMaxChange(newValue);
+              }
+            }
+          }}
+        >
+          {/* Selected range */}
           <div 
             className="absolute h-2 bg-gradient-to-r from-blue-500 to-purple-500 rounded-lg"
-            style={{ left: `${minPercent}%`, right: `${100 - maxPercent}%` }}
-          />
-          <input
-            type="range"
-            min={min}
-            max={max}
-            step={step}
-            value={minValue}
-            onChange={(e) => {
-              const value = parseInt(e.target.value);
-              if (value <= maxValue) {
-                onMinChange(value);
-              }
+            style={{ 
+              left: `${minPercent}%`, 
+              width: `${maxPercent - minPercent}%` 
             }}
-            className="absolute w-full h-2 bg-transparent appearance-none cursor-pointer slider-thumb"
-            style={{ zIndex: 2 }}
           />
-          <input
-            type="range"
-            min={min}
-            max={max}
-            step={step}
-            value={maxValue}
-            onChange={(e) => {
-              const value = parseInt(e.target.value);
-              if (value >= minValue) {
-                onMaxChange(value);
-              }
+          
+          {/* Min thumb */}
+          <div 
+            className="absolute top-0 w-4 h-4 bg-blue-500 rounded-full border-2 border-white shadow-lg transform -translate-y-1 cursor-pointer hover:scale-110 transition-transform"
+            style={{ 
+              left: `calc(${minPercent}% - 8px)`,
+              zIndex: 4
             }}
-            className="absolute w-full h-2 bg-transparent appearance-none cursor-pointer slider-thumb"
-            style={{ zIndex: 2 }}
+            onMouseDown={(e) => handleMouseDown(e, 'min')}
+          />
+          
+          {/* Max thumb */}
+          <div 
+            className="absolute top-0 w-4 h-4 bg-purple-500 rounded-full border-2 border-white shadow-lg transform -translate-y-1 cursor-pointer hover:scale-110 transition-transform"
+            style={{ 
+              left: `calc(${maxPercent}% - 8px)`,
+              zIndex: 4
+            }}
+            onMouseDown={(e) => handleMouseDown(e, 'max')}
           />
         </div>
-        <div className="flex justify-between text-sm font-medium text-gray-900 mt-2">
+
+        {/* Value labels */}
+        <div className="flex justify-between text-sm font-medium text-gray-900 mt-4">
           <span>{formatValue(minValue)}</span>
           <span>{formatValue(maxValue)}</span>
         </div>
@@ -398,6 +460,7 @@ const Filters = ({onClose, isOpen: isOpenProp, onApplyFilters}: FiltersProps) =>
     </div>
   );
 
+
   return (
     <>
       {/* Filter Toggle Button */}
@@ -420,7 +483,7 @@ const Filters = ({onClose, isOpen: isOpenProp, onApplyFilters}: FiltersProps) =>
               exit={{ opacity: 0 }}
               transition={{ duration: 0.3 }}
               className="fixed inset-0 z-50 bg-black bg-opacity-50 backdrop-blur-sm"
-              onClick={() => setIsOpen(false)}
+              
             />
             
             <motion.div 
@@ -440,6 +503,7 @@ const Filters = ({onClose, isOpen: isOpenProp, onApplyFilters}: FiltersProps) =>
                   </Form>
                 )}
               </Formik>
+        
             </motion.div>
           </>
         )}

@@ -54,6 +54,7 @@ const SearchAndFilter = ({
   const handleApplyFilters = (values: any) => {
     onApplyFilters?.(values);
     console.log('Filters applied:', values);
+    setIsFilterOpen(false);
   };
 
   const SearchForm = () => (

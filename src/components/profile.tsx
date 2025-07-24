@@ -2,7 +2,7 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAppSelector } from '@/store/hooks';
-import { selectUserRole, setUserRole } from '@/store/userRoleSlice';
+import { logout, selectUserRole, setUserRole } from '@/store/userRoleSlice';
 import { useSelector, useDispatch } from 'react-redux';
  
 // Mock API functions (replace with real API calls)
@@ -371,8 +371,7 @@ console.log('mak')
 
               {/* {localStorage.getItem('token') ? ( */}
                 <button className="w-full flex items-center justify-between p-3 rounded-lg hover:bg-red-50 transition-colors" onClick={() => {
-                  localStorage.clear();
-                  console.log('logged out');
+                  dispatch(logout());
                   router.push('/');
                 }}>
                   <div className="flex items-center gap-3">

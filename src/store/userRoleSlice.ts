@@ -7,11 +7,13 @@ export type UserRole = '2' | '3' | null;
 export interface UserRoleState {
   role: UserRole;
   hasVisitedBefore: boolean | null;
+  isLoggedIn: boolean | null;
 }
 
 const initialState : UserRoleState = {
   role: null,
-  hasVisitedBefore: null
+  hasVisitedBefore: null,
+  isLoggedIn: null
 }
 
 // Get initial state from localStorage
@@ -65,6 +67,19 @@ const userRoleSlice = createSlice({
         localStorage.removeItem('hasVisitedBefore');
       }
     },
+
+    // Set isLoggedIn and save to localStorage
+    setIsLoggedIn: (state, action: PayloadAction<boolean>) => {
+      state.isLoggedIn = action.payload;
+      
+      // Save to localStorage
+      if (action.payload) {
+        localStorage.setItem('isLoggedIn', 'true');
+      } else {
+        localStorage.removeItem('isLoggedIn');
+      }
+    },
+
     
     // Clear user role from localStorage
     clearUserRole: (state) => {
@@ -78,6 +93,13 @@ const userRoleSlice = createSlice({
       state.hasVisitedBefore = false;
       localStorage.removeItem('userRole');
       localStorage.removeItem('hasVisitedBefore');
+    },
+
+    // Logout
+    logout: (state) => {
+      state.role = null;
+      localStorage.removeItem('token');
+      localStorage.removeItem('isLoggedIn');
     }
   }
 });
@@ -87,12 +109,15 @@ export const {
   setUserRole, 
   setHasVisitedBefore, 
   clearUserRole, 
-  resetUserData 
+  resetUserData,
+  logout,
+  setIsLoggedIn
 } = userRoleSlice.actions;
 
 // Export selectors
 export const selectUserRole = (state: { userRole: UserRoleState }) => state.userRole.role;
 export const selectHasVisitedBefore = (state: { userRole: UserRoleState }) => state.userRole.hasVisitedBefore;
+export const selectIsLoggedIn = (state: { userRole: UserRoleState }) => state.userRole.isLoggedIn;
 
 // Export reducer
 export default userRoleSlice.reducer; 

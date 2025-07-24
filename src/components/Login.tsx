@@ -4,6 +4,8 @@ import { useState } from 'react';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 import { useRouter } from 'next/navigation';
+import { useDispatch } from 'react-redux';
+import { setIsLoggedIn } from '@/store/userRoleSlice';
 
 // Types for form values
 interface PhoneLoginFormValues {
@@ -76,7 +78,8 @@ const Login = () => {
   const [toast, setToast] = useState<{ message: string; type: 'success' | 'error' | 'info' } | null>(null);
   const [resendTimer, setResendTimer] = useState(0);
   const router = useRouter();
-
+  const dispatch = useDispatch();
+  
   // Show toast notification
   const showToast = (message: string, type: 'success' | 'error' | 'info') => {
     setToast({ message, type });
@@ -131,6 +134,7 @@ const Login = () => {
         
         // Store authentication token
         localStorage.setItem('token', 'mock-jwt-token');
+        dispatch(setIsLoggedIn(true));
         localStorage.setItem('userPhone', userPhone);
         
         // Redirect to home page

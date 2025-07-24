@@ -205,7 +205,7 @@ const Header = () => {
 {!pathname.includes('/detail') && !pathname.includes('/chat') &&  !pathname.includes('/profile') && (
   <>
       {/* Mobile Header - Simple top bar */}
-      <header className="bg-white shadow-sm sticky top-0 z-40 hidden md:block">
+      <header className="bg-white shadow-sm sticky top-0 z-40 hidden md:hidden">
         <div className="px-4 py-3">
           <div className="flex justify-between items-center">
             {/* Logo */}

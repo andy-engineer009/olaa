@@ -52,56 +52,56 @@ const influencers = [
     followers: 1000,
     startingPrice: 1000,
   },
-  {
-    id: 5,
-    name: "Sasha",
-    image: "https://apollo.olx.in/v1/files/1mfuey8oh35o3-IN/image;s=300x600;q=60",
-    isVerified: true,
-    location: "New York",
-    category: "Fashion",
-    followers: 1000,
-    startingPrice: 1000,
-  },
-  {
-    id: 6,
-    name: "Sasha",
-    image: "https://apollo.olx.in/v1/files/1mfuey8oh35o3-IN/image;s=300x600;q=60",
-    isVerified: true,
-    location: "New York",
-    category: "Fashion",
-    followers: 1000,
-    startingPrice: 1000,
-  },
-  {
-    id: 7,
-    name: "Sasha",
-    image: "https://apollo.olx.in/v1/files/1mfuey8oh35o3-IN/image;s=300x600;q=60",
-    isVerified: true,
-    location: "New York",
-    category: "Fashion",
-    followers: 1000,
-    startingPrice: 1000,
-  },
-  {
-    id: 8,
-    name: "Sasha",
-    image: "https://apollo.olx.in/v1/files/1mfuey8oh35o3-IN/image;s=300x600;q=60",
-    isVerified: true,
-    location: "New York",
-    category: "Fashion",
-    followers: 1000,
-    startingPrice: 1000,
-  },
-  {
-    id: 9,
-    name: "Sasha",
-    image: "https://apollo.olx.in/v1/files/1mfuey8oh35o3-IN/image;s=300x600;q=60",
-    isVerified: true,
-    location: "New York",
-    category: "Fashion",
-    followers: 1000,
-    startingPrice: 1000,
-  },
+  // {
+  //   id: 5,
+  //   name: "Sasha",
+  //   image: "https://apollo.olx.in/v1/files/1mfuey8oh35o3-IN/image;s=300x600;q=60",
+  //   isVerified: true,
+  //   location: "New York",
+  //   category: "Fashion",
+  //   followers: 1000,
+  //   startingPrice: 1000,
+  // },
+  // {
+  //   id: 6,
+  //   name: "Sasha",
+  //   image: "https://apollo.olx.in/v1/files/1mfuey8oh35o3-IN/image;s=300x600;q=60",
+  //   isVerified: true,
+  //   location: "New York",
+  //   category: "Fashion",
+  //   followers: 1000,
+  //   startingPrice: 1000,
+  // },
+  // {
+  //   id: 7,
+  //   name: "Sasha",
+  //   image: "https://apollo.olx.in/v1/files/1mfuey8oh35o3-IN/image;s=300x600;q=60",
+  //   isVerified: true,
+  //   location: "New York",
+  //   category: "Fashion",
+  //   followers: 1000,
+  //   startingPrice: 1000,
+  // },
+  // {
+  //   id: 8,
+  //   name: "Sasha",
+  //   image: "https://apollo.olx.in/v1/files/1mfuey8oh35o3-IN/image;s=300x600;q=60",
+  //   isVerified: true,
+  //   location: "New York",
+  //   category: "Fashion",
+  //   followers: 1000,
+  //   startingPrice: 1000,
+  // },
+  // {
+  //   id: 9,
+  //   name: "Sasha",
+  //   image: "https://apollo.olx.in/v1/files/1mfuey8oh35o3-IN/image;s=300x600;q=60",
+  //   isVerified: true,
+  //   location: "New York",
+  //   category: "Fashion",
+  //   followers: 1000,
+  //   startingPrice: 1000,
+  // },
   // {
   //   id: "1",
   //   name: "Sasha",
@@ -138,7 +138,7 @@ export default function Home() {
   return (
     <div>
       {/* logobar */}
-    <div className=" top-0 left-0 right-0 bg-white border-b border-gray-200 z-50 px-4 py-3 flex justify-between items-center h-14">
+    <div className=" top-0 left-0 right-0 bg-white border-b border-gray-200 z-50 px-4 py-3 flex justify-between items-center h-14 md:hidden">
   <div className="flex items-center">
     <svg className="w-8 h-8 text-purple-600" viewBox="0 0 24 24" fill="currentColor">
       <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"/>
@@ -240,9 +240,9 @@ export default function Home() {
           <button className="text-blue-600 hover:text-blue-700 font-[500] text-[14px]">View All</button>
         </div>
 
-        <div className="flex space-x-4 overflow-x-auto pb-4 hide-scrollbar">
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-2 md:gap-6 pb-4 md:pb-0">
           {influencers.slice(0, 10).map((influencer, index) => (
-            <div key={index} className="flex-none w-40">
+            <div key={index} className="">
               <InfluencerCard key={index} {...influencer} />
             </div>
           ))}
@@ -256,8 +256,8 @@ export default function Home() {
               </div>
             </div>
             
-            {/* trending influencers */}
-            <div className="w-full mx-auto mt-5 px-4 md:px-8">
+            {/* trending influencers  scrooll bar */}
+            {/* <div className="w-full mx-auto mt-5 px-4 md:px-8">
         <div className="flex justify-between items-center mb-4">
           <h3 className="text-md font-semibold text-gray-800">Trending Influencers</h3>
           <button className="text-blue-600 hover:text-blue-700 font-[500] text-[14px]">View All</button>
@@ -270,6 +270,21 @@ export default function Home() {
             </div>
           ))}
         </div>
+      </div> */}
+
+<div className="w-full mx-auto mt-5 px-4 md:px-8">
+        <div className="flex justify-between items-center mb-4">
+          <h3 className="text-md font-semibold text-gray-800">Trending Influencers</h3>
+          <button className="text-blue-600 hover:text-blue-700 font-[500] text-[14px]">View All</button>
+        </div>
+
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-2 md:gap-6 pb-20 md:pb-0">
+          {influencers.slice(0, 10).map((influencer, index) => (
+            <div key={index} className="">
+              <InfluencerCard key={index} {...influencer} />
+            </div>
+          ))}
+        </div>
       </div>
 
 
@@ -277,7 +292,7 @@ export default function Home() {
 
   
                   {/* trending influencers */}
-          <div className="w-full mx-auto mt-3 px-4 md:px-8">
+          {/* <div className="w-full mx-auto mt-3 px-4 md:px-8">
         <div className="flex justify-between items-center mb-4">
           <h3 className="text-md font-semibold text-gray-800">Near By Influencers</h3>
           <button className="text-blue-600 hover:text-blue-700 font-[500] text-[14px]">View All</button>
@@ -290,7 +305,7 @@ export default function Home() {
             </div>
           ))}
         </div>
-      </div>
+      </div> */}
 
 
       {/* <div className="flex mt-4 p-4 md:p-8 items-start">
