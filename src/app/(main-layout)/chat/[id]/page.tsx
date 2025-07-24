@@ -6,6 +6,7 @@ import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 import Image from 'next/image';
 import Link from 'next/link';
+import LoginPopup from '@/components/login-popup';
 
 // Types
 interface ChatUser {
@@ -247,13 +248,24 @@ export default function ChatPage() {
     <div className="flex flex-col h-full">
       {/* Header */}
       <div className="flex flex-col gap-4 border-b border-gray-200">
-        <div className="p-4">
+        {/* <div className="p-4">
           <Link href="/" className="text-black hover:underline block text-sm md:text-base">
             Back to Home
           </Link>
-        </div>
-        <div className="flex items-center justify-between px-4 pb-4">
+        </div> */}
+        <div className="flex items-center justify-between pr-4 py-4">
+          <div className="flex items-center gap-0">
+                    <button 
+            onClick={() => router.push('/')}
+            className="p-2 rounded-full hover:bg-gray-100"
+          >
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+            </svg>
+          </button>
           <h2 className="text-lg font-semibold text-gray-900">Messages</h2>
+          </div>
+
           {chatUsers.length > 0 && (
             <button
               onClick={handleDeleteAllChats}
@@ -468,6 +480,8 @@ export default function ChatPage() {
   };
 
   return (
+    <>
+    <LoginPopup />
     <div className="h-screen bg-white">
       <div className="flex h-full">
         {/* Chat list - hidden on mobile when chat is selected */}
@@ -495,5 +509,6 @@ export default function ChatPage() {
         </div>
       </div>
     </div>
+    </>
   );
 }

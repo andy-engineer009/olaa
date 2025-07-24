@@ -2,8 +2,9 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAppSelector } from '@/store/hooks';
-import { logout, selectUserRole, setUserRole } from '@/store/userRoleSlice';
+import { logout, selectUserRole, setUserRole, selectIsLoggedIn } from '@/store/userRoleSlice';
 import { useSelector, useDispatch } from 'react-redux';
+import LoginPopup from './login-popup';
  
 // Mock API functions (replace with real API calls)
 const fetchUserProfile = async () => {
@@ -18,25 +19,10 @@ const fetchUserProfile = async () => {
   };
 };
 
-const updateUserProfile = async (data: any) => {
-  // Simulate API call
-  return { success: true };
-};
-
-const deleteProfileImage = async () => {
-  // Simulate API call
-  return { success: true };
-};
-
-const uploadProfileImage = async (file: File) => {
-  // Simulate API call
-  return { url: '/new-profile.jpg' };
-};
-
 const Profile = () => {
-  console.log(useSelector(selectUserRole))
   const dispatch = useDispatch();
 const role = useSelector(selectUserRole);
+const isLoggedIn = useSelector(selectIsLoggedIn);
 
   const [initialValues, setInitialValues] = useState<any>(null);
   const [loading, setLoading] = useState(true);
@@ -86,7 +72,7 @@ console.log('mak')
   return (
     <div className="min-h-screen bg-white">
       {/* Header */}
-      <header className="sticky top-0 z-20 bg-white border-b border-gray-200 px-4 py-3">
+      <header className="sticky top-0 z-20 bg-white border-b border-gray-200 pr-4 py-3">
         <div className="flex items-center justify-between">
           <button 
             onClick={() => router.push('/')}
@@ -153,7 +139,7 @@ console.log('mak')
       </header>
 
       {/* Main Content */}
-      {localStorage.getItem('token') ? (
+    {isLoggedIn && (
 
       <main className="pb-20">
         {/* Profile Overview Section */}
@@ -402,14 +388,19 @@ console.log('mak')
           </div>
         </div>
       </main>
-      ) : (
-        <div className="p-8 text-center">
-          <h1 className="text-2xl font-semibold text-gray-900 mb-4">Please login to continue</h1>
-          <button className="bg-[#6f43fe] text-white px-4 py-2 rounded-lg hover:bg-[#6f43fe]/80 transition-colors" onClick={() => router.push('/login')}>
-            Login
-          </button>
-        </div>
-      )}
+      ) 
+      
+
+      // : (
+      //   <div className="p-8 text-center">
+      //     <h1 className="text-2xl font-semibold text-gray-900 mb-4">Please login to continue</h1>
+      //     <button className="bg-[#6f43fe] text-white px-4 py-2 rounded-lg hover:bg-[#6f43fe]/80 transition-colors" onClick={() => router.push('/login')}>
+      //       Login
+      //     </button>
+      //   </div>
+      // )
+      }
+      <LoginPopup />
     </div>
   );
 };

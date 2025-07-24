@@ -124,12 +124,12 @@ const Filters = ({onClose, isOpen: isOpenProp, onApplyFilters}: FiltersProps) =>
       return Math.round(value / step) * step;
     };
 
-    const handleMouseDown = (e: React.MouseEvent, type: 'min' | 'max') => {
+    const handlePointerDown = (e: React.PointerEvent, type: 'min' | 'max') => {
       e.preventDefault();
       setIsDragging(type);
     };
 
-    const handleMouseMove = (e: MouseEvent) => {
+    const handlePointerMove = (e: PointerEvent) => {
       if (!isDragging) return;
 
       const newValue = getValueFromPosition(e.clientX);
@@ -145,46 +145,55 @@ const Filters = ({onClose, isOpen: isOpenProp, onApplyFilters}: FiltersProps) =>
       }
     };
 
-    const handleMouseUp = () => {
+    const handlePointerUp = () => {
       setIsDragging(null);
     };
 
     useEffect(() => {
       if (isDragging) {
-        document.addEventListener('mousemove', handleMouseMove);
-        document.addEventListener('mouseup', handleMouseUp);
+        document.addEventListener('pointermove', handlePointerMove);
+        document.addEventListener('pointerup', handlePointerUp);
+        document.body.style.userSelect = 'none';
+        document.body.style.cursor = 'grabbing';
+        
         return () => {
-          document.removeEventListener('mousemove', handleMouseMove);
-          document.removeEventListener('mouseup', handleMouseUp);
+          document.removeEventListener('pointermove', handlePointerMove);
+          document.removeEventListener('pointerup', handlePointerUp);
+          document.body.style.userSelect = '';
+          document.body.style.cursor = '';
         };
       }
-    }, [isDragging, minValue, maxValue]);
+    }, [isDragging]);
+
+    const handleTrackClick = (e: React.PointerEvent) => {
+      if (isDragging) return;
+      
+      const newValue = getValueFromPosition(e.clientX);
+      const minDistance = Math.abs(newValue - minValue);
+      const maxDistance = Math.abs(newValue - maxValue);
+      
+      if (minDistance < maxDistance) {
+        if (newValue < maxValue) {
+          onMinChange(newValue);
+        }
+      } else {
+        if (newValue > minValue) {
+          onMaxChange(newValue);
+        }
+      }
+    };
 
     return (
       <div className="relative">
         {/* Track */}
         <div 
           ref={trackRef}
-          className="relative h-2 bg-gray-200 rounded-lg cursor-pointer"
-          onMouseDown={(e) => {
-            const newValue = getValueFromPosition(e.clientX);
-            const minDistance = Math.abs(newValue - minValue);
-            const maxDistance = Math.abs(newValue - maxValue);
-            
-            if (minDistance < maxDistance) {
-              if (newValue < maxValue) {
-                onMinChange(newValue);
-              }
-            } else {
-              if (newValue > minValue) {
-                onMaxChange(newValue);
-              }
-            }
-          }}
+          className="relative h-2 bg-gray-200 rounded-lg cursor-pointer select-none touch-none"
+          onPointerDown={handleTrackClick}
         >
           {/* Selected range */}
           <div 
-            className="absolute h-2 bg-gradient-to-r from-blue-500 to-purple-500 rounded-lg"
+            className="absolute h-2 bg-gradient-to-r from-blue-500 to-purple-500 rounded-lg transition-all duration-150"
             style={{ 
               left: `${minPercent}%`, 
               width: `${maxPercent - minPercent}%` 
@@ -193,29 +202,33 @@ const Filters = ({onClose, isOpen: isOpenProp, onApplyFilters}: FiltersProps) =>
           
           {/* Min thumb */}
           <div 
-            className="absolute top-0 w-4 h-4 bg-blue-500 rounded-full border-2 border-white shadow-lg transform -translate-y-1 cursor-pointer hover:scale-110 transition-transform"
+            className={`absolute top-0 w-5 h-5 bg-blue-500 rounded-full border-2 border-white shadow-lg transform -translate-y-1.5 cursor-grab active:cursor-grabbing transition-all duration-150 hover:scale-110 touch-none ${
+              isDragging === 'min' ? 'scale-110 shadow-xl' : ''
+            }`}
             style={{ 
-              left: `calc(${minPercent}% - 8px)`,
+              left: `calc(${minPercent}% - 10px)`,
               zIndex: 4
             }}
-            onMouseDown={(e) => handleMouseDown(e, 'min')}
+            onPointerDown={(e) => handlePointerDown(e, 'min')}
           />
           
           {/* Max thumb */}
           <div 
-            className="absolute top-0 w-4 h-4 bg-purple-500 rounded-full border-2 border-white shadow-lg transform -translate-y-1 cursor-pointer hover:scale-110 transition-transform"
+            className={`absolute top-0 w-5 h-5 bg-purple-500 rounded-full border-2 border-white shadow-lg transform -translate-y-1.5 cursor-grab active:cursor-grabbing transition-all duration-150 hover:scale-110 touch-none ${
+              isDragging === 'max' ? 'scale-110 shadow-xl' : ''
+            }`}
             style={{ 
-              left: `calc(${maxPercent}% - 8px)`,
+              left: `calc(${maxPercent}% - 10px)`,
               zIndex: 4
             }}
-            onMouseDown={(e) => handleMouseDown(e, 'max')}
+            onPointerDown={(e) => handlePointerDown(e, 'max')}
           />
         </div>
 
         {/* Value labels */}
         <div className="flex justify-between text-sm font-medium text-gray-900 mt-4">
-          <span>{formatValue(minValue)}</span>
-          <span>{formatValue(maxValue)}</span>
+          <span className="transition-all duration-150">{formatValue(minValue)}</span>
+          <span className="transition-all duration-150">{formatValue(maxValue)}</span>
         </div>
       </div>
     );
@@ -451,7 +464,7 @@ const Filters = ({onClose, isOpen: isOpenProp, onApplyFilters}: FiltersProps) =>
           </button>
           <button
             type="submit"
-            className="flex-1 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white py-2 px-4 rounded-lg font-medium transition-all duration-300 shadow-lg hover:shadow-xl"
+            className="flex-1 bg-[#6f43fe] text-white py-2 px-4 rounded-lg font-medium transition-all duration-300 shadow-lg hover:shadow-xl"
           >
             Apply
           </button>

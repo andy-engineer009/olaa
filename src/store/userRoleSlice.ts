@@ -13,7 +13,7 @@ export interface UserRoleState {
 const initialState : UserRoleState = {
   role: null,
   hasVisitedBefore: null,
-  isLoggedIn: null
+  isLoggedIn: false
 }
 
 // Get initial state from localStorage
@@ -98,6 +98,7 @@ const userRoleSlice = createSlice({
     // Logout
     logout: (state) => {
       state.role = null;
+      state.isLoggedIn = false;
       localStorage.removeItem('token');
       localStorage.removeItem('isLoggedIn');
     }

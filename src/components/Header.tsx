@@ -4,12 +4,13 @@ import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import { useRouter, usePathname } from 'next/navigation';
 import { useSelector, useDispatch } from 'react-redux';
-import { selectUserRole } from '@/store/userRoleSlice';
+import { selectUserRole, selectIsLoggedIn } from '@/store/userRoleSlice';
 
 const Header = () => {
   const role = useSelector(selectUserRole);
   const [isProfileDropdownOpen, setIsProfileDropdownOpen] = useState(false);
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const isLoggedIn = useSelector(selectIsLoggedIn);
+  const dispatch = useDispatch();
 
   const router = useRouter();
   const pathname = usePathname();
@@ -17,10 +18,6 @@ const Header = () => {
   const toggleProfileDropdown = () => {
     setIsProfileDropdownOpen(!isProfileDropdownOpen);
   };
-
-  useEffect(() => {
-    setIsLoggedIn(localStorage.getItem('token') ? true : false);
-  }, []);
 
   // Mobile navigation items with proper SVG icons
   const mobileNavItems = [
@@ -181,7 +178,7 @@ const Header = () => {
                       {/* Logout */}
                       <div className="border-t border-gray-100 pt-1" onClick={() => {
                         localStorage.removeItem('token');
-                        setIsLoggedIn(false);
+                        // setIsLoggedIn(false);
                       }}>
                         <a
                           href="#"
@@ -205,10 +202,9 @@ const Header = () => {
 {!pathname.includes('/detail') && !pathname.includes('/chat') &&  !pathname.includes('/profile') && (
   <>
       {/* Mobile Header - Simple top bar */}
-      <header className="bg-white shadow-sm sticky top-0 z-40 hidden md:hidden">
+      {/* <header className="bg-white shadow-sm sticky top-0 z-40 hidden md:hidden">
         <div className="px-4 py-3">
           <div className="flex justify-between items-center">
-            {/* Logo */}
             <div className="flex items-center" onClick={() => router.push('/')}>
               <div className="w-8 h-8 bg-orange-500 rounded-lg flex items-center justify-center mr-2">
                 <span className="text-white font-bold text-lg">O</span>
@@ -216,7 +212,6 @@ const Header = () => {
               <span className="text-xl font-bold text-gray-800">OLX</span>
             </div>
 
-            {/* Right side - Login/Profile */}
             <div className="flex items-center space-x-2">
               {!isLoggedIn && (
                 <button 
@@ -235,7 +230,7 @@ const Header = () => {
             </div>
           </div>
         </div>
-      </header>
+      </header> */}
 
       {/* Mobile Bottom Navigation Bar - App-like Design */}
       <nav className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 z-50 md:hidden shadow-lg">
@@ -307,7 +302,7 @@ const Header = () => {
           <div className="flex justify-center">
           {/* bg-[#d2fc31] */}
             <button
-              onClick={() => router.push(isLoggedIn ? '/infulanceradded' : '/login')}
+              onClick={() => router.push('/infulanceradded')}
               className="flex flex-col items-center justify-center w-14 h-14 bg-[#6f43fe] text-[#fff] rounded-full shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 border-4 border-white -mt-3"
             >
               <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">

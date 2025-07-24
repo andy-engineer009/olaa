@@ -5,6 +5,9 @@ import { Formik, Form, Field, ErrorMessage, FormikHelpers } from 'formik';
 import * as Yup from 'yup';
 import { motion, AnimatePresence } from 'framer-motion';
 import Link from 'next/link';
+import { useSelector } from 'react-redux';
+import { selectIsLoggedIn } from '@/store/userRoleSlice';
+import LoginPopup from './login-popup';
 
 // Types
 interface Offer {
@@ -1280,20 +1283,11 @@ export default function InfluencerOnboardingForm() {
   const [currentStep, setCurrentStep] = useState(1);
   const [formData, setFormData] = useState<FormValues>(initialValues);
   const [showWarning, setShowWarning] = useState(false);
+  const isLoggedIn = useSelector(selectIsLoggedIn);
 
-  // Show warning popup on first visit
-  useEffect(() => {
-    setShowWarning(true);
-
-    const hasSeenWarning = localStorage.getItem('influencer-warning-seen');
-    if (!hasSeenWarning) {
-      setShowWarning(true);
-    }
-  }, []);
 
   const handleWarningClose = () => {
     setShowWarning(false);
-    localStorage.setItem('influencer-warning-seen', 'true');
   };
 
   const steps = [
@@ -1337,8 +1331,11 @@ export default function InfluencerOnboardingForm() {
 
   return (
     <>
-      {/* Warning Popup */}
-      <WarningPopup isOpen={showWarning} onClose={handleWarningClose} />
+      {/* Warning Popup - Only show if logged in */}
+      {isLoggedIn && <WarningPopup isOpen={showWarning} onClose={handleWarningClose} />}
+      
+      {/* Login Popup - Show if not logged in */}
+      <LoginPopup />
 
       <div className="max-w-4xl mx-auto px-4 mb-0 pt-3">
         <Link
