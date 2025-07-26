@@ -1,9 +1,9 @@
-import LocalStorageValueHandler from "@/components/localstroageValue-handler";
+import AppPromotionPage from "@/components/app-promotion-page";
 
 export default function How() {
   return (
     <div>
-      <LocalStorageValueHandler />          
+      <AppPromotionPage />          
     </div>
   );
 }

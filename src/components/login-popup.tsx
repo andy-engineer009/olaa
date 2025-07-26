@@ -11,7 +11,6 @@ export default function LoginPopup() {
 
   // Show login popup if not logged in
   useEffect(() => {
-    console.log(isLoggedIn);
     if (!isLoggedIn) {
       setShowLoginPopup(true);
     }else{
@@ -20,7 +19,6 @@ export default function LoginPopup() {
   }, [isLoggedIn]);
 
   useEffect(() => {
-    console.log(isLoggedIn);
     if (!isLoggedIn) {
       setShowLoginPopup(true);
     }else{

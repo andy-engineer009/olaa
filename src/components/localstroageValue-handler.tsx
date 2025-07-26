@@ -1,7 +1,16 @@
-// Add this route to your Next.js app
-// pages/intro.tsx or app/intro/page.tsx
-import PlatformIntroduction from '@/components/PlatformIntroduction';
+'use client';
+import { setIsLoggedIn } from "@/store/userRoleSlice";
+import { useDispatch } from "react-redux";
 
-export default function IntroPage() {
-  return <PlatformIntroduction />;
+export default function LocalStorageValueHandler() {
+    const dispatch = useDispatch();
+    const isLoggedIn: any = localStorage.getItem('isLoggedIn');
+    if (isLoggedIn == null || isLoggedIn == false) {
+        dispatch(setIsLoggedIn(false));
+    }else{
+        dispatch(setIsLoggedIn(true));
+    }
+
+    return <></>;
 }
+            
