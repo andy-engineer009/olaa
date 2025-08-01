@@ -25,7 +25,11 @@ interface FormValues {
   // Step 1: Basic Info
   name: string;
   username: string;
-  platforms: any[];
+  is_instagram_paltfrom: boolean;
+  is_youtube_paltfrom: boolean;
+  is_facebook_paltfrom: boolean;
+  platforms_required?: any;
+  // platforms: any[];
   gender: string;
   categories: any[];
   languages: any[];
@@ -52,11 +56,11 @@ interface FormValues {
 }
 
 // Mock data for dropdowns
-const platforms = [
-  { id: 1, name: 'Instagram' },
-  { id: 2, name: 'YouTube' },
-  { id: 3, name: 'Facebook' }
-];
+// const platforms = [
+//   { id: 1, name: 'Instagram' },
+//   { id: 2, name: 'YouTube' },
+//   { id: 3, name: 'Facebook' }
+// ];
 const categories = [
   { id: 1, name: 'Fashion & Beauty' },
   { id: 2, name: 'Technology' },
@@ -195,7 +199,21 @@ const audienceAgeGroups = [
 const step1Schema = Yup.object().shape({
   name: Yup.string().required('Name is required').min(2, 'Name must be at least 2 characters'),
   username: Yup.string().required('Username is required').min(3, 'Username must be at least 3 characters'),
-  platforms: Yup.array().min(1, 'At least one platform is required'),
+  // platforms: Yup.array().min(1, 'At least one platform is required'),
+  // At least one of the three platform checkboxes is required
+  is_instagram_paltfrom: Yup.boolean().nullable(),
+  is_youtube_paltfrom: Yup.boolean().nullable(),
+  is_facebook_paltfrom: Yup.boolean().nullable(),
+  platforms_required: Yup.mixed().test(
+    'at-least-one-platform',
+    'At least one platform must be selected',
+    function (value, context) {
+      const { is_instagram_paltfrom, is_youtube_paltfrom, is_facebook_paltfrom } = context.parent;
+      // Check if at least one platform is selected
+      console.log(context.parent)
+      return is_instagram_paltfrom || is_youtube_paltfrom || is_facebook_paltfrom;
+    }
+  ),
   gender: Yup.string().required('Gender is required'),
   categories: Yup.array().min(1, 'At least one category is required'),
   languages: Yup.array().min(1, 'At least one language is required'),
@@ -203,16 +221,16 @@ const step1Schema = Yup.object().shape({
   city: Yup.string().required('City is required'),
   influencerAge: Yup.number().required('Age is required').min(13, 'Must be at least 13 years old').max(100, 'Invalid age'),
   followerCount: Yup.number().required('Follower count is required').min(100, 'Must have at least 100 followers'),
-  instagramUrl: Yup.string().when('platforms', {
-    is: (platforms: number[]) => platforms.includes(1),
+  instagramUrl: Yup.string().when('is_instagram_paltfrom', {
+    is: (is_instagram_paltfrom: boolean) => is_instagram_paltfrom === true,
     then: (schema) => schema.required('Instagram URL is required').url('Must be a valid URL')
   }),
-  youtubeUrl: Yup.string().when('platforms', {
-    is: (platforms: number[]) => platforms.includes(2),
+  youtubeUrl: Yup.string().when('is_youtube_paltfrom', {
+    is: (is_youtube_paltfrom: boolean) => is_youtube_paltfrom === true,
     then: (schema) => schema.required('YouTube URL is required').url('Must be a valid URL')
   }),
-  facebookUrl: Yup.string().when('platforms', {
-    is: (platforms: number[]) => platforms.includes(3),
+  facebookUrl: Yup.string().when('is_facebook_paltfrom', {
+    is: (is_facebook_paltfrom: boolean) => is_facebook_paltfrom === true,
     then: (schema) => schema.required('Facebook URL is required').url('Must be a valid URL')
   }),
   // audienceType: Yup.string().required('Audience type is required'),
@@ -259,7 +277,9 @@ const step3Schema = Yup.object().shape({
 const initialValues: FormValues = {
   name: '',
   username: '',
-  platforms: [],
+  is_instagram_paltfrom: false,
+  is_youtube_paltfrom: false,
+  is_facebook_paltfrom: false,
   gender: '',
   categories: [],
   languages: [],
@@ -278,7 +298,8 @@ const initialValues: FormValues = {
   // postImages: [],
   // videos: [],
   audienceType: '',
-  audienceAgeGroup: ''
+  audienceAgeGroup: '',
+  platforms_required: ''
 };
 
 // Multi-Select Checkbox Component
@@ -587,7 +608,49 @@ const Step1BasicInfo = ({ values, setFieldValue }: { values: FormValues; setFiel
       </div>
 
       {/* Platforms */}
-      <Field name="platforms">
+      <div className="space-y-3">
+        <label className="block text-sm font-medium text-gray-700">Platforms * (Select at least one)</label>
+        <div className="space-y-2">
+          <label className="flex items-center space-x-2 cursor-pointer">
+            <input
+              type="checkbox"
+              name="is_instagram_paltfrom"
+              value="true"
+              checked={values.is_instagram_paltfrom === true}
+              onChange={() => setFieldValue('is_instagram_paltfrom', values.is_instagram_paltfrom === true ? false : true)}
+              className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+            />
+            <span className="text-sm text-gray-700">Instagram</span>
+          </label>
+
+          <label className="flex items-center space-x-2 cursor-pointer">
+            <input
+              type="checkbox"
+              name="is_youtube_paltfrom"
+              value="true"
+              checked={values.is_youtube_paltfrom === true}
+              onChange={() => setFieldValue('is_youtube_paltfrom', values.is_youtube_paltfrom === true ? false : true)}
+              className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+            />
+            <span className="text-sm text-gray-700">YouTube</span>
+          </label>
+
+          <label className="flex items-center space-x-2 cursor-pointer">
+            <input
+              type="checkbox"
+              name="is_facebook_paltfrom"
+              value="true"
+              checked={values.is_facebook_paltfrom === true}
+              onChange={() => setFieldValue('is_facebook_paltfrom', values.is_facebook_paltfrom === true ? false : true)}
+              className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+            />
+            <span className="text-sm text-gray-700">Facebook</span>
+          </label>
+        </div>
+        <ErrorMessage name="platforms_required" component="div" className="text-red-500 text-sm mt-1" />
+      </div>
+
+      {/* <Field name="is_instagram_paltfrom">
         {({ field, form }: any) => (
           <MultiSelectCheckbox
             label="Platforms * (Select one or both)"
@@ -596,10 +659,10 @@ const Step1BasicInfo = ({ values, setFieldValue }: { values: FormValues; setFiel
             form={form}
           />
         )}
-      </Field>
+      </Field> */}
 
       {/* Platform URLs */}
-      {values.platforms.includes(1) && (
+      {values.is_instagram_paltfrom && (
         <div>
           <label htmlFor="instagramUrl" className="block text-sm font-medium text-gray-700 mb-2">
             Instagram Profile URL *
@@ -615,7 +678,7 @@ const Step1BasicInfo = ({ values, setFieldValue }: { values: FormValues; setFiel
         </div>
       )}
 
-      {values.platforms.includes(2) && (
+      {values.is_youtube_paltfrom && (
         <div>
           <label htmlFor="youtubeUrl" className="block text-sm font-medium text-gray-700 mb-2">
             YouTube Channel URL *
@@ -631,7 +694,7 @@ const Step1BasicInfo = ({ values, setFieldValue }: { values: FormValues; setFiel
         </div>
       )}
 
-{values.platforms.includes(3) && (
+{values.is_facebook_paltfrom && (
         <div>
           <label htmlFor="facebookUrl" className="block text-sm font-medium text-gray-700 mb-2">
             Facebook Profile URL *

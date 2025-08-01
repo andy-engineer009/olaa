@@ -1,9 +1,9 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { useDispatch } from 'react-redux';
 import { setIsLoggedIn } from '@/store/userRoleSlice';
 
@@ -78,7 +78,20 @@ const Login = () => {
   const [toast, setToast] = useState<{ message: string; type: 'success' | 'error' | 'info' } | null>(null);
   const [resendTimer, setResendTimer] = useState(0);
   const router = useRouter();
+  const searchParams = useSearchParams();
   const dispatch = useDispatch();
+
+  // Check if user is already logged in and redirect
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
+    
+    if (token && isLoggedIn) {
+      // Get the redirect URL from search params or default to home
+      const redirectUrl = searchParams.get('redirect') || '/';
+      router.replace(redirectUrl);
+    }
+  }, [router, searchParams]);
   
   // Show toast notification
   const showToast = (message: string, type: 'success' | 'error' | 'info') => {
@@ -132,14 +145,18 @@ const Login = () => {
       if (values.otp === '1234') { // Mock OTP for testing
         showToast('Login successful! Redirecting...', 'success');
         
-        // Store authentication token
+        // Store authentication token and login status
         localStorage.setItem('token', 'mock-jwt-token');
-        dispatch(setIsLoggedIn(true));
+        localStorage.setItem('isLoggedIn', 'true');
         localStorage.setItem('userPhone', userPhone);
+        dispatch(setIsLoggedIn(true));
         
-        // Redirect to home page
+        // Get redirect URL from search params or default to home
+        const redirectUrl = searchParams.get('redirect') || '/';
+        
+        // Redirect to the original page or home
         setTimeout(() => {
-          router.push('/');
+          router.replace(redirectUrl);
         }, 1000);
       } else {
         showToast('Invalid OTP. Please try again.', 'error');
@@ -170,13 +187,18 @@ const Login = () => {
       if (mockResponse.success) {
         showToast('Google sign-in successful! Redirecting...', 'success');
         
-        // Store authentication token
+        // Store authentication token and login status
         localStorage.setItem('token', 'google-jwt-token');
+        localStorage.setItem('isLoggedIn', 'true');
         localStorage.setItem('loginMethod', 'google');
+        dispatch(setIsLoggedIn(true));
         
-        // Redirect to home page
+        // Get redirect URL from search params or default to home
+        const redirectUrl = searchParams.get('redirect') || '/';
+        
+        // Redirect to the original page or home
         setTimeout(() => {
-          router.push('/');
+          router.replace(redirectUrl);
         }, 1000);
       } else {
         showToast(mockResponse.message || 'Google sign-in failed', 'error');
