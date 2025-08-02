@@ -5,6 +5,7 @@ import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
+import { api } from '@/common/services/rest-api/rest-api';
 
 // Types for form values
 interface ReferralFormValues {
@@ -16,8 +17,7 @@ const referralValidationSchema = Yup.object({
   referralCode: Yup.string()
     .min(3, 'Referral code must be at least 3 characters')
     .max(20, 'Referral code must be less than 20 characters')
-    .matches(/^[a-zA-Z0-9_-]+$/, 'Referral code can only contain letters, numbers, hyphens, and underscores')
-    .optional(),
+    .required('this field are required '),
 });
 
 // Toast notification component
@@ -72,91 +72,59 @@ const ReferralCode = () => {
   };
 
   // Handle form submission
-  const handleSubmit = async (values: ReferralFormValues) => {
-    router.push('/');
-    // setIsLoading(true);
+  const handleSubmit = async (values: any) => {
+    if(values.referralCode === ''){
+      // showToast('Referral code is required', 'error');
+      return;
+    }
+    setIsLoading(true);
     
-    // try {
-    //   const token = localStorage.getItem('token');
-      
-    //   if (!token) {
-    //     showToast('Authentication required. Please login first.', 'error');
-    //     setIsLoading(false);
-    //     return;
-    //   }
+    try {
+      const response = await api.post('/referral', {
+        referralCode: values.referralCode || null,
+      });
 
-    //   const response = await fetch('/api/referral', {
-    //     method: 'POST',
-    //     headers: {
-    //       'Content-Type': 'application/json',
-    //       'Authorization': `Bearer ${token}`,
-    //     },
-    //     body: JSON.stringify({
-    //       referralCode: values.referralCode || null,
-    //     }),
-    //   });
-
-    //   const data = await response.json();
-
-    //   if (response.ok) {
-    //     showToast('Referral code processed successfully!', 'success');
-    //     // Redirect to home page after successful submission
-    //     setTimeout(() => {
-    //       router.push('/');
-    //     }, 1500);
-    //   } else {
-    //     showToast(data.message || 'Failed to process referral code', 'error');
-    //   }
-    // } catch (error) {
-    //   console.error('Error submitting referral code:', error);
-    //   showToast('Network error. Please try again.', 'error');
-    // } finally {
-    //   setIsLoading(false);
-    // }
+      if (response.success) {
+        showToast('Referral code processed successfully!', 'success');
+        // Redirect to home page after successful submission
+        setTimeout(() => {
+          router.push('/');
+        }, 1500);
+      } else {
+        showToast(response.error || 'Failed to process referral code', 'error');
+      }
+    } catch (error) {
+      console.error('Error submitting referral code:', error);
+      showToast('Network error. Please try again.', 'error');
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   // Handle skip now
   const handleSkipNow = async () => {
-    router.push('/');
-    // setIsLoading(true);
+    setIsLoading(true);
     
-    // try {
-    //   const token = localStorage.getItem('token');
-      
-    //   if (!token) {
-    //     showToast('Authentication required. Please login first.', 'error');
-    //     setIsLoading(false);
-    //     return;
-    //   }
+    try {
+      const response = await api.post('/referral', {
+        referralCode: null,
+      });
 
-    //   const response = await fetch('/api/referral', {
-    //     method: 'POST',
-    //     headers: {
-    //       'Content-Type': 'application/json',
-    //       'Authorization': `Bearer ${token}`,
-    //     },
-    //     body: JSON.stringify({
-    //       referralCode: null,
-    //     }),
-    //   });
-
-    //   const data = await response.json();
-
-    //   if (response.ok) {
-    //     showToast('Skipped referral code successfully!', 'success');
-    //     // Redirect to home page
-    //     setTimeout(() => {
-    //       router.push('/');
-    //     }, 1500);
-    //   } else {
-    //     showToast(data.message || 'Failed to skip referral code', 'error');
-    //   }
-    // } catch (error) {
-    //   console.error('Error skipping referral code:', error);
-    //   showToast('Network error. Please try again.', 'error');
-    // } finally {
-    //   setIsLoading(false);
-    // }
+      if (response.success) {
+        showToast('Skipped referral code successfully!', 'success');
+        // Redirect to home page
+        setTimeout(() => {
+          router.push('/');
+        }, 1500);
+      } else {
+        showToast(response.error || 'Failed to skip referral code', 'error');
+      }
+    } catch (error) {
+      console.error('Error skipping referral code:', error);
+      showToast('Network error. Please try again.', 'error');
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -234,7 +202,7 @@ const ReferralCode = () => {
                   <div className="space-y-3 pt-2">
                     <button
                       type="submit"
-                      disabled={isLoading || !isValid}
+                      disabled={isLoading || !isValid || !dirty}
                       className="w-full bg-gradient-to-r from-blue-500 to-purple-600 text-white font-semibold py-3 px-4 rounded-xl hover:from-blue-600 hover:to-purple-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center"
                     >
                       {isLoading ? (

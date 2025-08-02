@@ -82,59 +82,7 @@ console.log('mak')
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
             </svg>
           </button>
-          <h1 className="text-lg font-semibold text-gray-900 mr-auto">Profile Settings</h1>
-          {localStorage.getItem('token') && ( <>
-          <div className="flex items-center gap-4">
-            <div className="flex items-center gap-3">
-              <div className="relative">
-                <span className={`px-3 py-1.5 rounded-full text-sm ${
-                  currentUserRole === '2' 
-                    ? 'bg-[#6f43fe]/10 text-[#6f43fe] font-medium'
-                    : 'bg-gray-100 text-gray-500'
-                }`}>
-                  Influencer
-                  {currentUserRole === '2' && (
-                    <span className="absolute -bottom-4 left-1/2 transform -translate-x-1/2 px-2 py-0.5 text-[10px] bg-green-100 text-green-600 font-medium rounded-full">
-                      Active
-                    </span>
-                  )}
-                </span>
-              </div>
-
-              <button
-                onClick={() => {
-                  const newRole = currentUserRole === '2' ? '3' : '2';
-                  dispatch(setUserRole(newRole));
-                }}
-                className={`relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none ${
-                  currentUserRole === '2' ? 'bg-[#6f43fe]' : 'bg-[#6f43fe]'
-                }`}
-              >
-                <span
-                  className={`${
-                    currentUserRole === '2' ? 'translate-x-0' : 'translate-x-5'
-                  } pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out`}
-                />
-              </button>
-
-              <div className="relative">
-                <span className={`px-3 py-1.5 rounded-full text-sm ${
-                  currentUserRole === '3'
-                    ? 'bg-[#6f43fe]/10 text-[#6f43fe] font-medium' 
-                    : 'bg-gray-100 text-gray-500'
-                }`}>
-                  Promoter
-                  {currentUserRole === '3' && (
-                    <span className="absolute -bottom-4 left-1/2 transform -translate-x-1/2 px-2 py-0.5 text-[10px] bg-green-100 text-green-600 font-medium rounded-full">
-                      Active
-                    </span>
-                  )}
-                </span>
-              </div>
-            </div>
-          </div>
-          </>
-          )}
+          <h1 className="text-lg font-semibold text-gray-900 mx-auto">Profile Settings</h1>
         </div>
       </header>
 
@@ -143,10 +91,10 @@ console.log('mak')
 
       <main className="pb-20">
         {/* Profile Overview Section */}
-        <section className="px-4 py-6 border-b border-gray-100">
+        <section className="px-4 py-4 border-b border-gray-100">
           <div className="flex items-center gap-4">
             {/* Profile Picture */}
-            <div className="relative">
+            {/* <div className="relative">
               <div className="w-16 h-16 rounded-full overflow-hidden bg-gray-200">
                 {image ? (
                   <img 
@@ -162,7 +110,7 @@ console.log('mak')
                   </div>
                 )}
               </div>
-              {/* <label className="absolute -bottom-1 -right-1 bg-blue-500 text-white p-1 rounded-full cursor-pointer hover:bg-blue-600 transition-colors">
+           <label className="absolute -bottom-1 -right-1 bg-blue-500 text-white p-1 rounded-full cursor-pointer hover:bg-blue-600 transition-colors">
                 <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
                 </svg>
@@ -173,8 +121,8 @@ console.log('mak')
                   onChange={handleImageUpload}
                   disabled={updating}
                 />
-              </label> */}
-            </div>
+              </label> 
+            </div> */}
 
             {/* User Info */}
             <div className="flex-1">
@@ -301,6 +249,60 @@ console.log('mak')
               </button>
             </div>
           </div> */}
+
+
+{localStorage.getItem('token') && ( <>
+          <div className="flex items-center gap-4 mb-8">
+            <div className="flex items-center gap-3">
+              <div className="relative">
+                <span className={`px-3 py-1.5 rounded-full text-sm ${
+                  currentUserRole === '2' 
+                    ? 'bg-[#6f43fe]/10 text-[#6f43fe] font-medium'
+                    : 'bg-gray-100 text-gray-500'
+                }`}>
+                  Influencer
+                  {currentUserRole === '2' && (
+                    <span className="absolute -bottom-4 left-1/2 transform -translate-x-1/2 px-2 py-0.5 text-[10px] bg-green-100 text-green-600 font-medium rounded-full">
+                      Active
+                    </span>
+                  )}
+                </span>
+              </div>
+
+              <button
+                onClick={() => {
+                  const newRole = currentUserRole === '2' ? '3' : '2';
+                  dispatch(setUserRole(newRole));
+                }}
+                className={`relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none ${
+                  currentUserRole === '2' ? 'bg-[#6f43fe]' : 'bg-[#6f43fe]'
+                }`}
+              >
+                <span
+                  className={`${
+                    currentUserRole === '2' ? 'translate-x-0' : 'translate-x-5'
+                  } pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out`}
+                />
+              </button>
+
+              <div className="relative">
+                <span className={`px-3 py-1.5 rounded-full text-sm ${
+                  currentUserRole === '3'
+                    ? 'bg-[#6f43fe]/10 text-[#6f43fe] font-medium' 
+                    : 'bg-gray-100 text-gray-500'
+                }`}>
+                  Promoter
+                  {currentUserRole === '3' && (
+                    <span className="absolute -bottom-4 left-1/2 transform -translate-x-1/2 px-2 py-0.5 text-[10px] bg-green-100 text-green-600 font-medium rounded-full">
+                      Active
+                    </span>
+                  )}
+                </span>
+              </div>
+            </div>
+          </div>
+          </>
+          )}
 
           {/* Influencer Profile Section */}
           <div className="mb-6">
