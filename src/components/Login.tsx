@@ -6,6 +6,11 @@ import * as Yup from 'yup';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useDispatch } from 'react-redux';
 import { setIsLoggedIn } from '@/store/userRoleSlice';
+import { API_ROUTES } from '@/appApi';
+import { api } from '@/common/services/rest-api/rest-api';
+import { useGoogleLogin } from '@react-oauth/google';
+import Loader from './loader';
+import { setVerfiedUser } from '@/helpers/common';
 
 // Types for form values
 interface PhoneLoginFormValues {
@@ -170,47 +175,92 @@ const Login = () => {
     }
   };
 
-  // Handle Google sign-in
-  const handleGoogleLogin = async () => {
-    setIsLoading(true);
-    try {
-      // Simulate Google OAuth process
-      await new Promise(resolve => setTimeout(resolve, 2000));
-      
-      // Mock Google sign-in response
-      const mockResponse: GoogleLoginResponse = {
-        success: true,
-        message: 'Google sign-in successful',
-        redirectUrl: '/'
-      };
-      
-      if (mockResponse.success) {
-        showToast('Google sign-in successful! Redirecting...', 'success');
-        
-        // Store authentication token and login status
-        localStorage.setItem('token', 'google-jwt-token');
-        localStorage.setItem('isLoggedIn', 'true');
-        localStorage.setItem('loginMethod', 'google');
-        dispatch(setIsLoggedIn(true));
-        
-        // Get redirect URL from search params or default to home
-        const redirectUrl = searchParams.get('redirect') || '/';
-        
-        // Redirect to the original page or home
-        setTimeout(() => {
-          router.replace(redirectUrl);
-        }, 1000);
-      } else {
-        showToast(mockResponse.message || 'Google sign-in failed', 'error');
-      }
-      
-    } catch (error) {
-      console.error('Google login error:', error);
-      showToast('Google sign-in failed. Please try again.', 'error');
-    } finally {
-      setIsLoading(false);
+
+  // google repsonse code handler
+  const resposneGoogleHandler = async(authresult: any) => {
+   try{
+    console.log(authresult)
+    if(authresult?.code) {
+      setIsLoading(true);
+      api.get(`${API_ROUTES.google_signup}?google_code=${authresult?.code}`).then((response) => {
+        setIsLoading(false);
+        if(response?.status == 1) {
+          setVerfiedUser(response?.data);
+          showToast(response?.message, 'success')
+          if(response?.data?.is_new_user == 1) {
+            router.push('/referral');
+          } else {
+            router.push('/');
+          }
+        } else {
+          showToast(response?.message, 'error')
+        }
+
+      })
     }
-  };
+   }catch(err){
+    console.error('error google  ', authresult)
+    setIsLoading(false);
+   };
+  }
+
+  // Handle Google sign-in
+  const handleGoogleLogin = useGoogleLogin({
+    onSuccess: resposneGoogleHandler,
+    onError: resposneGoogleHandler,
+    flow: 'auth-code',
+  }) 
+
+
+
+
+
+
+    // setIsLoading(true);
+    // try {
+
+    //     // api.get(API_ROUTES.google_signup).then((res: any) => {
+    //     //   console.log(res);
+    //     // }).catch((err: any) => {
+    //     //   console.log(err);
+    //     // });
+    //   // // Simulate Google OAuth process
+    //   // await new Promise(resolve => setTimeout(resolve, 2000));
+      
+    //   // // Mock Google sign-in response
+    //   // const mockResponse: GoogleLoginResponse = {
+    //   //   success: true,
+    //   //   message: 'Google sign-in successful',
+    //   //   redirectUrl: '/'
+    //   // };
+      
+    //   // if (mockResponse.success) {
+    //   //   showToast('Google sign-in successful! Redirecting...', 'success');
+        
+    //   //   // Store authentication token and login status
+    //   //   localStorage.setItem('token', 'google-jwt-token');
+    //   //   localStorage.setItem('isLoggedIn', 'true');
+    //   //   localStorage.setItem('loginMethod', 'google');
+    //   //   dispatch(setIsLoggedIn(true));
+        
+    //   //   // Get redirect URL from search params or default to home
+    //   //   const redirectUrl = searchParams.get('redirect') || '/';
+        
+    //   //   // Redirect to the original page or home
+    //   //   setTimeout(() => {
+    //   //     router.replace(redirectUrl);
+    //   //   }, 1000);
+    //   // } else {
+    //   //   showToast(mockResponse.message || 'Google sign-in failed', 'error');
+    //   // }
+      
+    // } catch (error) {
+    //   console.error('Google login error:', error);
+    //   showToast('Google sign-in failed. Please try again.', 'error');
+    // } finally {
+    //   setIsLoading(false);
+    // }
+  
 
   // Handle resend OTP
   const handleResendOTP = async () => {
@@ -252,6 +302,8 @@ const Login = () => {
   };
 
   return (
+    <>
+     {isLoading && <Loader/>}
     <div className="min-h-screen bg-gradient-to-br from-orange-50 via-white to-orange-50 flex items-center justify-center p-4">
       {/* Toast Notifications */}
       {toast && (
@@ -425,7 +477,7 @@ const Login = () => {
           {/* Google Login Button */}
 
           {!isOTPStep && <button
-            onClick={handleGoogleLogin}
+            onClick={ () => handleGoogleLogin()}
             disabled={isLoading}
             className="w-full bg-white hover:bg-gray-50 disabled:bg-gray-100 text-gray-700 font-medium py-3 px-4 rounded-lg border border-gray-300 transition-colors duration-200 flex items-center justify-center space-x-3"
           >
@@ -498,6 +550,7 @@ const Login = () => {
         }
       `}</style>
     </div>
+    </>
   );
 };
 

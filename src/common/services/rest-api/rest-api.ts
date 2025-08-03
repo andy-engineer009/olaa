@@ -1,5 +1,5 @@
 // API Configuration
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000/api';
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5050/';
 const API_TIMEOUT = 10000; // 10 seconds
 
 // Environment configuration
@@ -142,12 +142,13 @@ class ResponseInterceptor {
 
     // Handle different HTTP status codes
     if (response.ok) {
-      return {
-        success: true,
-        data: responseData.data || responseData,
-        message: responseData.message,
-        status: response.status,
-      };
+      return responseData
+      // return {
+      //   success: true,
+      //   data: responseData.data || responseData,
+      //   message: responseData.message,
+      //   status: response.status,
+      // };
     }
 
     // Handle specific error cases

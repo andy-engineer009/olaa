@@ -6,15 +6,17 @@ import * as Yup from 'yup';
 import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
 import { api } from '@/common/services/rest-api/rest-api';
+import { API_ROUTES } from '@/appApi';
+import Loader from './loader';
 
 // Types for form values
 interface ReferralFormValues {
-  referralCode: string;
+  referral_code: string;
 }
 
 // Validation schema
 const referralValidationSchema = Yup.object({
-  referralCode: Yup.string()
+  referral_code: Yup.string()
     .min(3, 'Referral code must be at least 3 characters')
     .max(20, 'Referral code must be less than 20 characters')
     .required('this field are required '),
@@ -73,61 +75,39 @@ const ReferralCode = () => {
 
   // Handle form submission
   const handleSubmit = async (values: any) => {
-    if(values.referralCode === ''){
+    if(values.referral_code === ''){
       // showToast('Referral code is required', 'error');
       return;
     }
-    setIsLoading(true);
-    
-    try {
-      const response = await api.post('/referral', {
-        referralCode: values.referralCode || null,
-      });
 
-      if (response.success) {
-        showToast('Referral code processed successfully!', 'success');
-        // Redirect to home page after successful submission
-        setTimeout(() => {
+    setIsLoading(true);
+    try {
+      api.post(API_ROUTES.referral, {
+        referral_code: values.referral_code,
+      }).then((response) => {
+        setIsLoading(false);
+        if(response.status == 1) {
+          showToast(response.message, 'success');
           router.push('/');
-        }, 1500);
-      } else {
-        showToast(response.error || 'Failed to process referral code', 'error');
-      }
+        } else {
+          showToast(response.message, 'error');
+        }
+      })  ;
     } catch (error) {
+      setIsLoading(false);
       console.error('Error submitting referral code:', error);
       showToast('Network error. Please try again.', 'error');
-    } finally {
-      setIsLoading(false);
-    }
+    } 
   };
 
   // Handle skip now
   const handleSkipNow = async () => {
-    setIsLoading(true);
-    
-    try {
-      const response = await api.post('/referral', {
-        referralCode: null,
-      });
-
-      if (response.success) {
-        showToast('Skipped referral code successfully!', 'success');
-        // Redirect to home page
-        setTimeout(() => {
-          router.push('/');
-        }, 1500);
-      } else {
-        showToast(response.error || 'Failed to skip referral code', 'error');
-      }
-    } catch (error) {
-      console.error('Error skipping referral code:', error);
-      showToast('Network error. Please try again.', 'error');
-    } finally {
-      setIsLoading(false);
-    }
+    router.push('/');
   };
 
   return (
+    <>
+    {/* {isLoading && <Loader/>} */}
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 flex flex-col">
       {/* Header */}
       <div className="bg-white shadow-sm border-b border-gray-100 px-4 py-4">
@@ -175,25 +155,25 @@ const ReferralCode = () => {
             className="bg-white rounded-2xl shadow-lg border border-gray-100 p-6 mb-6"
           >
             <Formik
-              initialValues={{ referralCode: '' }}
+              initialValues={{ referral_code: '' }}
               validationSchema={referralValidationSchema}
               onSubmit={handleSubmit}
             >
               {({ isValid, dirty }) => (
                 <Form className="space-y-4">
                   <div>
-                    <label htmlFor="referralCode" className="block text-sm font-medium text-gray-700 mb-2">
+                    <label htmlFor="referral_code" className="block text-sm font-medium text-gray-700 mb-2">
                       Referral Code (Optional)
                     </label>
                     <Field
                       type="text"
-                      id="referralCode"
-                      name="referralCode"
+                      id="referral_code"
+                      name="referral_code"
                       placeholder="Enter referral code"
                       className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 text-gray-900 placeholder-gray-400"
                     />
                     <ErrorMessage
-                      name="referralCode"
+                      name="referral_code"
                       component="div"
                       className="mt-1 text-sm text-red-500"
                     />
@@ -280,6 +260,7 @@ const ReferralCode = () => {
         />
       )}
     </div>
+    </>
   );
 };
 
