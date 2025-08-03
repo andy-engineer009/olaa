@@ -4,7 +4,7 @@ const setVerfiedUser = (data: any, dispatch?: any) => {
     console.log(data, 'data')
     if(data?.token) {
         localStorage.setItem('token', data.token);
-        localStorage.setItem('is_new_user', data.user.is_new_user);
+        localStorage.setItem('is_new_user', data.is_new_user);
         // localStorage.setItem('role', data.role);
         localStorage.setItem('isLoggedIn', 'true');
         if (dispatch) {

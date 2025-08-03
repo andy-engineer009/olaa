@@ -1423,7 +1423,7 @@ export default function InfluencerOnboardingForm() {
         city: parseInt(values.city.toString()),
         locality: parseInt(values.locality.toString()),
         categories: values.categories.map((category: any) => parseInt(category.toString())),
-        languages: values.languages.map((language: any) => parseInt(language.toString())),
+        language: values.languages.map((language: any) => parseInt(language.toString())),
         offers: values.offers,
         profileImage: values.profileImage,
       }

@@ -11,6 +11,7 @@ import { api } from '@/common/services/rest-api/rest-api';
 import { useGoogleLogin } from '@react-oauth/google';
 import Loader from './loader';
 import { setVerfiedUser } from '@/helpers/common';
+import axios from 'axios';
 
 // Types for form values
 interface PhoneLoginFormValues {
@@ -21,11 +22,11 @@ interface OTPVerificationFormValues {
   otp: string;
 }
 
-interface GoogleLoginResponse {
-  success: boolean;
-  message: string;
-  redirectUrl?: string;
-}
+// interface GoogleLoginResponse {
+//   success: boolean;
+//   message: string;
+//   redirectUrl?: string;
+// }
 
 // Validation schemas
 const phoneValidationSchema = Yup.object({
@@ -79,6 +80,7 @@ const Login = () => {
   // State management
   const [isOTPStep, setIsOTPStep] = useState(false);
   const [userPhone, setUserPhone] = useState('');
+  const [userPhoneData, setUserPhoneData] = useState<any>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [toast, setToast] = useState<{ message: string; type: 'success' | 'error' | 'info' } | null>(null);
   const [resendTimer, setResendTimer] = useState(0);
@@ -107,74 +109,152 @@ const Login = () => {
   // Handle phone number submission
   const handlePhoneSubmit = async (values: PhoneLoginFormValues) => {
     setIsLoading(true);
-    try {
-      // Simulate API call to send OTP
-      await new Promise(resolve => setTimeout(resolve, 2000));
+    api.post(`${API_ROUTES.google_signup}`,{is_login_Type : 2, phone : values.phoneNumber}).then((response) => {
+      setIsLoading(false)
+        if(response.status == 1) {
+          setUserPhone(values.phoneNumber);
+          setUserPhoneData(response?.data);
+          setIsOTPStep(true);
+          setResendTimer(30);
+          const timer = setInterval(() => {
+            setResendTimer(prev => {
+              if (prev <= 1) {
+                clearInterval(timer);
+                return 0;
+              }
+              return prev - 1;
+            });
+          }, 1000);
+          showToast(response.message, 'success')
+
+        }else {
+          showToast(response.message, 'error')
+        }
+    })
+
+
+    // try {
+    //   // Simulate API call to send OTP
+    //   await new Promise(resolve => setTimeout(resolve, 2000));
       
-      // Store phone number and show OTP screen
-      setUserPhone(values.phoneNumber);
-      setIsOTPStep(true);
+    //   // Store phone number and show OTP screen
+    //   setUserPhone(values.phoneNumber);
+    //   setIsOTPStep(true);
       
-      // Start resend timer (30 seconds)
-      setResendTimer(30);
-      const timer = setInterval(() => {
-        setResendTimer(prev => {
-          if (prev <= 1) {
-            clearInterval(timer);
-            return 0;
-          }
-          return prev - 1;
-        });
-      }, 1000);
+    //   // Start resend timer (30 seconds)
+    //   setResendTimer(30);
+    //   const timer = setInterval(() => {
+    //     setResendTimer(prev => {
+    //       if (prev <= 1) {
+    //         clearInterval(timer);
+    //         return 0;
+    //       }
+    //       return prev - 1;
+    //     });
+    //   }, 1000);
       
-      // Show success toast
-      showToast(`OTP sent to +91 ${values.phoneNumber}`, 'success');
-      console.log('OTP sent to:', values.phoneNumber);
+    //   // Show success toast
+    //   showToast(`OTP sent to +91 ${values.phoneNumber}`, 'success');
+    //   console.log('OTP sent to:', values.phoneNumber);
       
-    } catch (error) {
-      console.error('Error sending OTP:', error);
-      showToast('Failed to send OTP. Please try again.', 'error');
-    } finally {
-      setIsLoading(false);
-    }
+    // } catch (error) {
+    //   console.error('Error sending OTP:', error);
+    //   showToast('Failed to send OTP. Please try again.', 'error');
+    // } finally {
+    //   setIsLoading(false);
+    // }
   };
 
   // Handle OTP verification
   const handleOTPSubmit = async (values: OTPVerificationFormValues) => {
     setIsLoading(true);
+    // Create your own axios call and send a token in the headers
     try {
-      // Simulate API call to verify OTP
-      await new Promise(resolve => setTimeout(resolve, 1500));
-      
-      // Mock verification (in real app, this would be verified by backend)
-      if (values.otp === '1234') { // Mock OTP for testing
+      const token = userPhoneData?.token;
+      const response = await axios.post(
+        `http://localhost:5050/${API_ROUTES.otpVerify}`,
+        { otp: values.otp },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      console.log(response, 'ddd',response.data)
+      if (response.data.status === 1) {
         showToast('Login successful! Redirecting...', 'success');
-        
+        console.log(userPhoneData)
+        setVerfiedUser(userPhoneData, dispatch)
+        if(userPhoneData?.is_new_user == 1) {
+          router.push('/referral');
+        } else {
+          router.push('/');
+        }
         // Store authentication token and login status
-        localStorage.setItem('token', 'mock-jwt-token');
-        localStorage.setItem('isLoggedIn', 'true');
-        localStorage.setItem('userPhone', userPhone);
-        dispatch(setIsLoggedIn(true));
-        
+        // localStorage.setItem('token', response.data?.data?.token || '');
+        // localStorage.setItem('isLoggedIn', 'true');
+        // localStorage.setItem('userPhone', userPhone);
+        // dispatch(setIsLoggedIn(true));
         // Get redirect URL from search params or default to home
-        const redirectUrl = searchParams.get('redirect') || '/';
-        
-        // Redirect to the original page or home
-        setTimeout(() => {
-          router.replace(redirectUrl);
-        }, 1000);
+        // const redirectUrl = searchParams.get('redirect') || '/';
+        // setTimeout(() => {
+        //   router.replace(redirectUrl);
+        // }, 1000);
       } else {
-        showToast('Invalid OTP. Please try again.', 'error');
+        showToast(response.data?.message || 'OTP verification failed', 'error');
       }
-      
-    } catch (error) {
-      console.error('Error verifying OTP:', error);
+    } catch (error: any) {
+      console.error('Error verifying OTP with API:', error);
       showToast('Failed to verify OTP. Please try again.', 'error');
     } finally {
       setIsLoading(false);
     }
-  };
 
+
+
+
+    
+
+    // api.post(`${API_ROUTES.otpVerify}`,{otp : values.otp, token : userPhoneToken}).then((response) => {
+    //   if(response.status == 1) {
+    //     showToast('Login successful! Redirecting...', 'success')
+    //   }else {
+    //     showToast(response.message, 'error')
+    //   }
+    // })
+
+    // try {
+    //   // Simulate API call to verify OTP
+    //   await new Promise(resolve => setTimeout(resolve, 1500));
+      
+    //   // Mock verification (in real app, this would be verified by backend)
+    //   if (values.otp === '1234') { // Mock OTP for testing
+    //     showToast('Login successful! Redirecting...', 'success');
+        
+    //     // Store authentication token and login status
+    //     localStorage.setItem('token', 'mock-jwt-token');
+    //     localStorage.setItem('isLoggedIn', 'true');
+    //     localStorage.setItem('userPhone', userPhone);
+    //     dispatch(setIsLoggedIn(true));
+        
+    //     // Get redirect URL from search params or default to home
+    //     const redirectUrl = searchParams.get('redirect') || '/';
+        
+    //     // Redirect to the original page or home
+    //     setTimeout(() => {
+    //       router.replace(redirectUrl);
+    //     }, 1000);
+    //   } else {
+    //     showToast('Invalid OTP. Please try again.', 'error');
+    //   }
+      
+    // } catch (error) {
+    //   console.error('Error verifying OTP:', error);
+    //   showToast('Failed to verify OTP. Please try again.', 'error');
+    // } finally {
+    //   setIsLoading(false);
+    // }
+  };
 
   // google repsonse code handler
   const resposneGoogleHandler = async(authresult: any) => {
@@ -182,7 +262,7 @@ const Login = () => {
     console.log(authresult)
     if(authresult?.code) {
       setIsLoading(true);
-      api.get(`${API_ROUTES.google_signup}?google_code=${authresult?.code}`).then((response) => {
+      api.post(`${API_ROUTES.google_signup}?google_code=${authresult?.code}`,{is_login_Type : 1}).then((response) => {
         setIsLoading(false);
         if(response?.status == 1) {
           setVerfiedUser(response?.data, dispatch);
@@ -210,11 +290,6 @@ const Login = () => {
     onError: resposneGoogleHandler,
     flow: 'auth-code',
   }) 
-
-
-
-
-
 
     // setIsLoading(true);
     // try {
@@ -267,30 +342,53 @@ const Login = () => {
     if (resendTimer > 0) return;
     
     setIsLoading(true);
-    try {
-      await new Promise(resolve => setTimeout(resolve, 1000));
+
+    setIsLoading(true);
+    api.post(`${API_ROUTES.google_signup}`,{is_login_Type : 2, phone : userPhone}).then((response) => {
+      setIsLoading(false)
+        if(response.status == 1) {
+    
+          setResendTimer(30);
+          const timer = setInterval(() => {
+            setResendTimer(prev => {
+              if (prev <= 1) {
+                clearInterval(timer);
+                return 0;
+              }
+              return prev - 1;
+            });
+          }, 1000);
+          showToast('OTP sent succesfully', 'success')
+
+        }else {
+          showToast(response.message, 'error')
+        }
+    })
+
+    // try {
+    //   await new Promise(resolve => setTimeout(resolve, 1000));
       
-      // Start resend timer again
-      setResendTimer(30);
-      const timer = setInterval(() => {
-        setResendTimer(prev => {
-          if (prev <= 1) {
-            clearInterval(timer);
-            return 0;
-          }
-          return prev - 1;
-        });
-      }, 1000);
+    //   // Start resend timer again
+    //   setResendTimer(30);
+    //   const timer = setInterval(() => {
+    //     setResendTimer(prev => {
+    //       if (prev <= 1) {
+    //         clearInterval(timer);
+    //         return 0;
+    //       }
+    //       return prev - 1;
+    //     });
+    //   }, 1000);
       
-      showToast(`OTP resent to +91 ${userPhone}`, 'success');
-      console.log('OTP resent to:', userPhone);
+    //   showToast(`OTP resent to +91 ${userPhone}`, 'success');
+    //   console.log('OTP resent to:', userPhone);
       
-    } catch (error) {
-      console.error('Error resending OTP:', error);
-      showToast('Failed to resend OTP. Please try again.', 'error');
-    } finally {
-      setIsLoading(false);
-    }
+    // } catch (error) {
+    //   console.error('Error resending OTP:', error);
+    //   showToast('Failed to resend OTP. Please try again.', 'error');
+    // } finally {
+    //   setIsLoading(false);
+    // }
   };
 
   // Format phone number for display
