@@ -101,6 +101,7 @@ const userRoleSlice = createSlice({
       state.isLoggedIn = false;
       localStorage.removeItem('token');
       localStorage.removeItem('isLoggedIn');
+      localStorage.removeItem('is_new_user');
     }
   }
 });

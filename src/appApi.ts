@@ -4,7 +4,8 @@
 export const API_ROUTES = {
     google_signup: "auth/google-signup",
     referral: "auth/referal-code",
-    dropdownData: "dropdown-data"
+    dropdownData: "dropdown-data",
+    addInfulancer: "influencer/add"
     // goToSignup: "http://localhost:5000/api/auth/signup",
     // getdashboardData: "http://localhost:5000/api/user/dashboard",
     // withdraw: "http://localhost:5000/api/user/withdraw",

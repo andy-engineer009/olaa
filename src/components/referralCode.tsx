@@ -10,16 +10,21 @@ import { API_ROUTES } from '@/appApi';
 import Loader from './loader';
 
 // Types for form values
-interface ReferralFormValues {
-  referral_code: string;
-}
+  // interface ReferralFormValues {
+  //   name: string;
+  //   referral_code: string;
+  // }
 
 // Validation schema
 const referralValidationSchema = Yup.object({
+  name: Yup.string()
+    .min(2, 'Name must be at least 2 characters')
+    .max(50, 'Name must be less than 50 characters')
+    .required('Name is required'),
   referral_code: Yup.string()
     .min(3, 'Referral code must be at least 3 characters')
     .max(20, 'Referral code must be less than 20 characters')
-    .required('this field are required '),
+    .optional(),
 });
 
 // Toast notification component
@@ -75,19 +80,21 @@ const ReferralCode = () => {
 
   // Handle form submission
   const handleSubmit = async (values: any) => {
-    if(values.referral_code === ''){
-      // showToast('Referral code is required', 'error');
+    if(values.name === ''){
+      showToast('Name is required', 'error');
       return;
     }
 
     setIsLoading(true);
     try {
       api.post(API_ROUTES.referral, {
-        referral_code: values.referral_code,
+        name: values.name,
+        referral_code: values.referral_code || '',
       }).then((response) => {
         setIsLoading(false);
         if(response.status == 1) {
           showToast(response.message, 'success');
+          localStorage.setItem('is_new_user', '0');
           router.push('/');
         } else {
           showToast(response.message, 'error');
@@ -95,14 +102,9 @@ const ReferralCode = () => {
       })  ;
     } catch (error) {
       setIsLoading(false);
-      console.error('Error submitting referral code:', error);
+      console.error('Error submitting form:', error);
       showToast('Network error. Please try again.', 'error');
     } 
-  };
-
-  // Handle skip now
-  const handleSkipNow = async () => {
-    router.push('/');
   };
 
   return (
@@ -120,7 +122,7 @@ const ReferralCode = () => {
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
             </svg>
           </button> */}
-          <h1 className="text-lg font-semibold text-gray-900">Referral Code</h1>
+          <h1 className="text-lg font-semibold text-gray-900"> Add Infomartion</h1>
           {/* <div className="w-10"></div> */}
         </div>
       </div>
@@ -137,13 +139,13 @@ const ReferralCode = () => {
           >
             <div className="w-24 h-24 mx-auto mb-4 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center">
               <svg className="w-12 h-12 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
               </svg>
             </div>
-            <h2 className="text-2xl font-bold text-gray-900 mb-2">Have a Referral Code?</h2>
+            <h2 className="text-2xl font-bold text-gray-900 mb-2">Complete Your Profile</h2>
             <p className="text-gray-600 text-sm leading-relaxed">
-              Enter your referral code to get special benefits and rewards. 
-              This step is optional - you can skip it for now.
+              Please provide your full name to complete your profile setup. 
+              You can also enter a referral code if you have one for additional benefits.
             </p>
           </motion.div>
 
@@ -155,12 +157,30 @@ const ReferralCode = () => {
             className="bg-white rounded-2xl shadow-lg border border-gray-100 p-6 mb-6"
           >
             <Formik
-              initialValues={{ referral_code: '' }}
+              initialValues={{ name: '', referral_code: '' }}
               validationSchema={referralValidationSchema}
               onSubmit={handleSubmit}
             >
               {({ isValid, dirty }) => (
                 <Form className="space-y-4">
+                  <div>
+                    <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-2">
+                      Name *
+                    </label>
+                    <Field
+                      type="text"
+                      id="name"
+                      name="name"
+                      placeholder="Enter your name"
+                      className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 text-gray-900 placeholder-gray-400"
+                    />
+                    <ErrorMessage
+                      name="name"
+                      component="div"
+                      className="mt-1 text-sm text-red-500"
+                    />
+                  </div>
+
                   <div>
                     <label htmlFor="referral_code" className="block text-sm font-medium text-gray-700 mb-2">
                       Referral Code (Optional)
@@ -179,7 +199,7 @@ const ReferralCode = () => {
                     />
                   </div>
 
-                  <div className="space-y-3 pt-2">
+                  <div className="pt-2">
                     <button
                       type="submit"
                       disabled={isLoading || !isValid || !dirty}
@@ -191,23 +211,7 @@ const ReferralCode = () => {
                           <span className="ml-2">Processing...</span>
                         </>
                       ) : (
-                        'Submit'
-                      )}
-                    </button>
-
-                    <button
-                      type="button"
-                      onClick={handleSkipNow}
-                      disabled={isLoading}
-                      className="w-full bg-gray-100 text-gray-700 font-semibold py-3 px-4 rounded-xl hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center"
-                    >
-                      {isLoading ? (
-                        <>
-                          <LoadingSpinner size="sm" />
-                          <span className="ml-2">Processing...</span>
-                        </>
-                      ) : (
-                        'Skip for Now'
+                        'Complete Profile'
                       )}
                     </button>
                   </div>

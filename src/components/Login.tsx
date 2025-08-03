@@ -185,9 +185,9 @@ const Login = () => {
       api.get(`${API_ROUTES.google_signup}?google_code=${authresult?.code}`).then((response) => {
         setIsLoading(false);
         if(response?.status == 1) {
-          setVerfiedUser(response?.data);
+          setVerfiedUser(response?.data, dispatch);
           showToast(response?.message, 'success')
-          if(response?.data?.is_new_user == 1) {
+          if(response?.data?.user?.is_new_user == 1) {
             router.push('/referral');
           } else {
             router.push('/');

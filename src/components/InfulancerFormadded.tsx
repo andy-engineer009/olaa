@@ -8,6 +8,8 @@ import Link from 'next/link';
 import { useSelector } from 'react-redux';
 import { selectIsLoggedIn } from '@/store/userRoleSlice';
 import LoginPopup from './login-popup';
+import { api } from '@/common/services/rest-api/rest-api';
+import { API_ROUTES } from '@/appApi';
 
 // Types
 interface Offer {
@@ -23,30 +25,30 @@ interface Offer {
 
 interface FormValues {
   // Step 1: Basic Info
-  name: string;
+  // name: string;
   username: string;
-  is_instagram_paltfrom: boolean;
-  is_youtube_paltfrom: boolean;
-  is_facebook_paltfrom: boolean;
+  is_instagram_enabled: boolean;
+  is_youtube_enabled: boolean;
+  is_facebook_enabled: boolean;
   platforms_required?: any;
   // platforms: any[];
   gender: string;
   categories: any[];
   languages: any[];
-  verifiedProfile: boolean;
+  verified_profile: boolean;
   state: string;
   city: string;
   locality: string;
-  influencerAge: number;
-  followerCount: number;
-  instagramUrl: string;
-  youtubeUrl: string;
-  facebookUrl: string;
-  audienceType: string;
-  audienceAgeGroup: string;
+  age: number;
+  follower_count: number;
+  instagram_url: string;
+  youtube_url: string;
+  facebook_url: string;
+  audience_type: string;
+  audience_age_group: string;
   
   // Step 2: Pricing
-  startingPrice: any;
+  starting_price: any;
   offers: Offer[];
   
   // Step 3: Media
@@ -61,7 +63,7 @@ interface FormValues {
 //   { id: 2, name: 'YouTube' },
 //   { id: 3, name: 'Facebook' }
 // ];
-const categories = [
+let categories = [
   { id: 1, name: 'Fashion & Beauty' },
   { id: 2, name: 'Technology' },
   { id: 3, name: 'Fitness & Health' },
@@ -74,7 +76,7 @@ const categories = [
   { id: 10, name: 'Entertainment' }
 ];
 
-const languages = [
+let languages = [
   { id: 1, name: 'English' },
   { id: 2, name: 'Hindi' },
   { id: 3, name: 'Punjabi' },
@@ -89,7 +91,7 @@ const genders = [
   { id: 3, name: 'Other' }
 ];
 
-const states = [
+let states = [
   // Indian States
   { id: 1, name: 'Andhra Pradesh', shortName: 'AP' },
   { id: 2, name: 'Arunachal Pradesh', shortName: 'AR' },
@@ -131,7 +133,7 @@ const states = [
   { id: 36, name: 'Puducherry', shortName: 'PY' }
 ];
 
-const cities = [
+let cities = [
   { id: 1, name: 'Visakhapatnam', stateId: 1 },
   { id: 2, name: 'Itanagar', stateId: 2 },
   { id: 3, name: 'Guwahati', stateId: 3 },
@@ -170,7 +172,7 @@ const cities = [
   { id: 36, name: 'Puducherry', stateId: 36 }
 ];
 
-const localities = [
+let localities = [
   { id: 1, name: 'Andheri West', cityId: 1 },   // Mumbai
   { id: 2, name: 'Kothrud', cityId: 2 },        // Pune
   { id: 3, name: 'Connaught Place', cityId: 3 },// New Delhi
@@ -197,21 +199,21 @@ const audienceAgeGroups = [
 
 // Validation schemas
 const step1Schema = Yup.object().shape({
-  name: Yup.string().required('Name is required').min(2, 'Name must be at least 2 characters'),
+  // name: Yup.string().required('Name is required').min(2, 'Name must be at least 2 characters'),
   username: Yup.string().required('Username is required').min(3, 'Username must be at least 3 characters'),
   // platforms: Yup.array().min(1, 'At least one platform is required'),
   // At least one of the three platform checkboxes is required
-  is_instagram_paltfrom: Yup.boolean().nullable(),
-  is_youtube_paltfrom: Yup.boolean().nullable(),
-  is_facebook_paltfrom: Yup.boolean().nullable(),
+  is_instagram_enabled: Yup.boolean().nullable(),
+  is_youtube_enabled: Yup.boolean().nullable(),
+  is_facebook_enabled: Yup.boolean().nullable(),
   platforms_required: Yup.mixed().test(
     'at-least-one-platform',
     'At least one platform must be selected',
     function (value, context) {
-      const { is_instagram_paltfrom, is_youtube_paltfrom, is_facebook_paltfrom } = context.parent;
+      const { is_instagram_enabled, is_youtube_enabled, is_facebook_enabled } = context.parent;
       // Check if at least one platform is selected
       console.log(context.parent)
-      return is_instagram_paltfrom || is_youtube_paltfrom || is_facebook_paltfrom;
+      return is_instagram_enabled || is_youtube_enabled || is_facebook_enabled;
     }
   ),
   gender: Yup.string().required('Gender is required'),
@@ -219,17 +221,17 @@ const step1Schema = Yup.object().shape({
   languages: Yup.array().min(1, 'At least one language is required'),
   state: Yup.string().required('State is required'),
   city: Yup.string().required('City is required'),
-  influencerAge: Yup.number().required('Age is required').min(13, 'Must be at least 13 years old').max(100, 'Invalid age'),
-  followerCount: Yup.number().required('Follower count is required').min(100, 'Must have at least 100 followers'),
-  instagramUrl: Yup.string().when('is_instagram_paltfrom', {
+  age: Yup.number().required('Age is required').min(13, 'Must be at least 13 years old').max(100, 'Invalid age'),
+  follower_count: Yup.number().required('Follower count is required').min(100, 'Must have at least 100 followers'),
+  instagram_url: Yup.string().when('is_instagram_paltfrom', {
     is: (is_instagram_paltfrom: boolean) => is_instagram_paltfrom === true,
     then: (schema) => schema.required('Instagram URL is required').url('Must be a valid URL')
   }),
-  youtubeUrl: Yup.string().when('is_youtube_paltfrom', {
+  youtube_url: Yup.string().when('is_youtube_paltfrom', {
     is: (is_youtube_paltfrom: boolean) => is_youtube_paltfrom === true,
     then: (schema) => schema.required('YouTube URL is required').url('Must be a valid URL')
   }),
-  facebookUrl: Yup.string().when('is_facebook_paltfrom', {
+  facebook_url: Yup.string().when('is_facebook_paltfrom', {
     is: (is_facebook_paltfrom: boolean) => is_facebook_paltfrom === true,
     then: (schema) => schema.required('Facebook URL is required').url('Must be a valid URL')
   }),
@@ -238,7 +240,7 @@ const step1Schema = Yup.object().shape({
 });
 
 const step2Schema = Yup.object().shape({
-  startingPrice: Yup.number().required('Starting price is required').min(0, 'Price must be positive'),
+  starting_price: Yup.number().required('Starting price is required').min(0, 'Price must be positive'),
   offers: Yup.array().of(
     Yup.object().shape({
       id: Yup.string().required('Offer ID is required'),
@@ -275,30 +277,30 @@ const step3Schema = Yup.object().shape({
 
 // Initial values
 const initialValues: FormValues = {
-  name: '',
+  // name: '',
   username: '',
-  is_instagram_paltfrom: false,
-  is_youtube_paltfrom: false,
-  is_facebook_paltfrom: false,
+  is_instagram_enabled: false,
+  is_youtube_enabled: false,
+  is_facebook_enabled: false,
   gender: '',
   categories: [],
   languages: [],
-  verifiedProfile: true,
+  verified_profile: true,
   state: '',
   city: '',
   locality: '',
-  influencerAge: 0,
-  followerCount: 0,
-  instagramUrl: '',
-  youtubeUrl: '',
-  facebookUrl: '',
-  startingPrice: '',
+  age: 0,
+  follower_count: 0,
+  instagram_url: '',
+  youtube_url: '',
+  facebook_url: '',
+  starting_price: '',
   offers: [],
   profileImage: null,
   // postImages: [],
   // videos: [],
-  audienceType: '',
-  audienceAgeGroup: '',
+  audience_type: '',
+  audience_age_group: '',
   platforms_required: ''
 };
 
@@ -566,7 +568,7 @@ const WarningPopup = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => voi
 };
 
 // Step Components
-const Step1BasicInfo = ({ values, setFieldValue }: { values: FormValues; setFieldValue: (field: string, value: any) => void }) => (
+const Step1BasicInfo = ({ values, setFieldValue, dropdownData }: { values: FormValues; setFieldValue: (field: string, value: any) => void, dropdownData: any }) => (
   <motion.div
     initial={{ opacity: 0, x: 20 }}
     animate={{ opacity: 1, x: 0 }}
@@ -578,7 +580,7 @@ const Step1BasicInfo = ({ values, setFieldValue }: { values: FormValues; setFiel
     <div className="space-y-6">
       {/* Name and Username */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <div>
+         {/*<div>
           <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-2">
             Full Name *
           </label>
@@ -590,7 +592,7 @@ const Step1BasicInfo = ({ values, setFieldValue }: { values: FormValues; setFiel
             placeholder="Enter your full name"
           />
           <ErrorMessage name="name" component="div" className="text-red-500 text-sm mt-1" />
-        </div>
+        </div> */}
 
         <div>
           <label htmlFor="username" className="block text-sm font-medium text-gray-700 mb-2">
@@ -614,10 +616,10 @@ const Step1BasicInfo = ({ values, setFieldValue }: { values: FormValues; setFiel
           <label className="flex items-center space-x-2 cursor-pointer">
             <input
               type="checkbox"
-              name="is_instagram_paltfrom"
+              name="is_instagram_enabled"
               value="true"
-              checked={values.is_instagram_paltfrom === true}
-              onChange={() => setFieldValue('is_instagram_paltfrom', values.is_instagram_paltfrom === true ? false : true)}
+              checked={values.is_instagram_enabled === true}
+              onChange={() => setFieldValue('is_instagram_enabled', values.is_instagram_enabled === true ? false : true)}
               className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
             />
             <span className="text-sm text-gray-700">Instagram</span>
@@ -626,10 +628,10 @@ const Step1BasicInfo = ({ values, setFieldValue }: { values: FormValues; setFiel
           <label className="flex items-center space-x-2 cursor-pointer">
             <input
               type="checkbox"
-              name="is_youtube_paltfrom"
+              name="is_youtube_enabled"
               value="true"
-              checked={values.is_youtube_paltfrom === true}
-              onChange={() => setFieldValue('is_youtube_paltfrom', values.is_youtube_paltfrom === true ? false : true)}
+              checked={values.is_youtube_enabled === true}
+              onChange={() => setFieldValue('is_youtube_enabled', values.is_youtube_enabled === true ? false : true)}
               className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
             />
             <span className="text-sm text-gray-700">YouTube</span>
@@ -638,10 +640,10 @@ const Step1BasicInfo = ({ values, setFieldValue }: { values: FormValues; setFiel
           <label className="flex items-center space-x-2 cursor-pointer">
             <input
               type="checkbox"
-              name="is_facebook_paltfrom"
+              name="is_facebook_enabled"
               value="true"
-              checked={values.is_facebook_paltfrom === true}
-              onChange={() => setFieldValue('is_facebook_paltfrom', values.is_facebook_paltfrom === true ? false : true)}
+              checked={values.is_facebook_enabled === true}
+              onChange={() => setFieldValue('is_facebook_enabled', values.is_facebook_enabled === true ? false : true)}
               className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
             />
             <span className="text-sm text-gray-700">Facebook</span>
@@ -662,47 +664,47 @@ const Step1BasicInfo = ({ values, setFieldValue }: { values: FormValues; setFiel
       </Field> */}
 
       {/* Platform URLs */}
-      {values.is_instagram_paltfrom && (
+      {values.is_instagram_enabled && (
         <div>
           <label htmlFor="instagramUrl" className="block text-sm font-medium text-gray-700 mb-2">
             Instagram Profile URL *
           </label>
           <Field
             type="url"
-            id="instagramUrl"
-            name="instagramUrl"
+            id="instagram_url"
+            name="instagram_url"
             className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
             placeholder="https://instagram.com/yourusername"
           />
-          <ErrorMessage name="instagramUrl" component="div" className="text-red-500 text-sm mt-1" />
+          <ErrorMessage name="instagram_url" component="div" className="text-red-500 text-sm mt-1" />
         </div>
       )}
 
-      {values.is_youtube_paltfrom && (
+      {values.is_youtube_enabled && (
         <div>
           <label htmlFor="youtubeUrl" className="block text-sm font-medium text-gray-700 mb-2">
             YouTube Channel URL *
           </label>
           <Field
             type="url"
-            id="youtubeUrl"
-            name="youtubeUrl"
+            id="youtube_url"
+            name="youtube_url"
             className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
             placeholder="https://youtube.com/@yourchannel"
           />
-          <ErrorMessage name="youtubeUrl" component="div" className="text-red-500 text-sm mt-1" />
+          <ErrorMessage name="youtube_url" component="div" className="text-red-500 text-sm mt-1" />
         </div>
       )}
 
-{values.is_facebook_paltfrom && (
+{values.is_facebook_enabled && (
         <div>
           <label htmlFor="facebookUrl" className="block text-sm font-medium text-gray-700 mb-2">
             Facebook Profile URL *
           </label>
           <Field
             type="url"
-            id="facebookUrl"
-            name="facebookUrl"
+            id="facebook_url"
+            name="facebook_url"
             className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
             placeholder="https://facebook.com/yourusername"
           />
@@ -713,31 +715,31 @@ const Step1BasicInfo = ({ values, setFieldValue }: { values: FormValues; setFiel
       {/* Age and Followers */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div>
-          <label htmlFor="influencerAge" className="block text-sm font-medium text-gray-700 mb-2">
+          <label htmlFor="age" className="block text-sm font-medium text-gray-700 mb-2">
             Your Age *
           </label>
           <Field
             type="number"
-            id="influencerAge"
-            name="influencerAge"
+            id="age"
+            name="age"
             className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
             placeholder="Enter your age"
           />
-          <ErrorMessage name="influencerAge" component="div" className="text-red-500 text-sm mt-1" />
+          <ErrorMessage name="age" component="div" className="text-red-500 text-sm mt-1" />
         </div>
 
         <div>
-          <label htmlFor="followerCount" className="block text-sm font-medium text-gray-700 mb-2">
+          <label htmlFor="follower_count" className="block text-sm font-medium text-gray-700 mb-2">
             Total Follower Count *
           </label>
           <Field
             type="number"
-            id="followerCount"
-            name="followerCount"
+            id="follower_count"
+            name="follower_count"
             className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
             placeholder="Enter total follower count"
           />
-          <ErrorMessage name="followerCount" component="div" className="text-red-500 text-sm mt-1" />
+          <ErrorMessage name="follower_count" component="div" className="text-red-500 text-sm mt-1" />
         </div>
       </div>
 
@@ -765,7 +767,7 @@ const Step1BasicInfo = ({ values, setFieldValue }: { values: FormValues; setFiel
         {({ field, form }: any) => (
           <MultiSelectCheckbox
             label="Categories * (Select all that apply)"
-            options={categories}
+            options={dropdownData.categories}
             field={field}
             form={form}
           />
@@ -777,7 +779,7 @@ const Step1BasicInfo = ({ values, setFieldValue }: { values: FormValues; setFiel
         {({ field, form }: any) => (
           <MultiSelectCheckbox
             label="Languages * (Select all that apply)"
-            options={languages}
+            options={dropdownData.languages}
             field={field}
             form={form}
           />
@@ -791,29 +793,33 @@ const Step1BasicInfo = ({ values, setFieldValue }: { values: FormValues; setFiel
           <div className="flex items-center space-x-2">
             <Field
               type="radio"
-              id="verifiedProfileYes"
-              name="verifiedProfile" 
+              id="verified_profile_yes"
+              name="verified_profile" 
               value={true}
+              // checked={values.verified_profile === true}
+              onChange={() => setFieldValue('verified_profile', true)}
               className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300"
             />
-            <label htmlFor="verifiedProfileYes" className="text-sm font-medium text-gray-700">
+            <label htmlFor="verified_profile_yes" className="text-sm font-medium text-gray-700">
               Yes
             </label>
           </div>
           <div className="flex items-center space-x-2">
             <Field
               type="radio"
-              id="verifiedProfileNo"
-              name="verifiedProfile"
+              id="verified_profile_no"
+              name="verified_profile"
               value={false}
+              // checked={values.verified_profile === false}
+              onChange={() => setFieldValue('verified_profile', false)}
               className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300"
             />
-            <label htmlFor="verifiedProfileNo" className="text-sm font-medium text-gray-700">
+            <label htmlFor="verified_profile_no" className="text-sm font-medium text-gray-700">
               No
             </label>
           </div>
         </div>
-        <ErrorMessage name="verifiedProfile" component="div" className="text-red-500 text-sm mt-1" />
+        <ErrorMessage name="verified_profile" component="div" className="text-red-500 text-sm mt-1" />
       </div>
 
       {/* Location Fields */}
@@ -834,7 +840,7 @@ const Step1BasicInfo = ({ values, setFieldValue }: { values: FormValues; setFiel
             }}
           >
             <option value="">Select State</option>
-            {states.map(state => (
+            {dropdownData.states.map((state : any) => (
               <option key={state.id} value={state.id}>{state.name}</option>
             ))}
           </Field>
@@ -860,7 +866,7 @@ const Step1BasicInfo = ({ values, setFieldValue }: { values: FormValues; setFiel
             {/* {values.state && states[values.state as keyof typeof states]?.map((city: any) => (
               <option key={city.id} value={city.id}>{city.name}</option>
             ))} */}
-                        {values.state && cities.filter(city => city.stateId === parseInt(values.state)).map((city) => (
+                        {values.state && dropdownData.cities.filter((city : any) => city.state_id === parseInt(values.state)).map((city : any) => (
               <option key={city.id} value={city.id}>{city.name}</option>
             ))}
 
@@ -881,20 +887,20 @@ const Step1BasicInfo = ({ values, setFieldValue }: { values: FormValues; setFiel
             disabled={!values.city}
           >
             <option value="">Select Locality</option>
-            {values.city && localities.filter(locality => locality.cityId === parseInt(values.city)).map((locality) => (
+            {values.city && dropdownData.localities.filter((locality : any) => locality.city_id === parseInt(values.city)).map((locality : any) => (
               <option key={locality.id} value={locality.id}>{locality.name}</option>
             ))}
 
           </Field>
         </div>
         <div>
-          <label htmlFor="audienceType" className="block text-sm font-medium text-gray-700 mb-2">
+          <label htmlFor="audience_type" className="block text-sm font-medium text-gray-700 mb-2">
             Audience Type (optional)
           </label>
           <Field
             as="select"
-            id="audienceType"
-            name="audienceType"
+            id="audience_type"
+            name="audience_type"
             className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
           >
             <option value="">Select Audience Type</option>
@@ -902,17 +908,17 @@ const Step1BasicInfo = ({ values, setFieldValue }: { values: FormValues; setFiel
               <option key={type.id} value={type.id}>{type.name}</option>
             ))}
           </Field>
-          <ErrorMessage name="audienceType" component="div" className="text-red-500 text-sm mt-1" />
+          <ErrorMessage name="audience_type" component="div" className="text-red-500 text-sm mt-1" />
         </div>
 
         <div>
-          <label htmlFor="audienceAgeGroup" className="block text-sm font-medium text-gray-700 mb-2">
+          <label htmlFor="audience_age_group" className="block text-sm font-medium text-gray-700 mb-2">
             Audience Age Group (optional)
           </label>
           <Field
             as="select"
-            id="audienceAgeGroup"
-            name="audienceAgeGroup"
+            id="audience_age_group"
+            name="audience_age_group"
             className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
           >
             <option value="">Select Age Group</option>
@@ -920,7 +926,7 @@ const Step1BasicInfo = ({ values, setFieldValue }: { values: FormValues; setFiel
               <option key={ageGroup.id} value={ageGroup.id}>{ageGroup.name}</option>
             ))}
           </Field>
-          {/* <ErrorMessage name="audienceAgeGroup" component="div" className="text-red-500 text-sm mt-1" /> */}
+          {/* <ErrorMessage name="audience_age_group" component="div" className="text-red-500 text-sm mt-1" /> */}
         </div>
       </div>
     </div>
@@ -1087,18 +1093,18 @@ const Step2Pricing = ({ values, setFieldValue }: { values: FormValues; setFieldV
       <div className="space-y-6">
         {/* Starting Price */}
         <div>
-          <label htmlFor="startingPrice" className="block text-sm font-medium text-gray-700 mb-2">
+          <label htmlFor="starting_price" className="block text-sm font-medium text-gray-700 mb-2">
             Starting Price (₹) *
           </label>
           <p className="text-sm text-gray-500 mb-3">This is used for public listing preview and is not linked to actual offers.</p>
           <Field
             type="number"
-            id="startingPrice"
-            name="startingPrice"
+            id="starting_price"
+            name="starting_price"
             className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
             placeholder="Enter starting price"
           />
-          <ErrorMessage name="startingPrice" component="div" className="text-red-500 text-sm mt-1" />
+          <ErrorMessage name="starting_price" component="div" className="text-red-500 text-sm mt-1" />
         </div>
 
                   {/* Offers Section */}
@@ -1348,6 +1354,25 @@ export default function InfluencerOnboardingForm() {
   const [showWarning, setShowWarning] = useState(false);
   const isLoggedIn = useSelector(selectIsLoggedIn);
 
+  const [categories, setCategories] = useState([]);
+  const [languages, setLanguages] = useState([]);
+  const [states, setStates] = useState([]);
+  const [cities, setCities] = useState([]);
+  const [localities, setLocalities] = useState([]);
+
+  useEffect(() => {
+     api.get(API_ROUTES.dropdownData).then((response) => {
+      if(response.status == 1) {
+        const data: any = response.data;
+        setCategories(data.categories);
+        setLanguages(data.languages);
+        setStates(data.states);
+        setCities(data.cities);
+        setLocalities(data.locality);
+        // setFormData(response.data);
+      }
+     })
+  },[]);
 
   const handleWarningClose = () => {
     setShowWarning(false);
@@ -1378,8 +1403,43 @@ export default function InfluencerOnboardingForm() {
   const handleSubmit = async (values: FormValues, { setSubmitting }: FormikHelpers<FormValues>) => {
     try {
       await steps[currentStep - 1].schema.validate(values);
-      const finalData = { ...formData, ...values };
-      console.log('Final form data:', finalData);
+
+      const payload = {
+        username: values.username,
+        gender: parseInt(values.gender.toString()),
+        age: values.age,
+        follower_count:values.follower_count,
+        starting_price: values.starting_price,
+        verified_profile: values.verified_profile  ? 1 : 0,
+        is_instagram_enabled: values.is_instagram_enabled ? 1 : 0,
+        is_youtube_enabled: values.is_youtube_enabled ? 1 : 0,
+        is_facebook_enabled: values.is_facebook_enabled ? 1 : 0,
+        instagram_url: values.instagram_url,
+        youtube_url: values.youtube_url,
+        facebook_url: values.facebook_url,
+        audience_type: parseInt(values.audience_type.toString()),
+        audience_age_group: parseInt(values.audience_age_group.toString()),
+        state: parseInt(values.state.toString()),
+        city: parseInt(values.city.toString()),
+        locality: parseInt(values.locality.toString()),
+        categories: values.categories.map((category: any) => parseInt(category.toString())),
+        languages: values.languages.map((language: any) => parseInt(language.toString())),
+        offers: values.offers,
+        profileImage: values.profileImage,
+      }
+      // const finalData = { ...formData, ...values };
+      console.log(formData, 'formData')
+      console.log(values, 'values')
+
+      api.post(API_ROUTES.addInfulancer, payload).then((response) => {
+        if(response.status == 1) {
+          alert('Influencer added successfully!');
+        } else {
+          alert(response.message);
+        }
+      })
+
+      // console.log('Final form data:', finalData);
       alert('Form submitted successfully! Check console for data.');
     } catch (error) {
       console.error('Validation error:', error);
@@ -1461,7 +1521,7 @@ export default function InfluencerOnboardingForm() {
               <Form>
                 <AnimatePresence mode="wait">
                   {currentStep === 1 && (
-                    <Step1BasicInfo key="step1" values={values} setFieldValue={setFieldValue} />
+                    <Step1BasicInfo key="step1" values={values} setFieldValue={setFieldValue} dropdownData={{categories, languages, states, cities, localities}}/>
                   )}
                   {currentStep === 2 && (
                     <Step2Pricing key="step2" values={values} setFieldValue={setFieldValue} />
