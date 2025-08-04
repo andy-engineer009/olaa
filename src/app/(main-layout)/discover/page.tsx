@@ -146,7 +146,7 @@ export default function Discover() {
               </div>
             </div>
 
-                  <div className="flex mt-8 p-4 md:p-8 items-start">
+                  <div className="flex mt-0 px-4 md:p-8 items-start pt-[50px]">
         <div className=" md:pl-9" style={{flex: 1}}>
           <InfluencerGrid influencers={influencers} />
         </div>
