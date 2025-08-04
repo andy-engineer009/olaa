@@ -1458,57 +1458,60 @@ export default function InfluencerOnboardingForm() {
       {isLoggedIn && <WarningPopup isOpen={showWarning} onClose={handleWarningClose} />}
       
       {/* Login Popup - Show if not logged in */}
-      <LoginPopup />
+      {/* <LoginPopup /> */}
 
-      <div className="max-w-4xl mx-auto px-4 mb-0 pt-3">
-        <Link
-          href={'/'}
-          className="inline-flex items-center text-gray-600 hover:text-gray-900 transition-colors"
-        >
-          <svg 
-            xmlns="http://www.w3.org/2000/svg" 
-            className="h-5 w-5 mr-2" 
-            viewBox="0 0 20 20" 
-            fill="currentColor"
+      <div className="max-w-4xl mx-auto px-4 mb-0 py-3">
+        <div className="flex items-center">
+          <Link
+            href={'/'}
+            className="inline-flex items-center justify-center w-10 h-10 transition-colors"
+            aria-label="Back to Home"
           >
-            <path 
-              fillRule="evenodd" 
-              d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z" 
-              clipRule="evenodd" 
-            />
-          </svg>
-          Back to Home
-        </Link>
+            <svg 
+              xmlns="http://www.w3.org/2000/svg" 
+              className="h-6 w-6 text-gray-600" 
+              viewBox="0 0 20 20" 
+              fill="currentColor"
+            >
+              <path 
+                fillRule="evenodd" 
+                d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z" 
+                clipRule="evenodd" 
+              />
+            </svg>
+          </Link>
+          <h1 className="text-[22px] font-bold text-gray-700 flex-1 text-center">Influencer Registration</h1>
+        </div>
       </div>
-    <div className="min-h-screen bg-gray-50 pt-3 pb-8">
+    <div className="min-h-screen pt-3 pb-8 bg-[#f0f2f5]">
 
       <div className="max-w-4xl mx-auto px-4">
         {/* Progress Bar */}
-        <div className="bg-white rounded-lg shadow-lg p-6 mb-8">
-          <div className="flex items-center justify-between mb-4">
+        {/* <div className="bg-white rounded-lg shadow-sm p-4 mb-4 md:p-6 md:mb-8">
+          <div className="flex items-center justify-between mb-3">
             {steps.map((step, index) => (
               <div key={step.number} className="flex items-center">
-                <div className={`flex items-center justify-center w-10 h-10 rounded-full border-2 ${
+                <div className={`flex items-center justify-center w-8 h-8 md:w-10 md:h-10 rounded-full border ${
                   currentStep > step.number 
                     ? 'bg-green-500 border-green-500 text-white' 
                     : currentStep === step.number 
                     ? 'bg-blue-500 border-blue-500 text-white' 
-                    : 'bg-gray-200 border-gray-300 text-gray-500'
-                }`}>
+                    : 'bg-gray-100 border-gray-200 text-gray-400'
+                } text-sm md:text-base`}>
                   {currentStep > step.number ? '✓' : step.number}
                 </div>
                 {index < steps.length - 1 && (
-                  <div className={`w-16 h-1 mx-2 ${
-                    currentStep > step.number ? 'bg-green-500' : 'bg-gray-300'
+                  <div className={`w-8 md:w-12 h-0.5 mx-1 md:mx-2 ${
+                    currentStep > step.number ? 'bg-green-500' : 'bg-gray-200'
                   }`} />
                 )}
               </div>
             ))}
           </div>
           <div className="text-center">
-            <h1 className="text-2xl font-bold text-gray-900">Step {currentStep}: {steps[currentStep - 1].title}</h1>
+            <h1 className="text-lg md:text-xl font-semibold text-gray-800">Step {currentStep}: {steps[currentStep - 1].title}</h1>
           </div>
-        </div>
+        </div> */}
 
         {/* Form */}
         <div className="bg-white rounded-lg shadow-lg p-6">

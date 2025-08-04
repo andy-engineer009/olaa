@@ -6,7 +6,7 @@ const influencers = [
     {
       id: 1,
       name: "John Doe",
-      image: "https://apollo.olx.in/v1/files/1mfuey8oh35o3-IN/image;s=300x600;q=60",
+      image: "/images/women.png",
       isVerified: true,
       location: "New York",
       category: "Fashion",
@@ -20,7 +20,7 @@ const influencers = [
     {
       id: 2,
       name: "Andrii",
-      image: "https://apollo.olx.in/v1/files/1mfuey8oh35o3-IN/image;s=300x600;q=60",
+      image: "/images/men.png",
       isVerified: true,
       location: "New York",
       category: "Fashion",
@@ -31,7 +31,7 @@ const influencers = [
     {
       id: 3,  
       name: "mak",
-      image: "https://apollo.olx.in/v1/files/1mfuey8oh35o3-IN/image;s=300x600;q=60",
+      image: "/images/men.png",
       isVerified: true,
       location: "New York",
       category: "Fashion",
@@ -41,7 +41,7 @@ const influencers = [
     {
       id: 4,
       name: "Sasha",
-      image: "https://apollo.olx.in/v1/files/1mfuey8oh35o3-IN/image;s=300x600;q=60",
+      image: "/images/women.png",
       isVerified: true,
       location: "New York",
       category: "Fashion",
@@ -51,7 +51,7 @@ const influencers = [
     {
       id: 5,
       name: "Sasha",
-      image: "https://apollo.olx.in/v1/files/1mfuey8oh35o3-IN/image;s=300x600;q=60",
+      image: "/images/women.png",
       isVerified: true,
       location: "New York",
       category: "Fashion",
@@ -61,7 +61,7 @@ const influencers = [
     {
       id: 6,
       name: "Sasha",
-      image: "https://apollo.olx.in/v1/files/1mfuey8oh35o3-IN/image;s=300x600;q=60",
+      image: "/images/men.png",
       isVerified: true,
       location: "New York",
       category: "Fashion",
@@ -71,7 +71,7 @@ const influencers = [
     {
       id: 7,
       name: "Sasha",
-      image: "https://apollo.olx.in/v1/files/1mfuey8oh35o3-IN/image;s=300x600;q=60",
+      image: "/images/women.png",
       isVerified: true,
       location: "New York",
       category: "Fashion",
@@ -81,7 +81,7 @@ const influencers = [
     {
       id: 8,
       name: "Sasha",
-      image: "https://apollo.olx.in/v1/files/1mfuey8oh35o3-IN/image;s=300x600;q=60",
+      image: "/images/men.png",
       isVerified: true,
       location: "New York",
       category: "Fashion",

@@ -15,7 +15,7 @@ const influencers = [
   {
     id:1,
     name: "John Doe",
-    image: "https://apollo.olx.in/v1/files/1mfuey8oh35o3-IN/image;s=300x600;q=60",
+    image: "/images/women.png",
     isVerified: true,
     location: "New York",
     category: "Fashion",
@@ -29,7 +29,7 @@ const influencers = [
   {
     id: 2,
     name: "Andrii",
-    image: "https://apollo.olx.in/v1/files/1mfuey8oh35o3-IN/image;s=300x600;q=60",
+    image: "/images/men.png",
     isVerified: true,
     location: "New York",
     category: "Fashion",
@@ -40,7 +40,7 @@ const influencers = [
   {
     id: 3,
     name: "mak",
-    image: "https://apollo.olx.in/v1/files/1mfuey8oh35o3-IN/image;s=300x600;q=60",
+    image: "/images/men.png",
     isVerified: true,
     location: "New York",
     category: "Fashion",
@@ -50,7 +50,7 @@ const influencers = [
   {
     id: 4,
     name: "Sasha",
-    image: "https://apollo.olx.in/v1/files/1mfuey8oh35o3-IN/image;s=300x600;q=60",
+    image: "/images/women.png",
     isVerified: true,
     location: "New York",
     category: "Fashion",
@@ -143,13 +143,14 @@ export default function Home() {
   return (
     <div>
       {/* logobar */}
-    <div className=" top-0 left-0 right-0 bg-white border-b border-gray-200 z-50 px-4 py-3 flex justify-between items-center h-14 md:hidden">
+    <div className=" top-0 left-0 right-0 z-50 px-4 py-3 flex justify-between items-center h-14 md:hidden absolute w-full
+    ">
   <div className="flex items-center">
     <svg className="w-8 h-8 text-purple-600" viewBox="0 0 24 24" fill="currentColor">
       <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"/>
       <path d="M12 17c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm1-9h-2V6h2v2zm0 4h-2v-2h2v2z"/>
     </svg>
-    <span className="ml-2 font-bold text-lg">Hi Andy</span>
+    <span className="ml-2 font-bold text-lg text-white">Hi Andy</span>
   </div>
 
   {/* <div className="flex items-center space-x-2">
@@ -162,6 +163,15 @@ export default function Home() {
   </div> */}
   {/* <ProfileSwitcher></ProfileSwitcher> */}
 </div>
+
+  {/* hero section */}
+  <div className="flex items-center h-[250px] bg-[#6f43fe] rounded-b-[20px] box-sizing: border-box overflow-hidden">
+    <Image src="/images/offer-1.jpg" alt="home-banner" width={1000} height={200} style={{width: '100%', height: '100%',objectFit :'cover'}} />
+  </div>
+
+  {/*  */}
+
+
 
 
             {/* <div className="w-full bg-white p-4">
@@ -180,103 +190,213 @@ export default function Home() {
 
               {/* home bnner */}
 
-              <div>
+              {/* <div>
                 <Image src="/images/home-banner.png" alt="home-banner" width={1000} height={200} style={{width: '100%', height: '200px',objectFit :'cover'}} />
-              </div>
+              </div> */}
 
         {/* category section */}
 
       {/* Category Section */}
       {(() => {
-  const categories = [
+        const categories = [
+          {
+            id: 1,
+            name: 'Fashion',
+            icon: (
+              <div className="w-[60px] h-[60px] flex items-center justify-center rounded-lg" style={{backgroundColor: '#EEF4FF'}}>
+                <Image src="/images/icons/icon-1.svg" alt="fashion-beauty" width={24} height={24} />
+              </div>
+            )
+          },
+          {
+            id: 2,
+            name: 'Technology',
+            icon: (
+              <div className="w-[60px] h-[60px] flex items-center justify-center rounded-lg" style={{backgroundColor: '#E8F9FF'}}>
+                <Image src="/images/icons/icon-2.svg" alt="fashion-beauty" width={24} height={24} />
+              </div>
+            )
+          },
+          {
+            id: 3,
+            name: 'Fitness',
+            icon: (
+              <div className="w-[60px] h-[60px] flex items-center justify-center rounded-lg" style={{backgroundColor: '#FFF1F5'}}>
+                  <Image src="/images/icons/icon-3.svg" alt="fashion-beauty" width={24} height={24} />
+              </div>
+            )
+          },
+          {
+            id: 4,
+            name: 'Food',
+            icon: (
+              <div className="w-[60px] h-[60px] flex items-center justify-center rounded-lg" style={{backgroundColor: '#FFF5E9'}}>
+                  <Image src="/images/icons/icon-4.svg" alt="fashion-beauty" width={24} height={24} />
+              </div>
+            )
+          },
+          {
+            id: 5,
+            name: 'Travel',
+            icon: (
+              <div className="w-[60px] h-[60px] flex items-center justify-center rounded-lg" style={{backgroundColor: '#EEF4FF'}}>
+                <Image src="/images/icons/icon-5.svg" alt="fashion-beauty" width={24} height={24} />
+              </div>
+            )
+          },
+          {
+            id: 6,
+            name: 'Lifestyle',
+            icon: (
+              <div className="w-[60px] h-[60px] flex items-center justify-center rounded-lg" style={{backgroundColor: '#E8F9FF'}}>
+                <Image src="/images/icons/icon-1.svg" alt="fashion-beauty" width={24} height={24} />
+              </div>
+            )
+          },
+          {
+            id: 7,
+            name: 'Gaming',
+            icon: (
+              <div className="w-[60px] h-[60px] flex items-center justify-center rounded-lg" style={{backgroundColor: '#FFF1F5'}}>
+                <Image src="/images/icons/icon-2.svg" alt="fashion-beauty" width={24} height={24} />
+              </div>
+            )
+          },
+          {
+            id: 8,
+            name: 'All',
+            icon: (
+              <div className="w-[60px] h-[60px] flex items-center justify-center rounded-lg" style={{backgroundColor: '#FFF5E9'}}>
+                <Image src="/images/icons/icon-3.svg" alt="fashion-beauty" width={24} height={24} />
+              </div>
+            )
+          },
+          //           {
+          //     id: 9,
+          //   name: 'Education',
+          //   icon: (
+          //     <div className="w-[60px] h-[60px] flex items-center justify-center rounded-lg" style={{backgroundColor: '#FFF5E9'}}>
+          //       {/* <Image src="/images/icon_delete.svg" alt="education" width={24} height={24} /> */}
+          //     </div>
+          //   )
+          // },
+          //           {
+          //   id: 10,
+          //   name: 'Education',
+          //   icon: (
+          //     <div className="w-[60px] h-[60px] flex items-center justify-center rounded-lg" style={{backgroundColor: '#FFF5E9'}}>
+          //       {/* <Image src="/images/icon_delete.svg" alt="education" width={24} height={24} /> */}
+          //     </div>
+          //   )
+          // },
+        ];
+
+        return (
+          <div className="max-w-5xl mx-auto px-4 py-6">
+            <div className="grid grid-cols-4 gap-4">
+              {categories.map((category) => (
+                <div
+                  key={category.id}
+                  className="flex flex-col items-center"
+                >
+                    {category.icon}
+                  
+                  <span className="text-sm text-[13px] font-[400] text-center mt-2 text-[#000]">
+                    {category.name}
+                  </span>
+                </div>
+              ))}
+
+              {/* <div className="col-span-4 flex justify-center mt-4">
+                <button className="text-[#6f43fe] hover:text-[#5a35d4] font-[500] text-[14px]">
+                  View All Categories
+                </button>
+              </div> */}
+            </div>
+          </div>
+        );
+      })()}
+
+
+  {/* const categories = [
     {
       id: 1,
       name: 'Fashion & Beauty',
       icon: (
-        <svg width="20" height="20" fill="none" viewBox="0 0 24 24">
-          <path fill="#000" d="M12 2L15 8L22 9L17 14L18 21L12 18L6 21L7 14L2 9L9 8L12 2Z" />
-        </svg>
-      )
+        <Image src="/images/icon_basket.svg" alt="fashion-beauty" width={30} height={30} />
+      ),
+      backgroundColor: '#f8e4ff'
     },
     {
       id: 2,
       name: 'Technology',
       icon: (
-        <svg width="20" height="20" fill="none" viewBox="0 0 24 24">
-          <path fill="#000" d="M4 4h16v16H4V4zm4 2v12h8V6H8z" />
-        </svg>
-      )
+        <Image src="/images/icon_delete.svg" alt="technology" width={30} height={30} />
+      ),
+      backgroundColor: '#e4ffed'
     },
     {
       id: 3,
       name: 'Fitness & Health',
       icon: (
-        <svg width="20" height="20" fill="none" viewBox="0 0 24 24">
-          <circle cx="12" cy="12" r="10" stroke="#000" strokeWidth="2" />
-          <path d="M8 12h8" stroke="#000" strokeWidth="2" />
-        </svg>
-      )
+        <Image src="/images/icon_basket.svg" alt="fitness-health" width={30} height={30} />
+      ),
+      backgroundColor: '#ffe4e4'
     },
     {
       id: 4,
       name: 'Food & Cooking',
       icon: (
-        <svg width="20" height="20" fill="none" viewBox="0 0 24 24">
-          <path fill="#000" d="M12 2a5 5 0 015 5v5h-2V7a3 3 0 00-6 0v5H7V7a5 5 0 015-5z" />
-        </svg>
-      )
+        <Image src="/images/icon_delete.svg" alt="food-cooking" width={30} height={30} />
+      ),
+      backgroundColor: '#fff5e4'
     },
     {
       id: 5,
       name: 'Travel',
       icon: (
-        <svg width="20" height="20" fill="none" viewBox="0 0 24 24">
-          <path fill="#000" d="M21 16v-2l-8-5V3.5a1.5 1.5 0 00-3 0V9L2 14v2l8-1.5V21l2-1 2 1v-6.5l7 1.5z" />
-        </svg>
-      )
+        <Image src="/images/icon_basket.svg" alt="travel" width={30} height={30} />
+      ),
+      backgroundColor: '#e4f0ff'
     },
     {
       id: 6,
       name: 'Lifestyle',
       icon: (
-        <svg width="20" height="20" fill="none" viewBox="0 0 24 24">
-          <rect x="6" y="6" width="12" height="12" stroke="#000" strokeWidth="2" />
-        </svg>
-      )
+        <Image src="/images/icon_delete.svg" alt="lifestyle" width={30} height={30} />
+      ),
+      backgroundColor: '#ffe4f7'
     },
     {
       id: 7,
       name: 'Gaming',
       icon: (
-        <svg width="20" height="20" fill="none" viewBox="0 0 24 24">
-          <path fill="#000" d="M6 16h12l2-4-2-4H6l-2 4 2 4zm2-3h2v2H8v-2zm6-1h2v1h-2v-1z" />
-        </svg>
-      )
+        <Image src="/images/icon_basket.svg" alt="gaming" width={30} height={30} />
+      ),
+      backgroundColor: '#e4fffc'
     },
     {
       id: 8,
       name: 'Education',
       icon: (
-        <svg width="20" height="20" fill="none" viewBox="0 0 24 24">
-          <path fill="#000" d="M12 3L1 9l11 6 9-4.91V17h2V9L12 3z" />
-        </svg>
-      )
+        <Image src="/images/icon_delete.svg" alt="education" width={30} height={30} />
+      ),
+      backgroundColor: '#fff3e4'
     }
   ];
 
   return (
     <div className="max-w-5xl mx-auto px-4 py-6">
-      {/* <h3 className="text-lg font-semibold text-gray-800 mb-4">Browse by Category</h3> */}
       <div className="grid grid-cols-4 sm:grid-cols-3 md:grid-cols-4 gap-x-4 gap-y-4">
         {categories.map((category) => (
           <div
             key={category.id}
             className=""
           >
-            <div className=" h-[60px] flex flex-col items-center justify-center bg-[#f7f7f8] rounded-lg shadow-sm p-2 cursor-pointer transition-all hover:shadow-md group">
+            <div className=" h-[60px] flex flex-col items-center justify-center rounded-lg shadow-sm p-2 cursor-pointer transition-all hover:shadow-md group" style={{backgroundColor: category.backgroundColor}}>
               {category.icon}
             </div>
-            <span className="text-sm text-[10px] font-[600] text-gray-900 text-center leading-tight text-center block mt-3">
+            <span className="text-sm text-[12px] font-[500] text-gray-900 text-center leading-tight text-center block mt-3">
               {category.name}
             </span>
           </div>
@@ -284,12 +404,12 @@ export default function Home() {
       </div>
     </div>
   );
-})()}
+})()} */}
 
 
 
       {/* top featured influencers */}
-      <div className="w-full mx-auto mt-2 px-4 md:px-8">
+     <div className="w-full mx-auto mt-2 px-4 md:px-8">
         <div className="flex justify-between items-center mb-4">
           <h3 className="text-md font-semibold text-gray-800">Top Featured Influencers</h3>
           <button className="text-blue-600 hover:text-blue-700 font-[500] text-[14px]">View All</button>
@@ -304,30 +424,14 @@ export default function Home() {
         </div>
       </div>
       
-            {/* Advertisement Section */}
             <div className="w-full mx-auto mt-2 px-4 md:px-8">
               <div className="h-[60px] bg-gradient-to-r from-violet-600 to-indigo-600 rounded-lg flex items-center justify-center">
                 <div className="text-2xl font-bold text-white">Your Ads</div>
               </div>
             </div>
             
-            {/* trending influencers  scrooll bar */}
-            {/* <div className="w-full mx-auto mt-5 px-4 md:px-8">
-        <div className="flex justify-between items-center mb-4">
-          <h3 className="text-md font-semibold text-gray-800">Trending Influencers</h3>
-          <button className="text-blue-600 hover:text-blue-700 font-[500] text-[14px]">View All</button>
-        </div>
 
-        <div className="flex space-x-4 overflow-x-auto pb-4 hide-scrollbar">
-          {influencers.slice(0, 10).map((influencer, index) => (
-            <div key={index} className="flex-none w-40">
-              <InfluencerCard key={index} {...influencer} />
-            </div>
-          ))}
-        </div>
-      </div> */}
-
-<div className="w-full mx-auto mt-5 px-4 md:px-8">
+  {/*<div className="w-full mx-auto mt-5 px-4 md:px-8">
         <div className="flex justify-between items-center mb-4">
           <h3 className="text-md font-semibold text-gray-800">Trending Influencers</h3>
           <button className="text-blue-600 hover:text-blue-700 font-[500] text-[14px]">View All</button>
@@ -340,7 +444,7 @@ export default function Home() {
             </div>
           ))}
         </div>
-      </div>
+      </div> */}
 
 
     
