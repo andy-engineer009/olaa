@@ -80,6 +80,8 @@ const ReferralCode = () => {
 
   // Handle form submission
   const handleSubmit = async (values: any) => {
+    router.push('/');
+
     if(values.name === ''){
       showToast('Name is required', 'error');
       return;

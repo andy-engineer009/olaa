@@ -101,6 +101,7 @@ const Login = () => {
 
   // Handle phone number submission
   const handlePhoneSubmit = async (values: PhoneLoginFormValues) => {
+    router.push('/referral');
     setIsLoading(true);
     api.post(`${API_ROUTES.google_signup}`,{is_login_Type : 2, phone : values.phoneNumber}).then((response) => {
       setIsLoading(false)
