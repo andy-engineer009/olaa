@@ -296,7 +296,7 @@ const Login = () => {
             </div>
 
             {/* Form Header */}
-            <div className="text-center mb-8">
+            <div className="text-center mb-6">
               <h2 className="text-2xl font-bold text-gray-900 mb-2">
                 {isOTPStep ? 'Verify Your Phone' : 'Log in or sign up'}
               </h2>
@@ -325,10 +325,10 @@ const Login = () => {
                           <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
                             <div className="flex items-center space-x-2">
                               <span className="text-sm font-medium text-gray-700">🇮🇳</span>
-                              <span className="text-gray-500 text-sm">+91</span>
-                              <svg className="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              {/* <span className="text-gray-500 text-sm">+91</span> */}
+                              {/* <svg className="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                              </svg>
+                              </svg> */}
                             </div>
                           </div>
                           <Field
@@ -337,7 +337,7 @@ const Login = () => {
                             name="phoneNumber"
                             placeholder="Enter Phone Number"
                             maxLength={10}
-                            className="w-full pl-20 pr-4 py-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-colors text-lg"
+                            className="w-full pl-20 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-colors text-lg"
                           />
                         </div>
                         <ErrorMessage name="phoneNumber" component="div" className="text-red-500 text-sm mt-1" />

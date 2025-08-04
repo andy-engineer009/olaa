@@ -165,8 +165,9 @@ export default function Home() {
 </div>
 
   {/* hero section */}
-  <div className="flex items-center h-[250px] bg-[#6f43fe] rounded-b-[20px] box-sizing: border-box overflow-hidden">
-    <Image src="/images/offer-1.jpg" alt="home-banner" width={1000} height={200} style={{width: '100%', height: '100%',objectFit :'cover'}} />
+  <div className="flex items-center h-[200px] bg-[#04308e] box-sizing: border-box overflow-hidden">
+      {/* <div></div> */}
+    <Image src="/images/offer-1.jpg" alt="home-banner" width={100} height={200} style={{width: '100%', height: '100%',objectFit :'contain'}} />
   </div>
 
   {/*  */}
@@ -203,7 +204,7 @@ export default function Home() {
             id: 1,
             name: 'Fashion',
             icon: (
-              <div className="w-[60px] h-[60px] flex items-center justify-center rounded-lg" style={{backgroundColor: '#EEF4FF'}}>
+              <div className="w-[60px] h-[60px] flex items-center justify-center rounded-lg" style={{backgroundColor: '#d4e2e1'}}>
                 <Image src="/images/icons/icon-1.svg" alt="fashion-beauty" width={24} height={24} />
               </div>
             )
@@ -212,7 +213,7 @@ export default function Home() {
             id: 2,
             name: 'Technology',
             icon: (
-              <div className="w-[60px] h-[60px] flex items-center justify-center rounded-lg" style={{backgroundColor: '#E8F9FF'}}>
+              <div className="w-[60px] h-[60px] flex items-center justify-center rounded-lg" style={{backgroundColor: '#d4e2e1'}}>
                 <Image src="/images/icons/icon-2.svg" alt="fashion-beauty" width={24} height={24} />
               </div>
             )
@@ -221,7 +222,7 @@ export default function Home() {
             id: 3,
             name: 'Fitness',
             icon: (
-              <div className="w-[60px] h-[60px] flex items-center justify-center rounded-lg" style={{backgroundColor: '#FFF1F5'}}>
+              <div className="w-[60px] h-[60px] flex items-center justify-center rounded-lg" style={{backgroundColor: '#d4e2e1'}}>
                   <Image src="/images/icons/icon-3.svg" alt="fashion-beauty" width={24} height={24} />
               </div>
             )
@@ -230,7 +231,7 @@ export default function Home() {
             id: 4,
             name: 'Food',
             icon: (
-              <div className="w-[60px] h-[60px] flex items-center justify-center rounded-lg" style={{backgroundColor: '#FFF5E9'}}>
+              <div className="w-[60px] h-[60px] flex items-center justify-center rounded-lg" style={{backgroundColor: '#d4e2e1'}}>
                   <Image src="/images/icons/icon-4.svg" alt="fashion-beauty" width={24} height={24} />
               </div>
             )
@@ -239,7 +240,7 @@ export default function Home() {
             id: 5,
             name: 'Travel',
             icon: (
-              <div className="w-[60px] h-[60px] flex items-center justify-center rounded-lg" style={{backgroundColor: '#EEF4FF'}}>
+              <div className="w-[60px] h-[60px] flex items-center justify-center rounded-lg" style={{backgroundColor: '#d4e2e1'}}>
                 <Image src="/images/icons/icon-5.svg" alt="fashion-beauty" width={24} height={24} />
               </div>
             )
@@ -248,7 +249,7 @@ export default function Home() {
             id: 6,
             name: 'Lifestyle',
             icon: (
-              <div className="w-[60px] h-[60px] flex items-center justify-center rounded-lg" style={{backgroundColor: '#E8F9FF'}}>
+              <div className="w-[60px] h-[60px] flex items-center justify-center rounded-lg" style={{backgroundColor: '#d4e2e1'}}>
                 <Image src="/images/icons/icon-1.svg" alt="fashion-beauty" width={24} height={24} />
               </div>
             )
@@ -257,7 +258,7 @@ export default function Home() {
             id: 7,
             name: 'Gaming',
             icon: (
-              <div className="w-[60px] h-[60px] flex items-center justify-center rounded-lg" style={{backgroundColor: '#FFF1F5'}}>
+              <div className="w-[60px] h-[60px] flex items-center justify-center rounded-lg" style={{backgroundColor: '#d4e2e1'}}>
                 <Image src="/images/icons/icon-2.svg" alt="fashion-beauty" width={24} height={24} />
               </div>
             )
@@ -266,52 +267,35 @@ export default function Home() {
             id: 8,
             name: 'All',
             icon: (
-              <div className="w-[60px] h-[60px] flex items-center justify-center rounded-lg" style={{backgroundColor: '#FFF5E9'}}>
+              <div className="w-[60px] h-[60px] flex items-center justify-center rounded-lg" style={{backgroundColor: '#d4e2e1'}}>
                 <Image src="/images/icons/icon-3.svg" alt="fashion-beauty" width={24} height={24} />
               </div>
             )
           },
-          //           {
-          //     id: 9,
-          //   name: 'Education',
-          //   icon: (
-          //     <div className="w-[60px] h-[60px] flex items-center justify-center rounded-lg" style={{backgroundColor: '#FFF5E9'}}>
-          //       {/* <Image src="/images/icon_delete.svg" alt="education" width={24} height={24} /> */}
-          //     </div>
-          //   )
-          // },
-          //           {
-          //   id: 10,
-          //   name: 'Education',
-          //   icon: (
-          //     <div className="w-[60px] h-[60px] flex items-center justify-center rounded-lg" style={{backgroundColor: '#FFF5E9'}}>
-          //       {/* <Image src="/images/icon_delete.svg" alt="education" width={24} height={24} /> */}
-          //     </div>
-          //   )
-          // },
         ];
 
         return (
-          <div className="max-w-5xl mx-auto px-4 py-6">
-            <div className="grid grid-cols-4 gap-4">
+          <div
+            className="max-w-5xl mx-auto px-4 py-6 rounded-t-[20px]"
+            style={{
+              background: '#FFFF',
+              marginTop: '-23px',
+              zIndex: 1,
+              position: 'relative'
+            }}
+          >
+            <div className="flex overflow-x-auto hide-scrollbar space-x-4">
               {categories.map((category) => (
                 <div
                   key={category.id}
-                  className="flex flex-col items-center"
+                  className="flex flex-col items-center min-w-[80px] flex-shrink-0 me-0"
                 >
-                    {category.icon}
-                  
-                  <span className="text-sm text-[13px] font-[400] text-center mt-2 text-[#000]">
+                  {category.icon}
+                  <span className="text-sm text-[14px] font-[600] text-center mt-2 text-[#1f1f1f] whitespace-nowrap">
                     {category.name}
                   </span>
                 </div>
               ))}
-
-              {/* <div className="col-span-4 flex justify-center mt-4">
-                <button className="text-[#6f43fe] hover:text-[#5a35d4] font-[500] text-[14px]">
-                  View All Categories
-                </button>
-              </div> */}
             </div>
           </div>
         );
@@ -411,7 +395,7 @@ export default function Home() {
       {/* top featured influencers */}
      <div className="w-full mx-auto mt-2 px-4 md:px-8">
         <div className="flex justify-between items-center mb-4">
-          <h3 className="text-md font-semibold text-gray-800">Top Featured Influencers</h3>
+          <h3 className="text-md font-semibold text-gray-800">Top Trending </h3>
           <button className="text-blue-600 hover:text-blue-700 font-[500] text-[14px]">View All</button>
         </div>
 
