@@ -50,8 +50,10 @@ class TokenManager {
 
   private getTokenFromStorage(): any {
     if (typeof window !== 'undefined') {
+      console.log('token', localStorage.getItem('token'));
       return localStorage.getItem('token');
     }
+    
     return null;
   }
 
@@ -100,7 +102,6 @@ class RequestInterceptor {
   intercept(config: any): any {
     const tokenManager = TokenManager.getInstance();
     const token = tokenManager.getToken();
-
     // Add default headers
     const headers: any = {
       'Content-Type': 'application/json',
